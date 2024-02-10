@@ -111,8 +111,8 @@ public class Telemetry {
     public Pose2d getPose(){
         return m_lastPose;
     }
-/* 
-    public void resetOdometry(){
+
+    /*public void resetPose(){
         m_moduleMechanisms.
     }*/
 }
