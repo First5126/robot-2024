@@ -8,11 +8,24 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+
+import frc.robot.subsystems.limelight;
+import frc.robot.subsystems.shooter;
+import frc.robot.commands.limelightDistance;
+
+import frc.robot.commands.runOuttake;
+import frc.robot.commands.runIntake;
+import frc.robot.commands.clearJam;
+
+import frc.robot.subsystems.sparkMax;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-/**
+/*
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
@@ -21,15 +34,20 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final shooter m_shooter = new shooter();
+  private final sparkMax m_sparkMax = new sparkMax();
+  private final limelight m_Limelight = new limelight();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final GenericHID m_driverController = new GenericHID(0); // 0 is the USB Port to be used as indicated on the Driver Station
+      
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    m_Limelight.setDefaultCommand(new limelightDistance(m_Limelight));
   }
 
   /**
@@ -42,13 +60,14 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    final JoystickButton shooter = new JoystickButton(m_driverController, XboxController.Button.kB.value);
+    final JoystickButton taker = new JoystickButton(m_driverController, XboxController.Button.kA.value);
+    final JoystickButton clearJam = new JoystickButton(m_driverController, XboxController.Button.kX.value);
+
+    shooter.toggleOnTrue(new runOuttake(m_shooter));
+    taker.toggleOnTrue(new runIntake(m_shooter));
+    clearJam.toggleOnTrue(new clearJam(m_shooter));
   }
 
   /**

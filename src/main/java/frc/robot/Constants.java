@@ -15,5 +15,11 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final double MotorSpeed = 0.69;
+    public static String canivoreName = "frc5126";
+  }
+  public static class shooter {
+    public static final double IntakeSpeed = 0.5;
+    public static final double OuttakeSpeed = 0.5;
   }
 }
