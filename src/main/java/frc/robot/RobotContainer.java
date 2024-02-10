@@ -25,9 +25,6 @@ import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Swerve.CommandSwerveDrivetrain;
-import frc.robot.Swerve.Telemetry;
-import frc.robot.Swerve.TunerConstants;
 
 public class RobotContainer {
   //Subsystems
@@ -38,43 +35,11 @@ public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(Constants.OperatorConstants.DriverControllerPort);
   private final GenericHID m_ButtonsController = new GenericHID(Constants.OperatorConstants.ButtonsControllerPort);
 
-  //Swerve
-  private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(Constants.SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(Constants.SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  private final Telemetry logger = new Telemetry(Constants.SwerveConstants.MaxSpeed);
-
   public RobotContainer() {
     configureBindings();
   }
 
   private void configureBindings() {
-    //Swerve and driving
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-m_driverController.getLeftY() * Constants.SwerveConstants.MaxSpeed) // Drive forward with
-                                                                                           // negative Y (forward)
-            .withVelocityY(-m_driverController.getLeftX() * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-m_driverController.getRightX() * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
-        ));
-
-    m_driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    m_driverController.b().whileTrue(drivetrain
-        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))));
-
-    // reset the field-centric heading on left bumper press
-    m_driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-
-    if (Utils.isSimulation()) {
-      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
-    }
-    drivetrain.registerTelemetry(logger::telemeterize);
-
     //Buttons Controller
     final JoystickButton Intake2Button = new JoystickButton(m_ButtonsController, XboxController.Button.kA.value);    
       Intake2Button.toggleOnTrue(new Intake2(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
