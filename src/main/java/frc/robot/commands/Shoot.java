@@ -17,7 +17,7 @@ public class Shoot extends Command {
 
     public Shoot(Shooter subsystem) {
         m_subsystem = subsystem;
-        //addRequirements(subsystem);
+        addRequirements(subsystem);
     }
 
     @Override
@@ -28,10 +28,12 @@ public class Shoot extends Command {
     @Override
     public void execute() {
         m_subsystem.setShooterRPS();
-        Timer.delay(5);
-        if(m_subsystem.BackSeesNote()){
-            m_subsystem.ManualIntakeSpeed(0.5);
-        }
+
+        Timer.delay(3);
+        m_subsystem.ManualIntakeSpeed(0.7);
+        Timer.delay(1);
+
+        isFinished = true;
     }
 
     @Override

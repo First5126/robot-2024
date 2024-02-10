@@ -12,7 +12,7 @@ public class Intake2 extends Command {
 
     public Intake2(Shooter subsystem) {
         m_subsystem = subsystem;
-        //addRequirements(subsystem);
+        addRequirements(subsystem);
     }
 
     @Override

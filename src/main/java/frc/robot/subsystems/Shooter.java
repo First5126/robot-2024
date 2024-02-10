@@ -29,14 +29,16 @@ public class Shooter extends SubsystemBase {
     private double AverageShooterSpeed;
     public Shooter() {
         LeftShoot = new TalonFX(5);
+            LeftShoot.setInverted(false);
         RightShoot = new TalonFX(6);
+            RightShoot.setInverted(false);
         Intake = new CANSparkMax(5, MotorType.kBrushless);
-        ShooterRotationsPerSecond = 0;
+            Intake.setInverted(false);
         BackSensor = new DigitalInput(3);
         FrontSensor = new DigitalInput(1);
-
-        LeftShoot.setInverted(false);
-        RightShoot.setInverted(false);
+        ShooterRotationsPerSecond = 0;
+        
+        
         SmartDashboard.putNumber("Desired Speed", 0);
         SmartDashboard.putNumber("Intake Speed", 0);
     }
@@ -48,8 +50,6 @@ public class Shooter extends SubsystemBase {
         ShooterRotationsPerSecond = SmartDashboard.getNumber("Desired Speed", 0.5);
         PickUpSpeed = SmartDashboard.getNumber("Pick Up Speed", 0.6);
         MoveNoteSpeed = SmartDashboard.getNumber("Move Note Speed", 0.15);
-        System.out.println("Pick Up Speed:" + PickUpSpeed + "    Move Note Speed: " + MoveNoteSpeed);
-        System.out.println("Intake Speed:" + Intake.get());
         SmartDashboard.putBoolean("Back Sensor", BackSensor.get());
         SmartDashboard.putBoolean("Front Sensor", FrontSensor.get());
     }
