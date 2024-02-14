@@ -12,10 +12,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.Intake;
 import frc.robot.commands.Intake2;
 import frc.robot.commands.Shoot;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -43,13 +43,13 @@ public class RobotContainer {
     //Buttons Controller
     final JoystickButton Intake2Button = new JoystickButton(m_ButtonsController, XboxController.Button.kA.value);    
       Intake2Button.toggleOnTrue(new Intake2(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+
     final JoystickButton ShootButton = new JoystickButton(m_ButtonsController, XboxController.Button.kB.value);    
       ShootButton.toggleOnTrue(new Shoot(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-      final JoystickButton IntakeButton = new JoystickButton(m_ButtonsController, XboxController.Button.kY.value);    
-      IntakeButton.toggleOnTrue(new Intake(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
   }
   
   public Command getAutonomousCommand() {
     return Autos.exampleAuto(m_exampleSubsystem);
   }
 }
+

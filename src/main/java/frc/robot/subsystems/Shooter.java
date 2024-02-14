@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
@@ -15,9 +17,12 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
 
 public class Shooter extends SubsystemBase {
+
     private TalonFX LeftShoot;
     private TalonFX RightShoot;
     private CANSparkMax Intake;
@@ -26,40 +31,67 @@ public class Shooter extends SubsystemBase {
     private double MoveNoteSpeed;
     private DigitalInput BackSensor;
     private DigitalInput FrontSensor;
-    private double AverageShooterSpeed;
+    private double AverageShooterVelocity;
+    private Slot0Configs slot0Configs;
+    private VelocityVoltage velocityVoltage;
+    private double goalRPS;
+
+
+    private Encoder revThroughBore;
     public Shooter() {
+        
+        slot0Configs = new Slot0Configs();
+        slot0Configs.kP = Constants.ShooterConstants.kP;
+        slot0Configs.kI = Constants.ShooterConstants.kI;
+        slot0Configs.kD = Constants.ShooterConstants.kD;
+        slot0Configs.kA = Constants.ShooterConstants.kA;
+        slot0Configs.kS = Constants.ShooterConstants.kS;
+        slot0Configs.kV = Constants.ShooterConstants.kV;
+        slot0Configs.kG = Constants.ShooterConstants.kG;
+
+        velocityVoltage = new VelocityVoltage(0).withSlot(0);
         LeftShoot = new TalonFX(5);
-            LeftShoot.setInverted(false);
+            LeftShoot.setInverted(true);
+            LeftShoot.getConfigurator().apply(slot0Configs);
+
         RightShoot = new TalonFX(6);
-            RightShoot.setInverted(false);
+            RightShoot.setInverted(true);
+            RightShoot.getConfigurator().apply(slot0Configs);
+
         Intake = new CANSparkMax(5, MotorType.kBrushless);
             Intake.setInverted(false);
+
         BackSensor = new DigitalInput(3);
         FrontSensor = new DigitalInput(1);
-        ShooterRotationsPerSecond = 0;
-        
-        
-        SmartDashboard.putNumber("Desired Speed", 0);
-        SmartDashboard.putNumber("Intake Speed", 0);
+
+
+
+        //SmartDashboard.putNumber("Pick Up Speed", 0.0);
+        //SmartDashboard.putNumber("Move Note Speed", 0.0);
+        //SmartDashboard.putNumber("Goal RPS", 0);
+
+        revThroughBore = new Encoder(5, 6);
     }
 
     @Override
     public void periodic() {
         //SmartDashboard.putNumber("Desired Rotations Per Second", 0);
         //SmartDashboard.putNumber("Intake Speed", 0);
-        ShooterRotationsPerSecond = SmartDashboard.getNumber("Desired Speed", 0.5);
+        //ShooterRotationsPerSecond = SmartDashboard.getNumber("Desired Speed", 0.5);
         PickUpSpeed = SmartDashboard.getNumber("Pick Up Speed", 0.6);
         MoveNoteSpeed = SmartDashboard.getNumber("Move Note Speed", 0.15);
+        goalRPS = SmartDashboard.getNumber("Goal RPS", 29);
         SmartDashboard.putBoolean("Back Sensor", BackSensor.get());
         SmartDashboard.putBoolean("Front Sensor", FrontSensor.get());
+        SmartDashboard.putNumber("Arm Encoder", revThroughBore.getDistance());
     }
 
     @Override
     public void simulationPeriodic() {}
 
-    public void setShooterRPS(){
-        RightShoot.set(ShooterRotationsPerSecond);
-        LeftShoot.set(ShooterRotationsPerSecond);
+    public void setShooterRPS(double rps){
+        LeftShoot.setControl(velocityVoltage.withVelocity(rps));
+        RightShoot.setControl(velocityVoltage.withVelocity(rps));
     }
 
     public void SetPickUpSpeed(){
@@ -75,13 +107,11 @@ public class Shooter extends SubsystemBase {
         RightShoot.stopMotor();
     }
 
-    public double getShooterValue(){
-        AverageShooterSpeed = Math.abs(LeftShoot.get()) + Math.abs(RightShoot.get()) / 2;
-        return AverageShooterSpeed;
-    }
-
-    public double getDesiredShooterSpeed(){
-        return ShooterRotationsPerSecond;
+    public double getCurrentShooterVelocity(){
+        double leftVelo = Math.abs(LeftShoot.getVelocity().getValueAsDouble());
+        double rightVelo = Math.abs(RightShoot.getVelocity().getValueAsDouble());
+        AverageShooterVelocity = (leftVelo + rightVelo) / 2;
+        return AverageShooterVelocity;
     }
 
     public boolean BackSeesNote(){
@@ -105,7 +135,13 @@ public class Shooter extends SubsystemBase {
    public void ManualIntakeSpeed(double Speed){
     Intake.set(-Speed);
    }
-   public void SetMoveNoteSpeed(){
+    public void SetMoveNoteSpeed(){
         Intake.set(-MoveNoteSpeed);
     }
+
+    public double getGoalRPS(){
+        return goalRPS;
+    }
+
+
 }

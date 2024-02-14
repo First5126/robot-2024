@@ -13,27 +13,44 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class Shoot extends Command {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final Shooter m_subsystem;
-    private boolean isFinished; 
+    private double GoalRPS;
+    private boolean isFinished;
+    private double error;
+    private double DeadZone;
 
     public Shoot(Shooter subsystem) {
         m_subsystem = subsystem;
         addRequirements(subsystem);
+        
     }
 
     @Override
     public void initialize() {
         isFinished = false;
+        DeadZone = 2.5;
+        GoalRPS = m_subsystem.getGoalRPS();
+        System.out.println(GoalRPS);
     }
 
     @Override
     public void execute() {
-        m_subsystem.setShooterRPS();
+        m_subsystem.setShooterRPS(GoalRPS);
+        error = GoalRPS - m_subsystem.getCurrentShooterVelocity();
+        SmartDashboard.putNumber("Error", error);
+        SmartDashboard.putNumber("current velo", m_subsystem.getCurrentShooterVelocity());
 
-        Timer.delay(3);
-        m_subsystem.ManualIntakeSpeed(0.7);
-        Timer.delay(1);
+        if( error <= DeadZone && m_subsystem.BackSeesNote() ) {
+            m_subsystem.ManualIntakeSpeed(0.7);
+            Timer.delay(1);
 
-        isFinished = true;
+            isFinished = true;
+        }
+
+        if ( !m_subsystem.BackSeesNote() ){
+            isFinished = true;
+        }
+
+        
     }
 
     @Override
