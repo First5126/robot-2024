@@ -27,7 +27,7 @@ public class Shoot extends Command {
     @Override
     public void initialize() {
         isFinished = false;
-        DeadZone = 2.5;
+        DeadZone = 0.25;
         GoalRPS = m_subsystem.getGoalRPS();
         System.out.println(GoalRPS);
     }

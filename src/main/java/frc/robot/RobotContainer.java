@@ -17,6 +17,7 @@ import frc.robot.Constants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Intake2;
+import frc.robot.commands.Reverse;
 import frc.robot.commands.Shoot;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Shooter;
@@ -46,6 +47,9 @@ public class RobotContainer {
 
     final JoystickButton ShootButton = new JoystickButton(m_ButtonsController, XboxController.Button.kB.value);    
       ShootButton.toggleOnTrue(new Shoot(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+
+    final JoystickButton Reverse = new JoystickButton(m_ButtonsController, XboxController.Button.kX.value);
+      Reverse.toggleOnTrue(new Reverse(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
   }
   
   public Command getAutonomousCommand() {

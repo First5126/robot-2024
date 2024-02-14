@@ -27,6 +27,7 @@ public class Shooter extends SubsystemBase {
     private TalonFX RightShoot;
     private CANSparkMax Intake;
     private double ShooterRotationsPerSecond;
+    private double ReverseNoteSpeed;
     private double PickUpSpeed;
     private double MoveNoteSpeed;
     private DigitalInput BackSensor;
@@ -59,14 +60,14 @@ public class Shooter extends SubsystemBase {
             RightShoot.getConfigurator().apply(slot0Configs);
 
         Intake = new CANSparkMax(5, MotorType.kBrushless);
-            Intake.setInverted(false);
+            Intake.setInverted(true);
 
         BackSensor = new DigitalInput(3);
         FrontSensor = new DigitalInput(1);
 
 
 
-        //SmartDashboard.putNumber("Pick Up Speed", 0.0);
+        SmartDashboard.putNumber("Reverse note speed", 0.0);
         //SmartDashboard.putNumber("Move Note Speed", 0.0);
         //SmartDashboard.putNumber("Goal RPS", 0);
 
@@ -81,6 +82,7 @@ public class Shooter extends SubsystemBase {
         PickUpSpeed = SmartDashboard.getNumber("Pick Up Speed", 0.6);
         MoveNoteSpeed = SmartDashboard.getNumber("Move Note Speed", 0.15);
         goalRPS = SmartDashboard.getNumber("Goal RPS", 29);
+        ReverseNoteSpeed = SmartDashboard.getNumber("Reverse note speed", 0.0);
         SmartDashboard.putBoolean("Back Sensor", BackSensor.get());
         SmartDashboard.putBoolean("Front Sensor", FrontSensor.get());
         SmartDashboard.putNumber("Arm Encoder", revThroughBore.getDistance());
@@ -95,7 +97,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void SetPickUpSpeed(){
-        Intake.set(-PickUpSpeed);
+        Intake.set(PickUpSpeed);
     }
 
     public void zeroIntake(){
@@ -132,16 +134,19 @@ public class Shooter extends SubsystemBase {
         }
     }
 
-   public void ManualIntakeSpeed(double Speed){
-    Intake.set(-Speed);
-   }
+    public void ManualIntakeSpeed(double Speed){
+        Intake.set(Speed);
+    }
+
     public void SetMoveNoteSpeed(){
-        Intake.set(-MoveNoteSpeed);
+        Intake.set(MoveNoteSpeed);
     }
 
     public double getGoalRPS(){
         return goalRPS;
     }
 
-
+    public void ReverseTheNote(){
+        Intake.set(-ReverseNoteSpeed);
+    }
 }
