@@ -25,7 +25,7 @@ public class Intake2 extends Command {
         if (m_subsystem.FrontSeesNote() == false && (m_subsystem.BackSeesNote() == false)) {
             m_subsystem.SetPickUpSpeed();
         }
-        else if((m_subsystem.FrontSeesNote() == false) && (m_subsystem.BackSeesNote() == true )){
+        else if((m_subsystem.FrontSeesNote() == false) && (m_subsystem.BackSeesNote() == true)){
             isFinished = true;
         }
         else if((m_subsystem.FrontSeesNote() == true) && (m_subsystem.BackSeesNote() == false)){

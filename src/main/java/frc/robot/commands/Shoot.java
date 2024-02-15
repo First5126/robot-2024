@@ -4,6 +4,9 @@
 
 package frc.robot.commands;
 
+import frc.robot.ShooterSetpoint;
+import frc.robot.ShooterSetpointConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,7 +30,10 @@ public class Shoot extends Command {
     @Override
     public void initialize() {
         isFinished = false;
+        ShooterSetpoint t = ShooterSetpointConstants.getInstance().getShooterSetpointElement(0);
+    
         DeadZone = 0.25;
+        //DeadZone = ShooterSetpointConstants.getInstance().getShooterSetPoints()[0].getDistance();
         GoalRPS = m_subsystem.getGoalRPS();
         System.out.println(GoalRPS);
     }
@@ -40,7 +46,7 @@ public class Shoot extends Command {
         SmartDashboard.putNumber("current velo", m_subsystem.getCurrentShooterVelocity());
 
         if( error <= DeadZone && m_subsystem.BackSeesNote() ) {
-            m_subsystem.ManualIntakeSpeed(0.7);
+            m_subsystem.ManualIntakeSpeed(0.8);
             Timer.delay(1);
 
             isFinished = true;
