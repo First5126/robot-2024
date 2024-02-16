@@ -7,16 +7,12 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.limitSwitchTest;
-import frc.robot.commands.runIntake;
-import frc.robot.commands.runShooter;
-import frc.robot.commands.runClearJam;
-import frc.robot.commands.runAmpOuttake;
-import frc.robot.subsystems.limitSwitches;
-import frc.robot.subsystems.shooter;
+import frc.robot.commands.RotateArm;
+import frc.robot.subsystems.Arm;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -29,12 +25,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final shooter m_Shooter = new shooter();
-  private final limitSwitches m_LimitSwitches = new limitSwitches();
-
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public final GenericHID m_driverController = new GenericHID(OperatorConstants.kDriverControllerPort);
 
+  public final Arm m_arm = new Arm();
   /* The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -57,10 +51,8 @@ public class RobotContainer {
     final JoystickButton clearJam = new JoystickButton(m_driverController, XboxController.Button.kX.value);
     final JoystickButton OuttakeAmp = new JoystickButton(m_driverController, XboxController.Button.kY.value);
   
-    Intake.toggleOnTrue(new runIntake(m_Shooter));
-    Outtake.toggleOnTrue(new runShooter(m_Shooter));
-    clearJam.toggleOnTrue(new limitSwitchTest(m_LimitSwitches));
-    OuttakeAmp.toggleOnTrue(new runAmpOuttake(m_Shooter));
+    Outtake.toggleOnTrue(new RotateArm(m_arm, 64).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    Intake.toggleOnTrue(new RotateArm(m_arm, 0).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
   }
 
   /**

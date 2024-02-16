@@ -1,45 +1,55 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
-  private PIDController pidController = new PIDController(1.2, 0.0, 0.02);
+  private Slot0Configs slot0Configs;
+
+  private final PositionVoltage positionVoltage;
   private final TalonFX leftMotorFx;
   private final TalonFX rightMotorFx;
   private final Encoder encoder;
   private double motorVal;
   private boolean spinning = false;
   public Arm() {
+    slot0Configs = new Slot0Configs();
+      slot0Configs.kP = Constants.armConstants.kP;
+      slot0Configs.kI = Constants.armConstants.kI;
+      slot0Configs.kD = Constants.armConstants.kD;
+      slot0Configs.kA = Constants.armConstants.kA;
+      slot0Configs.kG = Constants.armConstants.kG;
+      slot0Configs.kS = Constants.armConstants.kS;
+      slot0Configs.kV = Constants.armConstants.kV;
+    positionVoltage = new PositionVoltage(0).withSlot(0);
     leftMotorFx = new TalonFX(11, "frc5126");
-    rightMotorFx = new TalonFX(10, "frc5126");
+    rightMotorFx = new TalonFX(12, "frc5126");
       rightMotorFx.setInverted(true);
-    encoder = new Encoder(0, 1, true);
+    leftMotorFx.getConfigurator().apply(slot0Configs);
+    rightMotorFx.getConfigurator().apply(slot0Configs);
+
+    encoder = new Encoder(0, 1);
   }
   @Override
   public void periodic() {
-    motorVal = pidController.calculate(encoder.getDistance(), 90);
-    if (spinning == true) {
-      leftMotorFx.set(motorVal);
-      rightMotorFx.set(motorVal);
-    }
+    SmartDashboard.putNumber("Rev Encoder", encoder.getDistance());
   }
-  public boolean startRot() {
-    if (spinning == false){
-      spinning = true;
-    }
-    if (encoder.getDistance() == 90){
-      return true;
-    }
-    else{
-      return false;
-    }
+  public void startRot(double position){
+    leftMotorFx.setControl(positionVoltage.withPosition(position));
+    rightMotorFx.setControl(positionVoltage.withPosition(position));
   }
   public void endRot(){
-    spinning = false;
+    leftMotorFx.set(0);
+    rightMotorFx.set(0);
+  }
+  public void ResetEncoder(){
+    encoder.reset();
   }
 }
