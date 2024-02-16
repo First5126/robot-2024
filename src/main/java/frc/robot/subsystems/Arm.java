@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -30,10 +31,10 @@ public class Arm extends SubsystemBase {
       slot0Configs.kV = Constants.armConstants.kV;
     positionVoltage = new PositionVoltage(0).withSlot(0);
     leftMotorFx = new TalonFX(11, "frc5126");
-    rightMotorFx = new TalonFX(12, "frc5126");
-      rightMotorFx.setInverted(true);
+    rightMotorFx = new TalonFX(10, "frc5126"); // changing to 12
+    // rightMotorFx.setInverted(true);
     leftMotorFx.getConfigurator().apply(slot0Configs);
-    rightMotorFx.getConfigurator().apply(slot0Configs);
+    // rightMotorFx.getConfigurator().apply(slot0Configs);
 
     encoder = new Encoder(0, 1);
   }
@@ -43,11 +44,10 @@ public class Arm extends SubsystemBase {
   }
   public void startRot(double position){
     leftMotorFx.setControl(positionVoltage.withPosition(position));
-    rightMotorFx.setControl(positionVoltage.withPosition(position));
+    rightMotorFx.setControl(new Follower(leftMotorFx.getDeviceID(), false));
   }
   public void endRot(){
     leftMotorFx.set(0);
-    rightMotorFx.set(0);
   }
   public void ResetEncoder(){
     encoder.reset();
