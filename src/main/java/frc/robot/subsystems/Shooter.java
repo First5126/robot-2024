@@ -10,6 +10,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -20,6 +21,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.Rev2mDistanceSensor.Port;
+import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
+import com.revrobotics.Rev2mDistanceSensor.Unit;
 
 public class Shooter extends SubsystemBase {
 
@@ -36,6 +41,9 @@ public class Shooter extends SubsystemBase {
     private Slot0Configs slot0Configs;
     private VelocityVoltage velocityVoltage;
     private double goalRPS;
+    private Pigeon2 Pigeon;
+    private Rev2mDistanceSensor DistanceSensor;
+
 
 
     private Encoder revThroughBore;
@@ -65,6 +73,7 @@ public class Shooter extends SubsystemBase {
         BackSensor = new DigitalInput(3);
         FrontSensor = new DigitalInput(1);
 
+        DistanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
 
 
         SmartDashboard.putNumber("Reverse note speed", 0.0);
@@ -72,6 +81,8 @@ public class Shooter extends SubsystemBase {
         //SmartDashboard.putNumber("Goal RPS", 0);
 
         revThroughBore = new Encoder(5, 6);
+
+        Pigeon = new Pigeon2(0);
     }
 
     @Override
@@ -86,6 +97,13 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putBoolean("Back Sensor", BackSensor.get());
         SmartDashboard.putBoolean("Front Sensor", FrontSensor.get());
         SmartDashboard.putNumber("Arm Encoder", revThroughBore.getDistance());
+        SmartDashboard.putNumber("Angle", Pigeon.getAngle());
+        SmartDashboard.putNumber("Rate of Rotation", Pigeon.getRate());
+        SmartDashboard.putNumber("Roll", Pigeon.getRoll().getValueAsDouble());
+        SmartDashboard.putNumber("Yaw", Pigeon.getYaw().getValueAsDouble());
+        SmartDashboard.putNumber("Pitch", Pigeon.getPitch().getValueAsDouble());
+        SmartDashboard.putNumber("Distance Sensor Range in inches", DistanceSensor.getRange(Unit.kInches));
+
     }
 
     @Override
