@@ -28,6 +28,13 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // The robot's subsystems and commands are defined here...
+  private final robotArm m_robotArm = new robotArm();
+  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final GenericHID m_driverController = new GenericHID(0);
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
   }
@@ -41,21 +48,27 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
 
+  private void configureBindings() {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+   final JoystickButton intake = new JoystickButton(m_driverController, XboxController.Button.kA.value);
+   intake.toggleOnTrue(new ArmIn(m_robotArm));
+   final JoystickButton outtake = new JoystickButton(m_driverController, XboxController.Button.kB.value);
+   outtake.toggleOnTrue(new ArmOut(m_robotArm));
+   final JoystickButton stuckIntake = new JoystickButton(m_driverController, XboxController.Button.kX.value);
+    stuckIntake.toggleOnTrue(new ArmIn(m_robotArm));
+   final JoystickButton outtakeamp  = new JoystickButton(m_driverController, XboxController.Button.kY.value);
+    outtakeamp.toggleOnTrue(new ArmOutAmp(m_robotArm));
   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
-   */
+   
+  */
+
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
