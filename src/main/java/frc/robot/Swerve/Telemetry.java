@@ -107,12 +107,4 @@ public class Telemetry {
             SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
         }
     }
-
-    public Pose2d getPose(){
-        return m_lastPose;
-    }
-/* 
-    public void resetOdometry(){
-        m_moduleMechanisms.
-    }*/
 }
