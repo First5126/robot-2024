@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,6 +14,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
@@ -45,8 +49,15 @@ public class RobotContainer {
 
   /* Path follower */
   private Command runAuto = drivetrain.getAutoPath("Tests");
+
+  //autoChooser
+  private final SendableChooser<Command> autoChooser;
   
   public RobotContainer() {
+    autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser.addOption("example path", PathPlannerPath.);
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+    //NamedCommands.registerCommand("exampleCommand", exampleSubsystem.exampleCommand());
     configureBindings();
   }
 
@@ -88,6 +99,7 @@ public class RobotContainer {
   }
   
   public Command getAutonomousCommand() {
-    return Autos.exampleAuto(m_exampleSubsystem);
+
+    return autoChooser.getSelected();
   }
 }
