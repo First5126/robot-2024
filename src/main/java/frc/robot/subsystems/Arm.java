@@ -27,7 +27,7 @@ public class Arm extends SubsystemBase {
       slot0Configs.kG = Constants.armConstants.kG;
       slot0Configs.kS = Constants.armConstants.kS;
       slot0Configs.kV = Constants.armConstants.kV;
-
+  
     positionVoltage = new PositionVoltage(0).withSlot(0);
     leftMotorFx = new TalonFX(11, "frc5126");
     leftMotorFx.getConfigurator().apply(slot0Configs);

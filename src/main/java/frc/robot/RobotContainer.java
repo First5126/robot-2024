@@ -45,26 +45,10 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Run the RunIntake Command when B is pressed or run the RunShooter command when X is pressed.
-    final JoystickButton Intake = new JoystickButton(m_driverController, XboxController.Button.kA.value);
-    final JoystickButton Outtake = new JoystickButton(m_driverController, XboxController.Button.kB.value);
-    final JoystickButton clearJam = new JoystickButton(m_driverController, XboxController.Button.kX.value);
-    final JoystickButton OuttakeAmp = new JoystickButton(m_driverController, XboxController.Button.kY.value);
+    final JoystickButton moveArmToNinetyDegrees = new JoystickButton(m_driverController, XboxController.Button.kX.value);
+    final JoystickButton resetArm = new JoystickButton(m_driverController, XboxController.Button.kY.value);
   
-    Outtake.toggleOnTrue(new RotateArm(m_arm, 64).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-    Intake.toggleOnTrue(new RotateArm(m_arm, 0).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    moveArmToNinetyDegrees.toggleOnTrue(new RotateArm(m_arm, 64).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    resetArm.toggleOnTrue(new RotateArm(m_arm, 0).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
   }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  /*
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
-  }
-  */
-
 }

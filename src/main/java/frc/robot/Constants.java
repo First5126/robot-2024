@@ -17,12 +17,12 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
   public static class armConstants {
-    public static final double kP = 4.6; // 4.8   
+    public static final double kP = 4.6;
     public static final double kI = 0.0;
     public static final double kD = 0.25;
     public static final double kA = 0.0;
     public static final double kG = 0.0;
     public static final double kS = 0.25;
-    public static final double kV = 0.1; // 0.2
+    public static final double kV = 0.1;
   }
 }

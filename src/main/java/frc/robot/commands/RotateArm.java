@@ -32,7 +32,6 @@ public class RotateArm extends Command {
   @Override
   public void execute() {
     m_subsystem.startRot(position);
-    //isFinished = true;
   }
 
   // Called once the command ends or is interrupted.
