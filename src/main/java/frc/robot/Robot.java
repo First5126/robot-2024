@@ -7,17 +7,19 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private Blinkin m_Blinkin;
 
   
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+    m_Blinkin = new Blinkin();
+
   }
 
   @Override
@@ -29,22 +31,24 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    m_Blinkin.PurpleHeartbeat();
+  }
 
   @Override
   public void disabledExit() {}
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    m_Blinkin.DoubleColorWave();
+  }
 
   @Override
   public void autonomousExit() {}
@@ -54,10 +58,13 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    m_Blinkin.DoubleSinelon();
+  }
 
   @Override
   public void teleopExit() {}
