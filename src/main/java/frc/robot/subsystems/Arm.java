@@ -14,8 +14,8 @@ public class Arm extends SubsystemBase {
   private Slot0Configs slot0Configs;
 
   private final PositionVoltage positionVoltage;
-  private final TalonFX leftMotorFx;
-  private final TalonFX rightMotorFx;
+  private final TalonFX leftMotorFx; // the motor on the left side of the arm
+  private final TalonFX rightMotorFx; // the motor on the right side of the arm
 
   private final Encoder encoder;
   public Arm() {
@@ -30,8 +30,8 @@ public class Arm extends SubsystemBase {
   
     positionVoltage = new PositionVoltage(0).withSlot(0);
     leftMotorFx = new TalonFX(11, "frc5126");
-    leftMotorFx.getConfigurator().apply(slot0Configs);
-    rightMotorFx = new TalonFX(10, "frc5126"); // changing to 12
+      leftMotorFx.getConfigurator().apply(slot0Configs);
+    rightMotorFx = new TalonFX(10, "frc5126"); // changing to a device ID of 12
 
     encoder = new Encoder(0, 1);
   }
