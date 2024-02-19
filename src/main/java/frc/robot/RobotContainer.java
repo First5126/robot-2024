@@ -15,7 +15,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.runIntake;
+import frc.robot.commands.runShooter;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -41,6 +44,9 @@ public class RobotContainer {
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final Telemetry logger = new Telemetry(Constants.SwerveConstants.MaxSpeed);
+
+  //Intake/outtake variables
+  private final shooter m_Shooter = new shooter(m_ButtonsController);
 
   public RobotContainer() {
     configureBindings();
@@ -71,6 +77,11 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
 
     //Buttons Controller
+    final JoystickButton intake = new JoystickButton(m_ButtonsController, XboxController.Button.kA.value);
+    final JoystickButton outtake = new JoystickButton(m_ButtonsController, XboxController.Button.kB.value);
+
+    intake.toggleOnTrue(new runIntake(m_Shooter, m_ButtonsController).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    outtake.toggleOnTrue(new runShooter(m_Shooter).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
   }
   
   public Command getAutonomousCommand() {
