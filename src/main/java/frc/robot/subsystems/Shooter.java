@@ -102,6 +102,7 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Roll", Pigeon.getRoll().getValueAsDouble());
         SmartDashboard.putNumber("Yaw", Pigeon.getYaw().getValueAsDouble());
         SmartDashboard.putNumber("Pitch", Pigeon.getPitch().getValueAsDouble());
+        SmartDashboard.putBoolean("Is in range", DistanceSensor.isRangeValid());
         SmartDashboard.putNumber("Distance Sensor Range in inches", DistanceSensor.getRange(Unit.kInches));
 
     }
