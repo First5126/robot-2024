@@ -17,7 +17,7 @@ public class Arm extends SubsystemBase {
   private final TalonFX leftMotorFx; // the motor on the left side of the arm
   private final TalonFX rightMotorFx; // the motor on the right side of the arm
 
-  private final Encoder encoder;
+  //private final Encoder encoder;
   public Arm() {
     slot0Configs = new Slot0Configs();
       slot0Configs.kP = Constants.armConstants.kP;
@@ -33,20 +33,23 @@ public class Arm extends SubsystemBase {
       leftMotorFx.getConfigurator().apply(slot0Configs);
     rightMotorFx = new TalonFX(10, "frc5126"); // changing to a device ID of 12
 
-    encoder = new Encoder(0, 1);
+    //encoder = new Encoder(0, 1);
+    rightMotorFx.setControl(new Follower(leftMotorFx.getDeviceID(), false));
   }
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Rev Encoder", encoder.getDistance());
+    //SmartDashboard.putNumber("Rev Encoder", encoder.getDistance());
   }
   public void startRot(double position){
     leftMotorFx.setControl(positionVoltage.withPosition(position));
-    rightMotorFx.setControl(new Follower(leftMotorFx.getDeviceID(), false));
+  }
+  public void manualRot(double speed){
+    leftMotorFx.set(speed);
   }
   public void endRot(){
     leftMotorFx.set(0);
   }
   public void ResetEncoder(){
-    encoder.reset();
+    //encoder.reset();
   }
 }

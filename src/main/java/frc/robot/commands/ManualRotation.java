@@ -1,18 +1,16 @@
 package frc.robot.commands;
 
-import frc.robot.subsystems.Arm;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Arm;
 
-/** An example command that uses an example subsystem. */
-public class RotateArm extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+public class ManualRotation extends Command {
   private final Arm m_subsystem;
-  private final double position;
+  private final double speed;
 
   private boolean isFinished;
 
-  public RotateArm(Arm subsystem, double position) {
-    this.position = position;
+  public ManualRotation(Arm subsystem, double speed) {
+    this.speed = speed;
     m_subsystem = subsystem;
   }
 
@@ -26,7 +24,7 @@ public class RotateArm extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.startRot(position);
+    m_subsystem.manualRot(speed);
   }
 
   // Called once the command ends or is interrupted.

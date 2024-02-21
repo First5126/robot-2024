@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ManualRotation;
 import frc.robot.commands.RotateArm;
 import frc.robot.subsystems.Arm;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -47,8 +48,14 @@ public class RobotContainer {
   private void configureBindings() {
     final JoystickButton moveArmToNinetyDegrees = new JoystickButton(m_driverController, XboxController.Button.kX.value);
     final JoystickButton resetArm = new JoystickButton(m_driverController, XboxController.Button.kY.value);
+
+    final JoystickButton manualSpinPositive = new JoystickButton(m_driverController, XboxController.Button.kA.value);
+    final JoystickButton manualSpinNegative = new JoystickButton(m_driverController, XboxController.Button.kB.value);
   
     moveArmToNinetyDegrees.toggleOnTrue(new RotateArm(m_arm, 64).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     resetArm.toggleOnTrue(new RotateArm(m_arm, 0).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+
+    manualSpinPositive.toggleOnTrue(new ManualRotation(m_arm, 0.3).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    manualSpinNegative.toggleOnTrue(new ManualRotation(m_arm, -0.3).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
   }
 }
