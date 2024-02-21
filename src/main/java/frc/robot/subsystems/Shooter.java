@@ -73,7 +73,7 @@ public class Shooter extends SubsystemBase {
         BackSensor = new DigitalInput(3);
         FrontSensor = new DigitalInput(1);
 
-        DistanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
+        DistanceSensor = new Rev2mDistanceSensor(Port.kMXP);
 
 
         SmartDashboard.putNumber("Reverse note speed", 0.0);
