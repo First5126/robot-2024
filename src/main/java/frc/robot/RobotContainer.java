@@ -18,7 +18,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.runIntake;
 import frc.robot.commands.runShooter;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.shooter;
+import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -46,7 +46,7 @@ public class RobotContainer {
   private final Telemetry logger = new Telemetry(Constants.SwerveConstants.MaxSpeed);
 
   //Intake/outtake variables
-  private final shooter m_Shooter = new shooter(m_ButtonsController);
+  private final Shooter m_Shooter = new Shooter(m_ButtonsController);
 
   public RobotContainer() {
     configureBindings();

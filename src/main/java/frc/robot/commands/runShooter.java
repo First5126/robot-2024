@@ -1,14 +1,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.shooter;
+import frc.robot.subsystems.Shooter;
 
 
 public class runShooter extends Command{
-  private final shooter m_Shooter;
+  private final Shooter m_Shooter;
   private boolean isFinished;
 
-  public runShooter(shooter shooter){
+  public runShooter(Shooter shooter){
     m_Shooter = shooter;
   }
   // Called when the command is initially scheduled.
