@@ -16,7 +16,7 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
-  public static class armConstants {
+  public static class ArmPID {
     public static final double kP = 4.6;
     public static final double kI = 0.0;
     public static final double kD = 0.25;
