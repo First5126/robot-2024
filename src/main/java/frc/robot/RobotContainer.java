@@ -54,7 +54,7 @@ public class RobotContainer {
     moveArmToNinetyDegrees.toggleOnTrue(new RotateArm(m_arm, 64).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     resetArm.toggleOnTrue(new RotateArm(m_arm, 0).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
-    manualSpinPositive.toggleOnTrue(new ManualRotation(m_arm, 0.3).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-    manualSpinNegative.toggleOnTrue(new ManualRotation(m_arm, -0.3).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    manualSpinPositive.whileTrue(new ManualRotation(m_arm, 0.3).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    manualSpinNegative.whileTrue(new ManualRotation(m_arm, -0.3).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
   }
 }

@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -34,7 +35,8 @@ public class Arm extends SubsystemBase {
   }
   @Override
   public void periodic() {
-    //SmartDashboard.putNumber("Rev Encoder", encoder.getDistance());
+    SmartDashboard.putNumber("Arm Velocity Left", leftMotorFx.getVelocity().getValueAsDouble());
+    SmartDashboard.putNumber("Arm Position", leftMotorFx.getPosition().getValueAsDouble());
   }
   public void startRot(double position){
     leftMotorFx.setControl(positionVoltage.withPosition(position));
