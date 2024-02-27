@@ -46,15 +46,15 @@ public class RobotContainer {
    */
   private void configureBindings() {
     final JoystickButton moveArmToNinetyDegrees = new JoystickButton(m_driverController, XboxController.Button.kX.value);
-    final JoystickButton resetArm = new JoystickButton(m_driverController, XboxController.Button.kY.value);
+    final JoystickButton homeArm = new JoystickButton(m_driverController, XboxController.Button.kY.value);
 
-    final JoystickButton manualSpinPositive = new JoystickButton(m_driverController, XboxController.Button.kA.value);
-    final JoystickButton manualSpinNegative = new JoystickButton(m_driverController, XboxController.Button.kB.value);
+    final JoystickButton manualRotationUp = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
+    final JoystickButton manualRotationDown = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
   
     moveArmToNinetyDegrees.toggleOnTrue(new RotateArm(m_arm, 64).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-    resetArm.toggleOnTrue(new RotateArm(m_arm, 0).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    homeArm.toggleOnTrue(new RotateArm(m_arm, 0).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
-    manualSpinPositive.whileTrue(new ManualRotation(m_arm, 0.3).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-    manualSpinNegative.whileTrue(new ManualRotation(m_arm, -0.3).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    manualRotationUp.whileTrue(new ManualRotation(m_arm, 0.3).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    manualRotationDown.whileTrue(new ManualRotation(m_arm, -0.3).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
   }
 }
