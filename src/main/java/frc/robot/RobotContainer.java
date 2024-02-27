@@ -8,7 +8,6 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ManualRotation;
 import frc.robot.commands.RotateArm;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.PotTest;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -40,13 +39,13 @@ public class RobotContainer {
   private final GenericHID m_ButtonsController = new GenericHID(Constants.OperatorConstants.ButtonsControllerPort);
 
   //Swerve
-  private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(Constants.SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(Constants.SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  private final Telemetry logger = new Telemetry(Constants.SwerveConstants.MaxSpeed);
+  //private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
+  //private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+  //    .withDeadband(Constants.SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(Constants.SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
+  //    .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+  //  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+  //private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  //private final Telemetry logger = new Telemetry(Constants.SwerveConstants.MaxSpeed);
 
   public RobotContainer() {
     configureBindings();
@@ -54,27 +53,27 @@ public class RobotContainer {
 
   private void configureBindings() {
     //Swerve and driving
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-(Math.signum(m_driverController.getLeftY()) * Math.pow(m_driverController.getLeftY(), 2)) * Constants.SwerveConstants.MaxSpeed) // Drive forward with
-                                                                                           // negative Y (forward)
-            .withVelocityY(-(Math.signum(m_driverController.getLeftX()) * Math.pow(m_driverController.getLeftX(), 2)) * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-m_driverController.getRightX() * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
-        ));
-
-    m_driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    m_driverController.b().whileTrue(drivetrain
-        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))));
-
+    //new Trigger(m_exampleSubsystem::exampleCondition)
+    //    .onTrue(new ExampleCommand(m_exampleSubsystem));
+    //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    //drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+    //    drivetrain.applyRequest(() -> drive.withVelocityX(-(Math.signum(m_driverController.getLeftY()) * Math.pow(m_driverController.getLeftY(), 2)) * Constants.SwerveConstants.MaxSpeed) // Drive forward with
+    //                                                                                       // negative Y (forward)
+    //        .withVelocityY(-(Math.signum(m_driverController.getLeftX()) * Math.pow(m_driverController.getLeftX(), 2)) * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
+    //        .withRotationalRate(-m_driverController.getRightX() * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
+    //    ));
+//
+    //m_driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    //m_driverController.b().whileTrue(drivetrain
+    //    .applyRequest(() -> point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))));
+//
     // reset the field-centric heading on left bumper press
-    m_driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-
-    if (Utils.isSimulation()) {
-      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
-    }
-    drivetrain.registerTelemetry(logger::telemeterize);
+    //m_driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+//
+    //if (Utils.isSimulation()) {
+    //  drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+    //}
+    //drivetrain.registerTelemetry(logger::telemeterize);
 
     //Buttons Controller
     final JoystickButton moveArmToNinetyDegrees = new JoystickButton(m_ButtonsController, XboxController.Button.kX.value);
