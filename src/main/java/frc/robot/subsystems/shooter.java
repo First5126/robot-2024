@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Shooter extends SubsystemBase{
+public class shooter extends SubsystemBase{
     private TalonFX FalconLeftShooter;
     private TalonFX FalconRightShooter;
 
@@ -31,25 +31,24 @@ public class Shooter extends SubsystemBase{
 
     public Timer timer = new Timer();
 
-    public Shooter(GenericHID controller){
+    public shooter(GenericHID controller){
         // Sets up the two sensors, telling them what channel to pull from
         StopSensor = new DigitalInput(2);
         SlowSensor = new DigitalInput(3);
 
         // Sets up the two TalonFX's - DEVICE ID'S MAY NOT BE CORRECT!
-        FalconLeftShooter = new TalonFX(5);
-        FalconRightShooter = new TalonFX(6);
+        FalconLeftShooter = new TalonFX(11);
+        FalconRightShooter = new TalonFX(10);
 
         // Sets up the IntakeSpark motor controller for the intake - DEVICE ID MAY NOT BE CORRECT!
-        IntakeSpark = new CANSparkMax(5, MotorType.kBrushless);
+        // IntakeSpark = new CANSparkMax(5, MotorType.kBrushless);
 
         m_driverController = controller;
     }
-    
     @Override
     public void periodic(){
         // Gets motor speed - soon to be hardcoded
-        outtakeSpeed = SmartDashboard.getNumber("Outtake Speed", 0.75);
+        outtakeSpeed = SmartDashboard.getNumber("Outtake Speed", 1);
         intakeSpeed = SmartDashboard.getNumber("Intake speed", 0.6);
 
         slowIntakeSpeed = SmartDashboard.getNumber("Slowed intake speed", 0.15);
@@ -69,38 +68,19 @@ public class Shooter extends SubsystemBase{
         FalconRightShooter.set(outtakeSpeed);
         FalconRightShooter.setInverted(true);
 
-        IntakeSpark.set(outtakeSpeed);
+        // IntakeSpark.set(outtakeSpeed);
     }
     public void disableShooter() {
         FalconLeftShooter.set(0);
         FalconRightShooter.set(0);
 
-        IntakeSpark.set(0);
+        //IntakeSpark.set(0);
     }
     public void enableIntake() {
-        IntakeSpark.set(intakeSpeed);
+        IntakeSpark.set(intakeSpeed);;
     }
     public void enableIntakeSlow() {
         IntakeSpark.set(slowIntakeSpeed);
-    }
-    public void clearJam(){
-        IntakeSpark.set(0.2);
-        IntakeSpark.setInverted(true);
-        
-        FalconLeftShooter.set(0.2);
-        FalconLeftShooter.setInverted(true);
-
-        FalconRightShooter.set(0.2);
-        FalconRightShooter.setInverted(false);
-    }
-    public void DisableClearJam(){
-        IntakeSpark.set(0);
-        IntakeSpark.setInverted(false);
-        
-        FalconLeftShooter.set(0);
-        FalconLeftShooter.setInverted(false);
-        FalconRightShooter.set(0);
-        FalconLeftShooter.setInverted(true);
     }
     public void disableIntake() {
         IntakeSpark.set(0);

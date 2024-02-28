@@ -3,16 +3,16 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.shooter;
 
 public class runIntake extends Command{
-  private final Shooter m_Shooter;
+  private final shooter m_Shooter;
   private final GenericHID m_driverController;
   private boolean isFinished;
 
   private boolean Slowed = false;
 
-  public runIntake(Shooter shooter, GenericHID controller){
+  public runIntake(shooter shooter, GenericHID controller){
     m_Shooter = shooter;
     m_driverController = controller;
   }
