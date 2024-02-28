@@ -97,10 +97,11 @@ public class LLSubsystem extends SubsystemBase {
     FrontId = BackTID.getInteger(0);
 
     // Intake Limelight Values
-    SmartDashboard.putNumber("(Inttake) Limelight IntakeTX", IntakeX);
-    SmartDashboard.putNumber("(Inttake) Limelight IntakeTY", IntakeY);
-    SmartDashboard.putNumber("(Inttake) Limelight Area", IntakeArea);
-    SmartDashboard.putNumber("(Inttake) Target Distance", IntakeDistanceFromTarget);
+    SmartDashboard.putNumber("(Intake) Limelight IntakeTX", IntakeX);
+    SmartDashboard.putNumber("(Intake) Limelight IntakeTY", IntakeY);
+    SmartDashboard.putNumber("(Intake) Limelight Area", IntakeArea);
+    SmartDashboard.putNumber("(Intake) Target Distance", IntakeDistanceFromTarget);
+    SmartDashboard.putNumber("(Intake) Limelight Angle", 0);
     intakeLimelightAngle = SmartDashboard.getNumber("(Intake) Limelight Angle", 9);
     
     // Back Limelight Values
@@ -108,6 +109,7 @@ public class LLSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("(Back) Limelight ty", BackY);
     SmartDashboard.putNumber("(Back) Limelight Area", BackArea);
     SmartDashboard.putNumber("(Back) Target Distance", BackDistanceFromTarget);
+    SmartDashboard.putNumber("(Back) Limelight Angle", 0);
     backLimelightAngle = SmartDashboard.getNumber("(Back) Limelight Angle", 9);
 
     // Front Limelight Values
@@ -115,30 +117,14 @@ public class LLSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("(Front) Limelight ty", FrontY);
     SmartDashboard.putNumber("(Front) Limelight Area", FrontArea);
     SmartDashboard.putNumber("(Front) Target Distance", FrontDistanceFromTarget);
+    SmartDashboard.putNumber("(Front) Limelight Angle", 0);
     FrontLimelightAngle = SmartDashboard.getNumber("(Front) Limelight Angle", 9);
   }
 
   public double getDistance(int LLId) { 
     double targetDegrees;
     double targetHeight = 0;
-    if (LLId == 1){
-      if (IntakeId == 1 || IntakeId == 2 || IntakeId == 5 || IntakeId == 6 || IntakeId == 9 || IntakeId == 10) {
-        targetHeight = 9.375;
-      }
-      else if (IntakeId == 3 || IntakeId == 4 || IntakeId == 7 || IntakeId == 8) {
-        targetHeight = 57.125;
-      }
-      else if (IntakeId >= 11) {
-        targetHeight = 52;
-      }
-      targetDegrees = intakeLimelightAngle + IntakeY;
-      double targetRadians = targetDegrees * (3.14159 / 180.0);
-
-      // calculates distance
-      IntakeDistanceFromTarget = (targetHeight - intakeLimelightHeight) / Math.tan(targetRadians);
-      return IntakeDistanceFromTarget;
-    }
-    else if (LLId == 2){
+    if (LLId == 2){
       if (BackId == 1 || BackId == 2 || BackId == 5 || BackId == 6 || BackId == 9 || BackId == 10) {
         targetHeight = 9.375;
       }
