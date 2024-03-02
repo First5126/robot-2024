@@ -21,13 +21,13 @@ public class Arm extends SubsystemBase {
 
   public Arm() {
     slot0Configs = new Slot0Configs();
-      slot0Configs.kP = Constants.ArmPID.kP;
-      slot0Configs.kI = Constants.ArmPID.kI;
-      slot0Configs.kD = Constants.ArmPID.kD;
-      slot0Configs.kA = Constants.ArmPID.kA;
-      slot0Configs.kG = Constants.ArmPID.kG;
-      slot0Configs.kS = Constants.ArmPID.kS;
-      slot0Configs.kV = Constants.ArmPID.kV;
+      slot0Configs.kP = Constants.ArmConstants.kP;
+      slot0Configs.kI = Constants.ArmConstants.kI;
+      slot0Configs.kD = Constants.ArmConstants.kD;
+      slot0Configs.kA = Constants.ArmConstants.kA;
+      slot0Configs.kG = Constants.ArmConstants.kG;
+      slot0Configs.kS = Constants.ArmConstants.kS;
+      slot0Configs.kV = Constants.ArmConstants.kV;
   
     positionVoltage = new PositionVoltage(0).withSlot(0);
     leftMotorFx = new TalonFX(10);
