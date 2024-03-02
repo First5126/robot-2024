@@ -14,11 +14,14 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private Blinkin m_Blinkin;
 
   
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+    m_Blinkin = new Blinkin();
+
   }
 
   @Override
@@ -30,7 +33,9 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    m_Blinkin.PurpleHeartbeat();
+  }
 
   @Override
   public void disabledExit() {}
@@ -44,7 +49,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    m_Blinkin.DoubleColorWave();
+  }
 
   @Override
   public void autonomousExit() {}
@@ -54,10 +61,13 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    m_Blinkin.DoubleSinelon();
+  }
 
   @Override
   public void teleopExit() {}
@@ -70,13 +80,17 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+
+  }
+
+  @Override
+  public void testExit() {
+
+  }
 
   @Override
   public void simulationInit() {}
-
-  @Override
-  public void testExit() {}
 
   @Override
   public void simulationPeriodic() {}
