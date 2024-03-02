@@ -63,5 +63,4 @@ public class LEDS_CANdle {
     candle.animate(new SingleFadeAnimation(r, g, b, 255, .3, 68, 0));
   }
 
-  public void 
 }
