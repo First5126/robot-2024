@@ -14,12 +14,14 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private LEDS_CANdle m_CANdle;
   private Blinkin m_Blinkin;
 
   
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+    m_CANdle = new LEDS_CANdle();
     m_Blinkin = new Blinkin();
 
   }
@@ -34,6 +36,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    m_CANdle.Larson(255, 56, 0);
     m_Blinkin.PurpleHeartbeat();
   }
 
@@ -66,6 +69,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    m_CANdle.Twinkle(255, 87, 51);
     m_Blinkin.DoubleSinelon();
   }
 
