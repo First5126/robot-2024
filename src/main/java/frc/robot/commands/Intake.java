@@ -5,12 +5,12 @@ import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
-public class Intake2 extends Command {
+public class Intake extends Command {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final Shooter m_subsystem;
     private boolean isFinished; 
 
-    public Intake2(Shooter subsystem) {
+    public Intake(Shooter subsystem) {
         m_subsystem = subsystem;
         addRequirements(subsystem);
     }
