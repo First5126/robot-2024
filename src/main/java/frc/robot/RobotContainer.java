@@ -8,7 +8,6 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ManualRotation;
 import frc.robot.commands.RotateArm;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.PotTest;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -53,7 +52,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    //Swerve and driving
+    // Swerve and driving
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
