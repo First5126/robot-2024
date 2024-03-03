@@ -63,15 +63,15 @@ public class Shooter extends SubsystemBase {
             LeftShoot.setInverted(true);
             LeftShoot.getConfigurator().apply(slot0Configs);
 
-        RightShoot = new TalonFX(6);
+        RightShoot = new TalonFX(16);
             RightShoot.setInverted(true);
             RightShoot.getConfigurator().apply(slot0Configs);
 
-        Intake = new CANSparkMax(5, MotorType.kBrushless);
+        Intake = new CANSparkMax(15, MotorType.kBrushless);
             Intake.setInverted(true);
 
         BackSensor = new DigitalInput(3);
-        FrontSensor = new DigitalInput(1);
+        FrontSensor = new DigitalInput(4);
 
         DistanceSensor = new Rev2mDistanceSensor(Port.kMXP);
 
@@ -80,7 +80,7 @@ public class Shooter extends SubsystemBase {
         //SmartDashboard.putNumber("Move Note Speed", 0.0);
         //SmartDashboard.putNumber("Goal RPS", 0);
 
-        revThroughBore = new Encoder(5, 6);
+        revThroughBore = new Encoder(1, 2);
 
         Pigeon = new Pigeon2(0);
     }
