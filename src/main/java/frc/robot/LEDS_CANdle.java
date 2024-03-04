@@ -28,7 +28,7 @@ public class LEDS_CANdle {
   private static void constructTheCandle(){
     try{
         if(candle == null){
-        candle = new CANdle(0);
+        candle = new CANdle(0, "frc5126");
         candle.configLEDType(LEDStripType.GRB);
         }
 

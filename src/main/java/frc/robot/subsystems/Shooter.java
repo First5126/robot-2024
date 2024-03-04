@@ -41,7 +41,7 @@ public class Shooter extends SubsystemBase {
     private Slot0Configs slot0Configs;
     private VelocityVoltage velocityVoltage;
     private double goalRPS;
-    private Pigeon2 Pigeon;
+    //private Pigeon2 Pigeon;
     private Rev2mDistanceSensor DistanceSensor;
 
 
@@ -59,7 +59,7 @@ public class Shooter extends SubsystemBase {
         slot0Configs.kG = Constants.ShooterConstants.kG;
 
         velocityVoltage = new VelocityVoltage(0).withSlot(0);
-        LeftShoot = new TalonFX(5);
+        LeftShoot = new TalonFX(15);
             LeftShoot.setInverted(true);
             LeftShoot.getConfigurator().apply(slot0Configs);
 
@@ -73,16 +73,16 @@ public class Shooter extends SubsystemBase {
         BackSensor = new DigitalInput(3);
         FrontSensor = new DigitalInput(4);
 
-        DistanceSensor = new Rev2mDistanceSensor(Port.kMXP);
+        //DistanceSensor = new Rev2mDistanceSensor(Port.kMXP);
 
 
         SmartDashboard.putNumber("Reverse note speed", 0.0);
         //SmartDashboard.putNumber("Move Note Speed", 0.0);
-        //SmartDashboard.putNumber("Goal RPS", 0);
+        SmartDashboard.putNumber("Goal RPS", 0);
 
         revThroughBore = new Encoder(1, 2);
 
-        Pigeon = new Pigeon2(0);
+        //Pigeon = new Pigeon2(0);
     }
 
     @Override
@@ -97,13 +97,13 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putBoolean("Back Sensor", BackSensor.get());
         SmartDashboard.putBoolean("Front Sensor", FrontSensor.get());
         SmartDashboard.putNumber("Arm Encoder", revThroughBore.getDistance());
-        SmartDashboard.putNumber("Angle", Pigeon.getAngle());
+        /*SmartDashboard.putNumber("Angle", Pigeon.getAngle());
         SmartDashboard.putNumber("Rate of Rotation", Pigeon.getRate());
         SmartDashboard.putNumber("Roll", Pigeon.getRoll().getValueAsDouble());
         SmartDashboard.putNumber("Yaw", Pigeon.getYaw().getValueAsDouble());
-        SmartDashboard.putNumber("Pitch", Pigeon.getPitch().getValueAsDouble());
-        SmartDashboard.putBoolean("Is in range", DistanceSensor.isRangeValid());
-        SmartDashboard.putNumber("Distance Sensor Range in inches", DistanceSensor.getRange(Unit.kInches));
+        SmartDashboard.putNumber("Pitch", Pigeon.getPitch().getValueAsDouble());*/
+        //SmartDashboard.putBoolean("Is in range", DistanceSensor.isRangeValid());
+        //SmartDashboard.putNumber("Distance Sensor Range in inches", DistanceSensor.getRange(Unit.kInches));
 
     }
 

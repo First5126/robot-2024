@@ -10,7 +10,7 @@ public class Blinkin {
   private Spark blinkinController;
 
   public Blinkin() {
-    blinkinController = new Spark(1);
+    //blinkinController = new Spark(1);
   }
 
   public void DoubleSinelon(){

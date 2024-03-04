@@ -30,9 +30,9 @@ public class Arm extends SubsystemBase {
       slot0Configs.kV = Constants.ArmConstants.kV;
   
     positionVoltage = new PositionVoltage(0).withSlot(0);
-    leftMotorFx = new TalonFX(10);
+    leftMotorFx = new TalonFX(10, "frc5126");
       leftMotorFx.getConfigurator().apply(slot0Configs);
-    rightMotorFx = new TalonFX(11); // changing to a device ID of 12
+    rightMotorFx = new TalonFX(11, "frc5126"); // changing to a device ID of 12
 
     rightMotorFx.setControl(new Follower(leftMotorFx.getDeviceID(), true));
   }
