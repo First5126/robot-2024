@@ -35,15 +35,18 @@ import frc.robot.Swerve.Telemetry;
 import frc.robot.Swerve.TunerConstants;
 
 public class RobotContainer {
+  
+  //Controllers
+  private final CommandXboxController m_driverController = new CommandXboxController(Constants.OperatorConstants.DriverControllerPort);
+  public final GenericHID m_ButtonsController = new GenericHID(Constants.OperatorConstants.ButtonsControllerPort);
+
+
   //Subsystems
-  private final Shooter m_ShooterSubsystem = new Shooter();
+  private final Shooter m_ShooterSubsystem = new Shooter(m_ButtonsController);
   public final Arm m_arm = new Arm();
 
 
-  //Controllers
-  private final CommandXboxController m_driverController = new CommandXboxController(Constants.OperatorConstants.DriverControllerPort);
-  private final GenericHID m_ButtonsController = new GenericHID(Constants.OperatorConstants.ButtonsControllerPort);
-
+  
   //Swerve
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -95,13 +98,13 @@ public class RobotContainer {
     */
     //Buttons Controller
     final JoystickButton Intake2Button = new JoystickButton(m_ButtonsController, XboxController.Button.kA.value);    
-      Intake2Button.toggleOnTrue(new Intake(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      Intake2Button.toggleOnTrue(new Intake(m_ShooterSubsystem, m_ButtonsController).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootButton = new JoystickButton(m_ButtonsController, XboxController.Button.kB.value);    
       ShootButton.toggleOnTrue(new Shoot(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton Reverse = new JoystickButton(m_ButtonsController, XboxController.Button.kX.value);
-      Reverse.toggleOnTrue(new Reverse(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      Reverse.whileTrue(new Reverse(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     /*final JoystickButton moveArmToNinetyDegrees = new JoystickButton(m_ButtonsController, XboxController.Button.kX.value);
     final JoystickButton homeArm = new JoystickButton(m_ButtonsController, XboxController.Button.kY.value);
 
