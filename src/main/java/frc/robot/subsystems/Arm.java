@@ -34,7 +34,7 @@ public class Arm extends SubsystemBase {
       leftMotorFx.getConfigurator().apply(slot0Configs);
     rightMotorFx = new TalonFX(11, "frc5126"); // changing to a device ID of 12
 
-    rightMotorFx.setControl(new Follower(leftMotorFx.getDeviceID(), true));
+    rightMotorFx.setControl(new Follower(leftMotorFx.getDeviceID(), false));
   }
   @Override
   public void periodic() {
