@@ -24,6 +24,7 @@ public class ManualRotation extends Command {
   @Override
   public void execute() {
     m_subsystem.manualRot(speed);
+    System.out.println("manualArm");
   }
 
   // Called once the command ends or is interrupted.
