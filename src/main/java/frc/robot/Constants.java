@@ -11,13 +11,24 @@ public final class Constants {
     public static final double MaxSpeed = 6; // 6 meters per second desired top speed
     public static final double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
   }
-  public static class ArmPID {
-    public static final double kP = 4.6;
-    public static final double kI = 0.0;
-    public static final double kD = 0.25;
-    public static final double kA = 0.0;
-    public static final double kG = 0.0;
-    public static final double kS = 0.25;
-    public static final double kV = 0.1;
+
+  public static class ShooterConstants {
+    public static final double kP = 0.11; //Output per unit of error in velocity (output/rps)
+    public static final double kI = 0; //Output per unit of integrated error in velocity (output/rotation)
+    public static final double kD = 0; //Output per unit of error derivative in velocity (output/(rps/s))
+    public static final double kA = 0; //Target Acceleration
+    public static final double kG = 0; //Gravity Feedforward gain
+    public static final double kS = 0.05; //to over come static friction (output)
+    public static final double kV = 0.12; //output per unit of requested velocity (output/rps)
+  }
+
+  public static class ArmConstants {
+    public static final double kP = 4.6; //Output per unit of error in velocity (output/rps)
+    public static final double kI = 0.0; //Output per unit of integrated error in velocity (output/rotation)
+    public static final double kD = 0.25; //Output per unit of error derivative in velocity (output/(rps/s))
+    public static final double kA = 0.0; //Target Acceleration
+    public static final double kG = 0.0; //Gravity Feedforward gain
+    public static final double kS = 0.25; //to over come static friction (output)
+    public static final double kV = 0.05; //output per unit of requested velocity (output/rps)
   }
 }
