@@ -24,8 +24,13 @@ public class ManualRotation extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.manualRot(speed);
-    System.out.println("manualArm");
+    if (m_subsystem.leftMotorFx.getForwardLimit().getValueAsDouble() == 0 || m_subsystem.rightMotorFx.getReverseLimit().getValueAsDouble() == 0){
+      isFinished = true;
+    }
+    else{
+      m_subsystem.manualRot(speed);
+      System.out.println("manualArm");
+    }
   }
 
   // Called once the command ends or is interrupted.
