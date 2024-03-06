@@ -74,6 +74,7 @@ public class Shooter extends SubsystemBase {
 
         Intake = new CANSparkMax(15, MotorType.kBrushless);
             Intake.setInverted(true);
+            ReverseNoteSpeed = 0.3;
 
         BackSensor = new DigitalInput(3);
         FrontSensor = new DigitalInput(4);
@@ -99,7 +100,7 @@ public class Shooter extends SubsystemBase {
         PickUpSpeed = SmartDashboard.getNumber("Pick Up Speed", 0.6);
         MoveNoteSpeed = SmartDashboard.getNumber("Move Note Speed", 0.15);
         goalRPS = SmartDashboard.getNumber("Goal RPS", 29);
-        ReverseNoteSpeed = SmartDashboard.getNumber("Reverse note speed", 0.0);
+
         SmartDashboard.putBoolean("Back Sensor", BackSensor.get());
         SmartDashboard.putBoolean("Front Sensor", FrontSensor.get());
         SmartDashboard.putNumber("Arm Encoder", revThroughBore.getDistance());
