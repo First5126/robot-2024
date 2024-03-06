@@ -26,16 +26,15 @@ public class Intake extends Command {
     public void initialize() {
         isFinished = false;
         Slowed = false; 
-        System.out.println("intake innit");
     }
 
     @Override
     public void execute() {
-        System.out.println("intake execute");
-        if (m_subsystem.FrontSeesNote() == false){
+        if (m_subsystem.FrontSeesNote()){
+            m_buttonsController.setRumble(RumbleType.kBothRumble, 1);
             Slowed = true;
         }
-        if (m_subsystem.BackSeesNote() == true){
+        if (m_subsystem.BackSeesNote()){
             m_buttonsController.setRumble(RumbleType.kBothRumble, 1);
             isFinished = true;
             m_subsystem.rumbling = true;
@@ -47,19 +46,7 @@ public class Intake extends Command {
         else{
             m_subsystem.SetPickUpSpeed();
         }
-        /* 
-        if (m_subsystem.FrontSeesNote() == false && (m_subsystem.BackSeesNote() == false)) {
-            m_subsystem.SetPickUpSpeed();
-        }
-        else if((m_subsystem.FrontSeesNote() == false) && (m_subsystem.BackSeesNote() == true)){
-            isFinished = true;
-        }
-        else if((m_subsystem.FrontSeesNote() == true) && (m_subsystem.BackSeesNote() == false)){
-            m_subsystem.SetMoveNoteSpeed();
-        }
-        else if(m_subsystem.BackSeesNote() == true){
-            isFinished = true;
-        }*/
+
     }
         
 

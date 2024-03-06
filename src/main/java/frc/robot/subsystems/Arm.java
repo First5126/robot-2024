@@ -49,19 +49,20 @@ public class Arm extends SubsystemBase {
     }
     else if (leftMotorFx.getForwardLimit().getValueAsDouble() == 0)
     {
-      startRot(63); 
+      return true;
+      //startRot(63); 
     }
     return false;
   }
   public boolean manualRot(double speed){
     leftMotorFx.set(speed);
-    if (rightMotorFx.getForwardLimit().getValueAsDouble() == 0){ 
+    
+    if (leftMotorFx.getForwardLimit().getValueAsDouble() == 0){ 
       // The lower limit switch
       return true;
     }
-    else if (leftMotorFx.getReverseLimit().getValueAsDouble() == 0){ 
-      // The upper limit switch. When this gets hit, it will set the arm back to 90 degrees using the PID loop function.
-      startRot(64);
+    else if (rightMotorFx.getReverseLimit().getValueAsDouble() == 0){ // The upper limit switch. When this gets hit, it will set the arm back to 90 degrees using the PID loop function. startRot(64);
+      return true;
     }
     return false;
   }
