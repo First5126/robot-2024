@@ -14,7 +14,10 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -41,13 +44,15 @@ public class Shooter extends SubsystemBase {
     private Slot0Configs slot0Configs;
     private VelocityVoltage velocityVoltage;
     private double goalRPS;
+    private GenericHID m_buttonsController;
     //private Pigeon2 Pigeon;
     private Rev2mDistanceSensor DistanceSensor;
-
+    public boolean rumbling;
+    public Timer timer = new Timer();
 
 
     private Encoder revThroughBore;
-    public Shooter() {
+    public Shooter(GenericHID controller) {
         
         slot0Configs = new Slot0Configs();
         slot0Configs.kP = Constants.ShooterConstants.kP;
@@ -74,7 +79,7 @@ public class Shooter extends SubsystemBase {
         FrontSensor = new DigitalInput(4);
 
         //DistanceSensor = new Rev2mDistanceSensor(Port.kMXP);
-
+        m_buttonsController = controller;
 
         SmartDashboard.putNumber("Reverse note speed", 0.0);
         //SmartDashboard.putNumber("Move Note Speed", 0.0);
@@ -83,6 +88,7 @@ public class Shooter extends SubsystemBase {
         revThroughBore = new Encoder(1, 2);
 
         //Pigeon = new Pigeon2(0);
+
     }
 
     @Override
@@ -104,9 +110,15 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Pitch", Pigeon.getPitch().getValueAsDouble());*/
         //SmartDashboard.putBoolean("Is in range", DistanceSensor.isRangeValid());
         //SmartDashboard.putNumber("Distance Sensor Range in inches", DistanceSensor.getRange(Unit.kInches));
-
+        if(rumbling){
+            if (timer.hasElapsed(1)){
+                timer.stop();
+                timer.reset();
+                m_buttonsController.setRumble(RumbleType.kBothRumble, 0);
+            }
+        
     }
-
+    }
     @Override
     public void simulationPeriodic() {}
 
