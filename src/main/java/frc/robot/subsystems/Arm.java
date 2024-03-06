@@ -16,8 +16,8 @@ public class Arm extends SubsystemBase {
   private Slot0Configs slot0Configs;
 
   private final PositionVoltage positionVoltage;
-  private final TalonFX leftMotorFx; // the motor on the left side of the arm
-  private final TalonFX rightMotorFx; // the motor on the right side of the arm
+  public final TalonFX leftMotorFx; // the motor on the left side of the arm
+  public final TalonFX rightMotorFx; // the motor on the right side of the arm
 
   public Arm() {
     slot0Configs = new Slot0Configs();
