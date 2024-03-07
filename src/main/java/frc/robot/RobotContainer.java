@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.Utils;
+
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -33,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Swerve.CommandSwerveDrivetrain;
 import frc.robot.Swerve.Telemetry;
 import frc.robot.Swerve.TunerConstants;
+import java.util.function.DoubleSupplier;
 
 public class RobotContainer {
   
@@ -54,7 +57,12 @@ public class RobotContainer {
   private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final Telemetry logger = new Telemetry(Constants.SwerveConstants.MaxSpeed);
-
+  private double xVelocity = -(Math.signum(m_driverController.getLeftY()) * Math.pow(m_driverController.getLeftY(), 2));
+  private double yVeocity = -(Math.signum(m_driverController.getLeftX()) * Math.pow(m_driverController.getLeftX(), 2));
+  private double Rotation = -(m_driverController.getRightX() * Math.pow(m_driverController.getRightX(), 2));
+  private SlewRateLimiter xSlewRate = new SlewRateLimiter(0);
+  private SlewRateLimiter ySlewRate = new SlewRateLimiter(0);
+  private SlewRateLimiter rotationSlewRate = new SlewRateLimiter(0);
   /* Path follower */
  // private Command runAuto = drivetrain.getAutoPath("Tests");
 
@@ -65,14 +73,22 @@ public class RobotContainer {
     configureBindings();
   }
 
+  private double deadband(double value){
+    if (Math.abs(value) < 0.1){
+      return 0;
+    }
+    else{
+    return value;
+    }
+  }
+
   private void configureBindings() {
     //Swerve and driving
-
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-m_driverController.getLeftY() * Constants.SwerveConstants.MaxSpeed) // Drive forward with
+        drivetrain.applyRequest(() -> drive.withVelocityX(xVelocity * Constants.SwerveConstants.MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
-            .withVelocityY(-m_driverController.getLeftX() * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-m_driverController.getRightX() * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
+            .withVelocityY( yVeocity * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate( Rotation * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
 
     m_driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
