@@ -59,10 +59,12 @@ public class RobotContainer {
  // private Command runAuto = drivetrain.getAutoPath("Tests");
 
   //autoChooser
-  //private final SendableChooser<Command> autoChooser;
+  private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   
   public RobotContainer() {
     configureBindings();
+    autoChooser.addOption("DansPath", drivetrain.getAutoPathPlannerFromFile("DanPath"));
+    SmartDashboard.putData(autoChooser);
   }
 
   private void configureBindings() {
@@ -121,8 +123,8 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
   }
   
-  /*public Command getAutonomousCommand() {
+  public Command getAutonomousCommand() {
 
     return autoChooser.getSelected();
-  }*/
+  }
 }
