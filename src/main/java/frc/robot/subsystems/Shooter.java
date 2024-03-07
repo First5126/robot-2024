@@ -24,10 +24,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
-import com.revrobotics.Rev2mDistanceSensor;
-import com.revrobotics.Rev2mDistanceSensor.Port;
-import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
-import com.revrobotics.Rev2mDistanceSensor.Unit;
+//import com.revrobotics.Rev2mDistanceSensor;
+//import com.revrobotics.Rev2mDistanceSensor.Port;
+//import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
+//import com.revrobotics.Rev2mDistanceSensor.Unit;
 
 public class Shooter extends SubsystemBase {
 
@@ -46,7 +46,7 @@ public class Shooter extends SubsystemBase {
     private double goalRPS;
     private GenericHID m_buttonsController;
     //private Pigeon2 Pigeon;
-    private Rev2mDistanceSensor DistanceSensor;
+    //private Rev2mDistanceSensor DistanceSensor;
     public boolean rumbling;
     public Timer timer = new Timer();
 
