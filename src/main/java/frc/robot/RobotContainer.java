@@ -57,6 +57,7 @@ public class RobotContainer {
 
     final JoystickButton NoteStuckOutake = new JoystickButton(m_driverController, XboxController.Button.kX.value);
     NoteStuckOutake.toggleOnTrue(new StuckOutake (m_NoteStuckOutake));
+    //
   }
 
 
