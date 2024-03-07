@@ -93,15 +93,6 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    final JoystickButton NoteStuckIntake = new JoystickButton(m_ButtonsController, XboxController.Button.kY.value);
-    NoteStuckIntake.toggleOnTrue(new StuckIntake (m_NoteStuckIntake));
-
-    final JoystickButton NoteStuckOutake = new JoystickButton(m_ButtonsController, XboxController.Button.kX.value);
-    NoteStuckOutake.toggleOnTrue(new StuckOutake (m_NoteStuckOutake));
-    //
-  }
-
-
     //Swerve and driving
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> drive.withVelocityX(xVelocity * Constants.SwerveConstants.MaxSpeed) // Drive forward with
@@ -136,8 +127,8 @@ public class RobotContainer {
     final JoystickButton ShootButton = new JoystickButton(m_ButtonsController, XboxController.Button.kB.value);    
       ShootButton.toggleOnTrue(new Shoot(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
-    final JoystickButton Reverse = new JoystickButton(m_ButtonsController, XboxController.Button.kX.value);
-      Reverse.whileTrue(new Reverse(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    //final JoystickButton Reverse = new JoystickButton(m_ButtonsController, XboxController.Button.kX.value);
+    //  Reverse.whileTrue(new Reverse(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     /*final JoystickButton moveArmToNinetyDegrees = new JoystickButton(m_ButtonsController, XboxController.Button.kX.value);
     final JoystickButton homeArm = new JoystickButton(m_ButtonsController, XboxController.Button.kY.value);
 */
@@ -149,6 +140,12 @@ public class RobotContainer {
 */
     manualRotationDown.whileTrue(new ManualRotation(m_arm, 0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     manualRotationUp.whileTrue(new ManualRotation(m_arm, -0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+
+    final JoystickButton NoteStuckIntake = new JoystickButton(m_ButtonsController, XboxController.Button.kY.value);
+    NoteStuckIntake.toggleOnTrue(new StuckIntake (m_NoteStuckIntake));
+
+    final JoystickButton NoteStuckOutake = new JoystickButton(m_ButtonsController, XboxController.Button.kX.value);
+    NoteStuckOutake.toggleOnTrue(new StuckOutake (m_NoteStuckOutake));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
