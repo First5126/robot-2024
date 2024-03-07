@@ -8,6 +8,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
 
 import edu.wpi.first.units.Dimensionless;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,8 +20,13 @@ public class Arm extends SubsystemBase {
   private final PositionVoltage positionVoltage;
   public final TalonFX leftMotorFx; // the motor on the left side of the arm
   public final TalonFX rightMotorFx; // the motor on the right side of the arm
-
+  //Introduce the Potentiometer that is on the Arm for fixed position reference
+  private final AnalogInput raw_a_pot = new AnalogInput(0);
+  private AnalogPotentiometer apot;
   public Arm() {
+
+    //Construct poteniometer object
+    apot = new AnalogPotentiometer(raw_a_pot);
     slot0Configs = new Slot0Configs();
       slot0Configs.kP = Constants.ArmConstants.kP;
       slot0Configs.kI = Constants.ArmConstants.kI;
@@ -40,6 +47,7 @@ public class Arm extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Arm Velocity Left", leftMotorFx.getVelocity().getValueAsDouble());
     SmartDashboard.putNumber("Arm Position", leftMotorFx.getPosition().getValueAsDouble());
+    SmartDashboard.putNumber("Arm Pot Position", apot.get());
   }
   public boolean startRot(double position){
     leftMotorFx.setControl(positionVoltage.withPosition(position));
