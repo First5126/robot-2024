@@ -44,7 +44,7 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Arm Velocity", leftMotorFx.getVelocity().getValueAsDouble());
-    SmartDashboard.putNumber("Potentiometer Position", potentiometer.get());
+    //SmartDashboard.putNumber("Potentiometer Position", potentiometer.get());
     SmartDashboard.putNumber("Arm Position", leftMotorFx.getPosition().getValueAsDouble());
   }
   public boolean startRot(double position){
