@@ -23,7 +23,7 @@ public class Arm extends SubsystemBase {
   public final AnalogPotentiometer potentiometer;
 
   public Arm() {
-    potentiometer = new AnalogPotentiometer(0);
+    //potentiometer = new AnalogPotentiometer(0);
     slot0Configs = new Slot0Configs();
       slot0Configs.kP = Constants.ArmConstants.kP;
       slot0Configs.kI = Constants.ArmConstants.kI;
@@ -35,7 +35,7 @@ public class Arm extends SubsystemBase {
   
     positionVoltage = new PositionVoltage(0).withSlot(0);
     leftMotorFx = new TalonFX(10, "frc5126");
-      leftMotorFx.setPosition(potentiometer.get());
+    //  leftMotorFx.setPosition(potentiometer.get());
       leftMotorFx.getConfigurator().apply(slot0Configs);
     rightMotorFx = new TalonFX(11, "frc5126"); // changing to a device ID of 12
 
