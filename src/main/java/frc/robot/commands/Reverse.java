@@ -17,20 +17,17 @@ public class Reverse extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("reverse innit");
         isFinished = false;
     }
 
     @Override
     public void execute() {
-        System.out.println("reverse execute");
         m_subsystem.ReverseTheNote();
         
     }
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("reverse end");
         m_subsystem.zeroIntake();
         isFinished = true;
     }

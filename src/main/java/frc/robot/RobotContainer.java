@@ -12,6 +12,7 @@ import frc.robot.subsystems.Arm;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.Utils;
 
@@ -28,6 +29,7 @@ import frc.robot.commands.Shoot;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -40,12 +42,12 @@ import java.util.function.DoubleSupplier;
 public class RobotContainer {
   
   //Controllers
-  private final CommandXboxController m_driverController = new CommandXboxController(Constants.OperatorConstants.DriverControllerPort);
+  private final CommandGenericHID m_driverController = new CommandGenericHID(Constants.OperatorConstants.DriverControllerPort);
   public final GenericHID m_ButtonsController = new GenericHID(Constants.OperatorConstants.ButtonsControllerPort);
 
 
   //Subsystems
-  private final Shooter m_ShooterSubsystem = new Shooter(m_ButtonsController);
+  private final Shooter m_ShooterSubsystem = new Shooter(m_ButtonsController, m_driverController);
   public final Arm m_arm = new Arm();
 
   //Swerve
@@ -57,19 +59,18 @@ public class RobotContainer {
   private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final Telemetry logger = new Telemetry(Constants.SwerveConstants.MaxSpeed);
-  private double xVelocity = -(Math.signum(m_driverController.getLeftY()) * Math.pow(m_driverController.getLeftY(), 2));
-  private double yVeocity = -(Math.signum(m_driverController.getLeftX()) * Math.pow(m_driverController.getLeftX(), 2));
-  private double Rotation = -(m_driverController.getRightX() * Math.pow(m_driverController.getRightX(), 2));
-  private SlewRateLimiter xSlewRate = new SlewRateLimiter(0);
-  private SlewRateLimiter ySlewRate = new SlewRateLimiter(0);
-  private SlewRateLimiter rotationSlewRate = new SlewRateLimiter(0);
+  private SlewRateLimiter xSlewRate = new SlewRateLimiter(1.5);
+  private SlewRateLimiter ySlewRate = new SlewRateLimiter(1.5);
+  private SlewRateLimiter rotationSlewRate = new SlewRateLimiter(1.5);
   /* Path follower */
- // private Command runAuto = drivetrain.getAutoPath("Tests");
+ private Command runAuto = drivetrain.getAutoPath("test");
 
   //autoChooser
-  //private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   
   public RobotContainer() {
+    autoChooser.addOption("Test PathPlanner", runAuto);
+    SmartDashboard.putData(autoChooser);
     configureBindings();
   }
 
@@ -85,18 +86,18 @@ public class RobotContainer {
   private void configureBindings() {
     //Swerve and driving
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(xVelocity * Constants.SwerveConstants.MaxSpeed) // Drive forward with
+        drivetrain.applyRequest(() -> drive.withVelocityX(xSlewRate.calculate(-(Math.signum(m_driverController.getHID().getRawAxis(1)) * Math.pow(m_driverController.getHID().getRawAxis(1), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
-            .withVelocityY( yVeocity * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate( Rotation * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
+            .withVelocityY( ySlewRate.calculate(-(Math.signum(m_driverController.getHID().getRawAxis(0)) * Math.pow(m_driverController.getHID().getRawAxis(0), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
 
-    m_driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    m_driverController.b().whileTrue(drivetrain
-        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))));
+    (m_driverController).button(1).whileTrue(drivetrain.applyRequest(() -> brake));
+    ( m_driverController).button(2).whileTrue(drivetrain
+        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-(m_driverController.getHID().getRawAxis(1)), -(m_driverController.getHID().getRawAxis(0))))));
 
     // reset the field-centric heading on left bumper press
-    m_driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    (m_driverController).button(5).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     drivetrain.registerTelemetry(logger::telemeterize);
 
     m_driverController.pov(0).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
@@ -111,8 +112,8 @@ public class RobotContainer {
     m_driverController.start().and(m_driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
     */
     //Buttons Controller
-    final JoystickButton Intake2Button = new JoystickButton(m_ButtonsController, XboxController.Button.kA.value);    
-      Intake2Button.toggleOnTrue(new Intake(m_ShooterSubsystem, m_ButtonsController).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    final JoystickButton IntakeButton = new JoystickButton(m_ButtonsController, XboxController.Button.kA.value);    
+      IntakeButton.toggleOnTrue(new Intake(m_ShooterSubsystem, m_ButtonsController, m_driverController).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootButton = new JoystickButton(m_ButtonsController, XboxController.Button.kB.value);    
       ShootButton.toggleOnTrue(new Shoot(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
@@ -137,8 +138,8 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
   }
   
-  /*public Command getAutonomousCommand() {
+  public Command getAutonomousCommand() {
 
     return autoChooser.getSelected();
-  }*/
+  }
 }
