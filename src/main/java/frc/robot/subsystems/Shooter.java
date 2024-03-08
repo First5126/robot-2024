@@ -18,9 +18,12 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
@@ -34,7 +37,6 @@ public class Shooter extends SubsystemBase {
     private TalonFX LeftShoot;
     private TalonFX RightShoot;
     private CANSparkMax Intake;
-    private double ShooterRotationsPerSecond;
     private double ReverseNoteSpeed;
     private double PickUpSpeed;
     private double MoveNoteSpeed;
@@ -45,6 +47,7 @@ public class Shooter extends SubsystemBase {
     private VelocityVoltage velocityVoltage;
     private double goalRPS;
     private GenericHID m_buttonsController;
+    private CommandGenericHID m_driverController;
     //private Pigeon2 Pigeon;
     private Rev2mDistanceSensor DistanceSensor;
     public boolean rumbling;
@@ -52,7 +55,7 @@ public class Shooter extends SubsystemBase {
 
 
     private Encoder revThroughBore;
-    public Shooter(GenericHID controller) {
+    public Shooter(GenericHID controller, CommandGenericHID m_driverController2) {
         
         slot0Configs = new Slot0Configs();
         slot0Configs.kP = Constants.ShooterConstants.kP;
@@ -81,6 +84,7 @@ public class Shooter extends SubsystemBase {
 
         //DistanceSensor = new Rev2mDistanceSensor(Port.kMXP);
         m_buttonsController = controller;
+        m_driverController = m_driverController2;
 
         SmartDashboard.putNumber("Reverse note speed", 0.0);
         //SmartDashboard.putNumber("Move Note Speed", 0.0);
@@ -116,6 +120,7 @@ public class Shooter extends SubsystemBase {
                 timer.stop();
                 timer.reset();
                 m_buttonsController.setRumble(RumbleType.kBothRumble, 0);
+                m_driverController.getHID().setRumble(RumbleType.kBothRumble, 0);
             }
         
     }
