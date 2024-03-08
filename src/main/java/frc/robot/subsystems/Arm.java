@@ -20,7 +20,7 @@ public class Arm extends SubsystemBase {
   public final TalonFX leftMotorFx; // the motor on the left side of the arm
   public final TalonFX rightMotorFx; // the motor on the right side of the arm
 
-  public final AnalogPotentiometer potentiometer;
+  //public final AnalogPotentiometer potentiometer;
 
   public Arm() {
     //potentiometer = new AnalogPotentiometer(0);
