@@ -21,10 +21,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
-import com.revrobotics.Rev2mDistanceSensor;
-import com.revrobotics.Rev2mDistanceSensor.Port;
-import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
-import com.revrobotics.Rev2mDistanceSensor.Unit;
 
 public class Shooter extends SubsystemBase {
 
@@ -42,7 +38,7 @@ public class Shooter extends SubsystemBase {
     private VelocityVoltage velocityVoltage;
     private double goalRPS;
     //private Pigeon2 Pigeon;
-    private Rev2mDistanceSensor DistanceSensor;
+    
 
 
 

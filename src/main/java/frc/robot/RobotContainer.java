@@ -9,6 +9,7 @@ import frc.robot.Swerve.Telemetry;
 import frc.robot.commands.ManualRotation;
 import frc.robot.commands.RotateArm;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -20,6 +21,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.commands.FindDistance;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Reverse;
 import frc.robot.commands.Shoot;
@@ -38,7 +40,7 @@ public class RobotContainer {
   //Subsystems
   private final Shooter m_ShooterSubsystem = new Shooter();
   public final Arm m_arm = new Arm();
-
+  public final LLSubsystem m_LlSubsystem = new LLSubsystem();
 
   //Controllers
   private final CommandXboxController m_driverController = new CommandXboxController(Constants.OperatorConstants.DriverControllerPort);
@@ -113,6 +115,8 @@ public class RobotContainer {
 
     /*manualRotationUp.whileTrue(new ManualRotation(m_arm, 0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     manualRotationDown.whileTrue(new ManualRotation(m_arm, -0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));*/
+    final JoystickButton llTest = new JoystickButton(m_ButtonsController, XboxController.Button.kY.value);
+      llTest.toggleOnTrue(new FindDistance(m_LlSubsystem, 0));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
