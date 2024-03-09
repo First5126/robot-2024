@@ -24,7 +24,7 @@ public class ManualRotation extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_subsystem.leftMotorFx.getForwardLimit().getValueAsDouble() == 0){
+    if (m_subsystem.MagLimitSwitch.get() == false){
       isFinished = true;
     }
     else if (m_subsystem.leftMotorFx.getReverseLimit().getValueAsDouble() == 0 && Math.signum(speed) == 1){
