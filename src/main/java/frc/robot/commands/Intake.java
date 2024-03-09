@@ -1,42 +1,61 @@
 package frc.robot.commands;
 
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Shooter;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.event.BooleanEvent;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 
 
 public class Intake extends Command {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final Shooter m_subsystem;
-    private boolean isFinished; 
+    private boolean isFinished;
+    private boolean Slowed = false;
+    private final CommandGenericHID m_buttonsController;
+    private final CommandGenericHID m_driverController;
 
-    public Intake(Shooter subsystem) {
+
+    public Intake(Shooter subsystem, CommandGenericHID controller, CommandGenericHID driver) {
         m_subsystem = subsystem;
+        m_buttonsController = controller;
+        m_driverController = driver;
         addRequirements(subsystem);
     }
 
     @Override
     public void initialize() {
         isFinished = false;
+        Slowed = false; 
     }
 
     @Override
     public void execute() {
-        if (m_subsystem.FrontSeesNote() == false && (m_subsystem.BackSeesNote() == false)) {
-            m_subsystem.SetPickUpSpeed();
+        if (m_subsystem.FrontSeesNote()){
+            m_buttonsController.getHID().setRumble(RumbleType.kBothRumble, 1);
+            m_driverController.getHID().setRumble(RumbleType.kBothRumble, 1);
+            Slowed = true;
         }
-        else if((m_subsystem.FrontSeesNote() == false) && (m_subsystem.BackSeesNote() == true)){
+        if (m_subsystem.BackSeesNote()){
+            m_buttonsController.getHID().setRumble(RumbleType.kBothRumble, 1);
+            m_driverController.getHID().setRumble(RumbleType.kBothRumble, 1);
             isFinished = true;
+            m_subsystem.rumbling = true;
+            m_subsystem.timer.start();
         }
-        else if((m_subsystem.FrontSeesNote() == true) && (m_subsystem.BackSeesNote() == false)){
+        else if (Slowed){
             m_subsystem.SetMoveNoteSpeed();
         }
-        else if(m_subsystem.BackSeesNote() == true){
-            isFinished = true;
+        else{
+            m_subsystem.SetPickUpSpeed();
         }
 
-        
     }
+        
 
     @Override
     public void end(boolean interrupted) {

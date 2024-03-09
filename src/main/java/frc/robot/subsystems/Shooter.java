@@ -14,10 +14,16 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
@@ -27,7 +33,6 @@ public class Shooter extends SubsystemBase {
     private TalonFX LeftShoot;
     private TalonFX RightShoot;
     private CANSparkMax Intake;
-    private double ShooterRotationsPerSecond;
     private double ReverseNoteSpeed;
     private double PickUpSpeed;
     private double MoveNoteSpeed;
@@ -37,13 +42,20 @@ public class Shooter extends SubsystemBase {
     private Slot0Configs slot0Configs;
     private VelocityVoltage velocityVoltage;
     private double goalRPS;
+    private CommandGenericHID m_buttonsController;
+    private CommandGenericHID m_driverController;
     //private Pigeon2 Pigeon;
+<<<<<<< HEAD
     
 
+=======
+    public boolean rumbling;
+    public Timer timer = new Timer();
+>>>>>>> Staging
 
 
     private Encoder revThroughBore;
-    public Shooter() {
+    public Shooter(CommandGenericHID controller, CommandGenericHID m_driverController2) {
         
         slot0Configs = new Slot0Configs();
         slot0Configs.kP = Constants.ShooterConstants.kP;
@@ -65,12 +77,14 @@ public class Shooter extends SubsystemBase {
 
         Intake = new CANSparkMax(15, MotorType.kBrushless);
             Intake.setInverted(true);
+            ReverseNoteSpeed = 0.3;
 
         BackSensor = new DigitalInput(3);
         FrontSensor = new DigitalInput(4);
 
         //DistanceSensor = new Rev2mDistanceSensor(Port.kMXP);
-
+        m_buttonsController = controller;
+        m_driverController = m_driverController2;
 
         SmartDashboard.putNumber("Reverse note speed", 0.0);
         //SmartDashboard.putNumber("Move Note Speed", 0.0);
@@ -79,6 +93,7 @@ public class Shooter extends SubsystemBase {
         revThroughBore = new Encoder(1, 2);
 
         //Pigeon = new Pigeon2(0);
+
     }
 
     @Override
@@ -89,7 +104,7 @@ public class Shooter extends SubsystemBase {
         PickUpSpeed = SmartDashboard.getNumber("Pick Up Speed", 0.6);
         MoveNoteSpeed = SmartDashboard.getNumber("Move Note Speed", 0.15);
         goalRPS = SmartDashboard.getNumber("Goal RPS", 29);
-        ReverseNoteSpeed = SmartDashboard.getNumber("Reverse note speed", 0.0);
+
         SmartDashboard.putBoolean("Back Sensor", BackSensor.get());
         SmartDashboard.putBoolean("Front Sensor", FrontSensor.get());
         SmartDashboard.putNumber("Arm Encoder", revThroughBore.getDistance());
@@ -100,9 +115,16 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Pitch", Pigeon.getPitch().getValueAsDouble());*/
         //SmartDashboard.putBoolean("Is in range", DistanceSensor.isRangeValid());
         //SmartDashboard.putNumber("Distance Sensor Range in inches", DistanceSensor.getRange(Unit.kInches));
-
+        if(rumbling){
+            if (timer.hasElapsed(1)){
+                timer.stop();
+                timer.reset();
+                m_buttonsController.getHID().setRumble(RumbleType.kBothRumble, 0);
+                m_driverController.getHID().setRumble(RumbleType.kBothRumble, 0);
+            }
+        
     }
-
+    }
     @Override
     public void simulationPeriodic() {}
 
@@ -164,4 +186,5 @@ public class Shooter extends SubsystemBase {
     public void ReverseTheNote(){
         Intake.set(-ReverseNoteSpeed);
     }
+
 }

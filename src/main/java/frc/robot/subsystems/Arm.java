@@ -6,8 +6,11 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.Dimensionless;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -16,10 +19,17 @@ public class Arm extends SubsystemBase {
   private Slot0Configs slot0Configs;
 
   private final PositionVoltage positionVoltage;
-  private final TalonFX leftMotorFx; // the motor on the left side of the arm
-  private final TalonFX rightMotorFx; // the motor on the right side of the arm
+  public final TalonFX leftMotorFx; // the motor on the left side of the arm
+  public final TalonFX rightMotorFx; // the motor on the right side of the arm
+  public double speed; 
+  public final AnalogPotentiometer potentiometer;
+  public DigitalInput MagLimitSwitch;
 
   public Arm() {
+    MagLimitSwitch = new DigitalInput(5);
+
+    potentiometer = new AnalogPotentiometer(0);
+
     slot0Configs = new Slot0Configs();
       slot0Configs.kP = Constants.ArmConstants.kP;
       slot0Configs.kI = Constants.ArmConstants.kI;
@@ -33,39 +43,36 @@ public class Arm extends SubsystemBase {
     leftMotorFx = new TalonFX(10, "frc5126");
       leftMotorFx.getConfigurator().apply(slot0Configs);
     rightMotorFx = new TalonFX(11, "frc5126"); // changing to a device ID of 12
-
-    rightMotorFx.setControl(new Follower(leftMotorFx.getDeviceID(), false));
+      rightMotorFx.setControl(new Follower(leftMotorFx.getDeviceID(), false));
   }
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Arm Velocity Left", leftMotorFx.getVelocity().getValueAsDouble());
+    SmartDashboard.putBoolean("Magnetic Limit Switch", MagLimitSwitch.get());
+    SmartDashboard.putNumber("arm speed", speed);
+    SmartDashboard.putNumber("reverse limit switch", leftMotorFx.getReverseLimit().getValueAsDouble());
+    SmartDashboard.putNumber("forward limit switch", leftMotorFx.getForwardLimit().getValueAsDouble());
+    SmartDashboard.putNumber("Arm Velocity", leftMotorFx.getVelocity().getValueAsDouble());
+    SmartDashboard.putNumber("Potentiometer Position", potentiometer.get());
     SmartDashboard.putNumber("Arm Position", leftMotorFx.getPosition().getValueAsDouble());
   }
-  public boolean startRot(double position){
+  public void startRot(double position){
     leftMotorFx.setControl(positionVoltage.withPosition(position));
-    if (rightMotorFx.getFault_ForwardHardLimit().getValueAsDouble() == 0){
-      // The lower limit switch
-      return true;
-    }
-    else if (leftMotorFx.getForwardLimit().getValueAsDouble() == 0)
-    {
-      startRot(63); 
-    }
-    return false;
   }
-  public boolean manualRot(double speed){
+  public void manualRot(double speed){
+    this.speed = speed;
     leftMotorFx.set(speed);
-    if (rightMotorFx.getForwardLimit().getValueAsDouble() == 0){ 
-      // The lower limit switch
-      return true;
-    }
-    else if (leftMotorFx.getReverseLimit().getValueAsDouble() == 0){ 
-      // The upper limit switch. When this gets hit, it will set the arm back to 90 degrees using the PID loop function.
-      startRot(64);
-    }
-    return false;
   }
+
   public void endRot(){
     leftMotorFx.set(0);
+  }
+
+  public boolean getMagneticLimitSwitch(){
+    if (MagLimitSwitch.get()){
+      return false;
+    }
+    else{
+      return true;
+    }
   }
 }

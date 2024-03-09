@@ -22,7 +22,6 @@ public class Reverse extends Command {
 
     @Override
     public void execute() {
-        
         m_subsystem.ReverseTheNote();
         
     }

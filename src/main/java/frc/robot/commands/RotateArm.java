@@ -25,7 +25,15 @@ public class RotateArm extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    isFinished = m_subsystem.startRot(position);
+    if ((m_subsystem.getMagneticLimitSwitch() && Math.signum(position) == -1) || (m_subsystem.leftMotorFx.getReverseLimit().getValueAsDouble() == 0 && Math.signum(position) == -1)){
+      isFinished = true;
+    }
+    else if (m_subsystem.leftMotorFx.getForwardLimit().getValueAsDouble() == 0 && Math.signum(position) == 1){
+      isFinished = true;
+    }
+    else{
+      m_subsystem.startRot(position);
+    }
   }
 
   // Called once the command ends or is interrupted.

@@ -6,15 +6,19 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Swerve.Telemetry;
-import frc.robot.commands.ManualRotation;
-import frc.robot.commands.RotateArm;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
+
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.Utils;
+
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -22,12 +26,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.commands.FindDistance;
-import frc.robot.commands.Intake;
-import frc.robot.commands.Reverse;
-import frc.robot.commands.Shoot;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -35,18 +37,26 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Swerve.CommandSwerveDrivetrain;
 import frc.robot.Swerve.Telemetry;
 import frc.robot.Swerve.TunerConstants;
+import frc.robot.commands.Intake;
+import frc.robot.commands.ManualRotation;
+import frc.robot.commands.Reverse;
+import frc.robot.commands.RotateArm;
+import frc.robot.commands.Shoot;
+
+import java.util.function.DoubleSupplier;
 
 public class RobotContainer {
+  
+  //Controllers
+  private final CommandGenericHID m_driverController = new CommandGenericHID(Constants.OperatorConstants.DriverControllerPort);
+  public final CommandGenericHID m_ButtonsController = new CommandGenericHID(Constants.OperatorConstants.ButtonsControllerPort);
+
+
   //Subsystems
-  private final Shooter m_ShooterSubsystem = new Shooter();
+  private final Shooter m_ShooterSubsystem = new Shooter(m_ButtonsController, m_driverController);
   public final Arm m_arm = new Arm();
   public final LLSubsystem m_LlSubsystem = new LLSubsystem();
-
-  //Controllers
-  private final CommandXboxController m_driverController = new CommandXboxController(Constants.OperatorConstants.DriverControllerPort);
-  private final GenericHID m_ButtonsController = new GenericHID(Constants.OperatorConstants.ButtonsControllerPort);
-
-  //Swerve``
+  //Swerve
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(Constants.SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(Constants.SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
@@ -55,66 +65,89 @@ public class RobotContainer {
   private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final Telemetry logger = new Telemetry(Constants.SwerveConstants.MaxSpeed);
-
+  private SlewRateLimiter xSlewRate = new SlewRateLimiter(1.5);
+  private SlewRateLimiter ySlewRate = new SlewRateLimiter(1.5);
+  private SlewRateLimiter rotationSlewRate = new SlewRateLimiter(1.5);
   /* Path follower */
- // private Command runAuto = drivetrain.getAutoPath("Tests");
+
 
   //autoChooser
-  //private final SendableChooser<Command> autoChooser;
+  private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   
   public RobotContainer() {
+
+    NamedCommands.registerCommand("Rotate Arm", new RotateArm(m_arm, 0));
+
+    autoChooser.addOption("Test", drivetrain.getAutoPath("Test"));
+    SmartDashboard.putData(autoChooser);
+
     configureBindings();
+  }
+
+  private double deadband(double value){
+    if (Math.abs(value) < 0.1){
+      return 0;
+    }
+    else{
+    return value;
+    }
   }
 
   private void configureBindings() {
     //Swerve and driving
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-m_driverController.getLeftY() * Constants.SwerveConstants.MaxSpeed) // Drive forward with
+        drivetrain.applyRequest(() -> drive.withVelocityX(xSlewRate.calculate(-(Math.signum(m_driverController.getHID().getRawAxis(1)) * Math.pow(m_driverController.getHID().getRawAxis(1), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
-            .withVelocityY(-m_driverController.getLeftX() * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-m_driverController.getRightX() * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
+            .withVelocityY( ySlewRate.calculate(-(Math.signum(m_driverController.getHID().getRawAxis(0)) * Math.pow(m_driverController.getHID().getRawAxis(0), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
 
-    m_driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    m_driverController.b().whileTrue(drivetrain
-        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))));
+    (m_driverController).button(1).whileTrue(drivetrain.applyRequest(() -> brake)); //a
+    ( m_driverController).button(2).whileTrue(drivetrain
+        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-(m_driverController.getHID().getRawAxis(1)), -(m_driverController.getHID().getRawAxis(0)))))); //b
 
     // reset the field-centric heading on left bumper press
-    m_driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    (m_driverController).button(5).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     drivetrain.registerTelemetry(logger::telemeterize);
 
     m_driverController.pov(0).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
     m_driverController.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
 
-     /* Bindings for drivetrain characterization */
-    /* These bindings require multiple buttons pushed to swap between quastatic and dynamic */
-    /* Back/Start select dynamic/quasistatic, Y/X select forward/reverse direction */
-    /*m_driverController.back().and(m_driverController.y()).whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    m_driverController.back().and(m_driverController.x()).whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    m_driverController.start().and(m_driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    m_driverController.start().and(m_driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    */
+
+
     //Buttons Controller
-    final JoystickButton Intake2Button = new JoystickButton(m_ButtonsController, XboxController.Button.kA.value);    
-      Intake2Button.toggleOnTrue(new Intake(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    final JoystickButton IntakeButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kA.value);    
+      IntakeButton.toggleOnTrue(new Intake(m_ShooterSubsystem, m_ButtonsController, m_driverController).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
-    final JoystickButton ShootButton = new JoystickButton(m_ButtonsController, XboxController.Button.kB.value);    
-      ShootButton.toggleOnTrue(new Shoot(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    final JoystickButton ROtateArm = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kY.value);
+      ROtateArm.toggleOnTrue(new RotateArm(m_arm, -43.824219).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
-    final JoystickButton Reverse = new JoystickButton(m_ButtonsController, XboxController.Button.kX.value);
-      Reverse.toggleOnTrue(new Reverse(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    final JoystickButton SubwooferShotButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kB.value);    
+      SubwooferShotButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, 58.48333).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+
+    final JoystickButton Reverse = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kX.value);
+      Reverse.whileTrue(new Reverse(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     /*final JoystickButton moveArmToNinetyDegrees = new JoystickButton(m_ButtonsController, XboxController.Button.kX.value);
+        moveArmToNinetyDegrees.toggleOnTrue(new RotateArm(m_arm, 64).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     final JoystickButton homeArm = new JoystickButton(m_ButtonsController, XboxController.Button.kY.value);
+        homeArm.toggleOnTrue(new RotateArm(m_arm, 0).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+*/
+    final JoystickButton manualRotationUp = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kRightBumper.value);
+      manualRotationUp.whileTrue(new ManualRotation(m_arm, 0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
-    /*final JoystickButton manualRotationDown = new JoystickButton(m_ButtonsController, XboxController.Button.kRightBumper.value);
-    final JoystickButton manualRotationUp = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftBumper.value);
-  
-    moveArmToNinetyDegrees.toggleOnTrue(new RotateArm(m_arm, 64).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-    homeArm.toggleOnTrue(new RotateArm(m_arm, 0).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    final JoystickButton manualRotationDown = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kLeftBumper.value);
+      manualRotationDown.whileTrue(new ManualRotation(m_arm, -0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
-    /*manualRotationUp.whileTrue(new ManualRotation(m_arm, 0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-    manualRotationDown.whileTrue(new ManualRotation(m_arm, -0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));*/
+    final Trigger AmpShotButton = new Trigger (m_ButtonsController.povLeft());
+      AmpShotButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, 15.95));
+    
+    final Trigger SubwooferButton = new Trigger (m_ButtonsController.povDown());
+      SubwooferButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, 58.483333));
+
+    final Trigger PodiumShotButton = new Trigger (m_ButtonsController.povRight());
+      PodiumShotButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, 63));
+
     final JoystickButton llTest = new JoystickButton(m_ButtonsController, XboxController.Button.kY.value);
       llTest.toggleOnTrue(new FindDistance(m_LlSubsystem, 0));
 
@@ -124,8 +157,8 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
   }
   
-  /*public Command getAutonomousCommand() {
+  public Command getAutonomousCommand() {
 
     return autoChooser.getSelected();
-  }*/
+  }
 }
