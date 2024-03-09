@@ -33,7 +33,7 @@ public class Shoot extends Command {
         isFinished = false;
         ShooterSetpoint t = ShooterSetpointConstants.getInstance().getShooterSetpointElement(0);
     
-        DeadZone = 0.25;
+        DeadZone = 2;
         //DeadZone = ShooterSetpointConstants.getInstance().getShooterSetPoints()[0].getDistance();
         GoalRPS = m_subsystem.getGoalRPS();
         System.out.println(GoalRPS);
@@ -48,12 +48,10 @@ public class Shoot extends Command {
 
         if( error <= DeadZone && m_subsystem.BackSeesNote() ) {
             m_subsystem.ManualIntakeSpeed(0.8);
-            Timer.delay(.2);
-
-            isFinished = true;
         }
 
         if ( !m_subsystem.BackSeesNote() ){
+            Timer.delay(1);
             isFinished = true;
         }
 
