@@ -46,7 +46,7 @@ public class Shooter extends SubsystemBase {
     private Slot0Configs slot0Configs;
     private VelocityVoltage velocityVoltage;
     private double goalRPS;
-    private GenericHID m_buttonsController;
+    private CommandGenericHID m_buttonsController;
     private CommandGenericHID m_driverController;
     //private Pigeon2 Pigeon;
     private Rev2mDistanceSensor DistanceSensor;
@@ -55,7 +55,7 @@ public class Shooter extends SubsystemBase {
 
 
     private Encoder revThroughBore;
-    public Shooter(GenericHID controller, CommandGenericHID m_driverController2) {
+    public Shooter(CommandGenericHID controller, CommandGenericHID m_driverController2) {
         
         slot0Configs = new Slot0Configs();
         slot0Configs.kP = Constants.ShooterConstants.kP;
@@ -119,7 +119,7 @@ public class Shooter extends SubsystemBase {
             if (timer.hasElapsed(1)){
                 timer.stop();
                 timer.reset();
-                m_buttonsController.setRumble(RumbleType.kBothRumble, 0);
+                m_buttonsController.getHID().setRumble(RumbleType.kBothRumble, 0);
                 m_driverController.getHID().setRumble(RumbleType.kBothRumble, 0);
             }
         

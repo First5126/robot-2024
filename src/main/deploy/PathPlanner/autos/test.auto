@@ -2,19 +2,26 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3459738631188973,
-      "y": 5.528332498106438
+      "x": 1.896942369383314,
+      "y": 6.466867406669286
     },
-    "rotation": 0
+    "rotation": 37.69424046668925
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "testpath"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Far left blue note"
+                }
+              }
+            ]
           }
         }
       ]

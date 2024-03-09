@@ -21,8 +21,9 @@ public class Shoot extends Command {
     private double error;
     private double DeadZone;
 
-    public Shoot(Shooter subsystem) {
+    public Shoot(Shooter subsystem, double RPS) {
         m_subsystem = subsystem;
+        GoalRPS = RPS;
         addRequirements(subsystem);
         
     }

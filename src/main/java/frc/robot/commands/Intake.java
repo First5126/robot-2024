@@ -15,11 +15,11 @@ public class Intake extends Command {
     private final Shooter m_subsystem;
     private boolean isFinished;
     private boolean Slowed = false;
-    private final GenericHID m_buttonsController;
+    private final CommandGenericHID m_buttonsController;
     private final CommandGenericHID m_driverController;
 
 
-    public Intake(Shooter subsystem, GenericHID controller, CommandGenericHID driver) {
+    public Intake(Shooter subsystem, CommandGenericHID controller, CommandGenericHID driver) {
         m_subsystem = subsystem;
         m_buttonsController = controller;
         m_driverController = driver;
@@ -35,12 +35,12 @@ public class Intake extends Command {
     @Override
     public void execute() {
         if (m_subsystem.FrontSeesNote()){
-            m_buttonsController.setRumble(RumbleType.kBothRumble, 1);
+            m_buttonsController.getHID().setRumble(RumbleType.kBothRumble, 1);
             m_driverController.getHID().setRumble(RumbleType.kBothRumble, 1);
             Slowed = true;
         }
         if (m_subsystem.BackSeesNote()){
-            m_buttonsController.setRumble(RumbleType.kBothRumble, 1);
+            m_buttonsController.getHID().setRumble(RumbleType.kBothRumble, 1);
             m_driverController.getHID().setRumble(RumbleType.kBothRumble, 1);
             isFinished = true;
             m_subsystem.rumbling = true;
