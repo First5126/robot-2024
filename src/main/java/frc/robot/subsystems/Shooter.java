@@ -45,13 +45,8 @@ public class Shooter extends SubsystemBase {
     private CommandGenericHID m_buttonsController;
     private CommandGenericHID m_driverController;
     //private Pigeon2 Pigeon;
-<<<<<<< HEAD
-    
-
-=======
     public boolean rumbling;
     public Timer timer = new Timer();
->>>>>>> Staging
 
 
     private Encoder revThroughBore;
@@ -116,7 +111,7 @@ public class Shooter extends SubsystemBase {
         //SmartDashboard.putBoolean("Is in range", DistanceSensor.isRangeValid());
         //SmartDashboard.putNumber("Distance Sensor Range in inches", DistanceSensor.getRange(Unit.kInches));
         if(rumbling){
-            if (timer.hasElapsed(1)){
+            if (timer.hasElapsed(2)){
                 timer.stop();
                 timer.reset();
                 m_buttonsController.getHID().setRumble(RumbleType.kBothRumble, 0);

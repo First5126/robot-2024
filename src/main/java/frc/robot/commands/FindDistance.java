@@ -12,6 +12,7 @@ public class FindDistance extends Command {
   public FindDistance(LLSubsystem LL_subsystem, int LLID) {
     m_LLSubsystem = LL_subsystem;
     LLId = LLID;
+    addRequirements(m_LLSubsystem);
   }
 
   // Called when the command is initially scheduled.
