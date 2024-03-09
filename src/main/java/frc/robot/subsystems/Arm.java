@@ -9,6 +9,7 @@ import com.ctre.phoenix6.signals.ForwardLimitValue;
 
 import edu.wpi.first.units.Dimensionless;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -21,8 +22,11 @@ public class Arm extends SubsystemBase {
   public final TalonFX rightMotorFx; // the motor on the right side of the arm
 
   public final AnalogPotentiometer potentiometer;
+  public DigitalInput MagLimitSwitch;
 
   public Arm() {
+    MagLimitSwitch = new DigitalInput(5);
+
     potentiometer = new AnalogPotentiometer(0);
     slot0Configs = new Slot0Configs();
       slot0Configs.kP = Constants.ArmConstants.kP;
@@ -42,6 +46,7 @@ public class Arm extends SubsystemBase {
   }
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("Magnetic Limit Switch", MagLimitSwitch.get());
     SmartDashboard.putNumber("Arm Velocity", leftMotorFx.getVelocity().getValueAsDouble());
     SmartDashboard.putNumber("Potentiometer Position", potentiometer.get());
     SmartDashboard.putNumber("Arm Position", leftMotorFx.getPosition().getValueAsDouble());

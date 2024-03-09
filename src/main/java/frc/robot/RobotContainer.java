@@ -51,26 +51,26 @@ public class RobotContainer {
   public final Arm m_arm = new Arm();
 
   //Swerve
-  private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(Constants.SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(Constants.SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  private final Telemetry logger = new Telemetry(Constants.SwerveConstants.MaxSpeed);
-  private SlewRateLimiter xSlewRate = new SlewRateLimiter(1.5);
-  private SlewRateLimiter ySlewRate = new SlewRateLimiter(1.5);
-  private SlewRateLimiter rotationSlewRate = new SlewRateLimiter(1.5);
-  /* Path follower */
- private Command runAuto = drivetrain.getAutoPath("test");
+  //private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
+  //private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+  //    .withDeadband(Constants.SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(Constants.SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
+  //    .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+  //private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+  //private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+  //private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  //private final Telemetry logger = new Telemetry(Constants.SwerveConstants.MaxSpeed);
+  //private SlewRateLimiter xSlewRate = new SlewRateLimiter(1.5);
+  //private SlewRateLimiter ySlewRate = new SlewRateLimiter(1.5);
+  //private SlewRateLimiter rotationSlewRate = new SlewRateLimiter(1.5);
+  ///* Path follower */
+ //private Command runAuto = drivetrain.getAutoPath("test");
 
   //autoChooser
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   
   public RobotContainer() {
-    autoChooser.addOption("Test PathPlanner", runAuto);
-    SmartDashboard.putData(autoChooser);
+    //autoChooser.addOption("Test PathPlanner", runAuto);
+    //SmartDashboard.putData(autoChooser);
     configureBindings();
   }
 
@@ -85,23 +85,23 @@ public class RobotContainer {
 
   private void configureBindings() {
     //Swerve and driving
-    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(xSlewRate.calculate(-(Math.signum(m_driverController.getHID().getRawAxis(1)) * Math.pow(m_driverController.getHID().getRawAxis(1), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive forward with
-                                                                                           // negative Y (forward)
-            .withVelocityY( ySlewRate.calculate(-(Math.signum(m_driverController.getHID().getRawAxis(0)) * Math.pow(m_driverController.getHID().getRawAxis(0), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
-        ));
-
-    (m_driverController).button(1).whileTrue(drivetrain.applyRequest(() -> brake));
-    ( m_driverController).button(2).whileTrue(drivetrain
-        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-(m_driverController.getHID().getRawAxis(1)), -(m_driverController.getHID().getRawAxis(0))))));
-
-    // reset the field-centric heading on left bumper press
-    (m_driverController).button(5).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-    drivetrain.registerTelemetry(logger::telemeterize);
-
-    m_driverController.pov(0).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
-    m_driverController.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
+    //drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+    //    drivetrain.applyRequest(() -> drive.withVelocityX(xSlewRate.calculate(-(Math.signum(m_driverController.getHID().getRawAxis(1)) * Math.pow(m_driverController.getHID().getRawAxis(1), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive forward with
+    //                                                                                       // negative Y (forward)
+    //        .withVelocityY( ySlewRate.calculate(-(Math.signum(m_driverController.getHID().getRawAxis(0)) * Math.pow(m_driverController.getHID().getRawAxis(0), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
+    //        .withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
+    //    ));
+//
+    //(m_driverController).button(1).whileTrue(drivetrain.applyRequest(() -> brake));
+    //( m_driverController).button(2).whileTrue(drivetrain
+    //    .applyRequest(() -> point.withModuleDirection(new Rotation2d(-(m_driverController.getHID().getRawAxis(1)), -(m_driverController.getHID().getRawAxis(0))))));
+//
+    //// reset the field-centric heading on left bumper press
+    //(m_driverController).button(5).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    //drivetrain.registerTelemetry(logger::telemeterize);
+//
+    //m_driverController.pov(0).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
+    //m_driverController.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
 
      /* Bindings for drivetrain characterization */
     /* These bindings require multiple buttons pushed to swap between quastatic and dynamic */
@@ -132,10 +132,10 @@ public class RobotContainer {
     manualRotationDown.whileTrue(new ManualRotation(m_arm, 0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     manualRotationUp.whileTrue(new ManualRotation(m_arm, -0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     
-    if (Utils.isSimulation()) {
-      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
-    }
-    drivetrain.registerTelemetry(logger::telemeterize);
+    //if (Utils.isSimulation()) {
+    //  drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+    //}
+    //drivetrain.registerTelemetry(logger::telemeterize);
   }
   
   public Command getAutonomousCommand() {
