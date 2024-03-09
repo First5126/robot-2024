@@ -4,17 +4,13 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.Swerve.Telemetry;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.LLSubsystem;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.event.BooleanEvent;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.Utils;
 
@@ -24,26 +20,20 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
 import frc.robot.commands.FindDistance;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Swerve.CommandSwerveDrivetrain;
-import frc.robot.Swerve.Telemetry;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.commands.Intake;
 import frc.robot.commands.ManualRotation;
 import frc.robot.commands.Reverse;
 import frc.robot.commands.RotateArm;
 import frc.robot.commands.Shoot;
-
-import java.util.function.DoubleSupplier;
 
 public class RobotContainer {
   
@@ -148,7 +138,7 @@ public class RobotContainer {
     final Trigger PodiumShotButton = new Trigger (m_ButtonsController.povRight());
       PodiumShotButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, 63));
 
-    final JoystickButton llTest = new JoystickButton(m_ButtonsController, XboxController.Button.kY.value);
+    final JoystickButton llTest = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kY.value);
       llTest.toggleOnTrue(new FindDistance(m_LlSubsystem, 0));
 
     if (Utils.isSimulation()) {
