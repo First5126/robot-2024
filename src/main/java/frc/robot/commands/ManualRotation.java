@@ -18,17 +18,19 @@ public class ManualRotation extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    
     isFinished = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_subsystem.MagLimitSwitch.get() == false){
+  
+    if ((m_subsystem.getMagneticLimitSwitch() && Math.signum(speed) == -1) || (m_subsystem.leftMotorFx.getReverseLimit().getValueAsDouble() == 0 && Math.signum(speed) == -1)){
       isFinished = true;
     }
-    else if (m_subsystem.leftMotorFx.getReverseLimit().getValueAsDouble() == 0 && Math.signum(speed) == 1){
-      m_subsystem.manualRot(speed);
+    else if (m_subsystem.leftMotorFx.getForwardLimit().getValueAsDouble() == 0 && Math.signum(speed) == 1){
+      isFinished = true;
     }
     else{
       m_subsystem.manualRot(speed);

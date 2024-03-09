@@ -181,4 +181,5 @@ public class Shooter extends SubsystemBase {
     public void ReverseTheNote(){
         Intake.set(-ReverseNoteSpeed);
     }
+
 }

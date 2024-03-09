@@ -48,7 +48,7 @@ public class Shoot extends Command {
 
         if( error <= DeadZone && m_subsystem.BackSeesNote() ) {
             m_subsystem.ManualIntakeSpeed(0.8);
-            Timer.delay(1);
+            Timer.delay(.2);
 
             isFinished = true;
         }

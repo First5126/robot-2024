@@ -113,17 +113,13 @@ public class RobotContainer {
     m_driverController.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
 
 
-     /* Bindings for drivetrain characterization */
-    /* These bindings require multiple buttons pushed to swap between quastatic and dynamic */
-    /* Back/Start select dynamic/quasistatic, Y/X select forward/reverse direction */
-    /*m_driverController.back().and(m_driverController.y()).whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    m_driverController.back().and(m_driverController.x()).whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    m_driverController.start().and(m_driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    m_driverController.start().and(m_driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    */
+
     //Buttons Controller
     final JoystickButton IntakeButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kA.value);    
       IntakeButton.toggleOnTrue(new Intake(m_ShooterSubsystem, m_ButtonsController, m_driverController).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+
+    final JoystickButton ROtateArm = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kY.value);
+      ROtateArm.toggleOnTrue(new RotateArm(m_arm, -43.824219).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton SubwooferShotButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kB.value);    
       SubwooferShotButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, 58.48333).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
@@ -136,10 +132,10 @@ public class RobotContainer {
         homeArm.toggleOnTrue(new RotateArm(m_arm, 0).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 */
     final JoystickButton manualRotationUp = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kRightBumper.value);
-      manualRotationUp.whileTrue(new ManualRotation(m_arm, -0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      manualRotationUp.whileTrue(new ManualRotation(m_arm, 0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton manualRotationDown = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kLeftBumper.value);
-      manualRotationDown.whileTrue(new ManualRotation(m_arm, 0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      manualRotationDown.whileTrue(new ManualRotation(m_arm, -0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final Trigger AmpShotButton = new Trigger (m_ButtonsController.povLeft());
       AmpShotButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, 15.95));
