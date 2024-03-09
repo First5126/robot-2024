@@ -10,6 +10,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.controls.Follower;
 
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
@@ -19,9 +20,12 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 
 public class SystemIdentification extends SubsystemBase {
-    private final TalonFX m_motorToTest = new TalonFX(Constants.TALON_FX_ID, Constants.CANBUS);
-    private final DutyCycleOut m_joystickControl = new DutyCycleOut(0);
+    private final TalonFX m_TalonLeft = new TalonFX(Constants.TALON_FX_ID_LEFT, Constants.CANBUS);
+    private final TalonFX m_TalonRight = new TalonFX(Constants.TALON_FX_ID_RIGHT, Constants.CANBUS);
+
     private final VoltageOut m_sysidControl = new VoltageOut(0);
+
+    //private ForwardQuasistatic m_ForwardQuasistatic = new ForwardQuasistatic();
 
     private SysIdRoutine m_SysIdRoutine =
         new SysIdRoutine(
@@ -32,30 +36,28 @@ public class SystemIdentification extends SubsystemBase {
                                        // Log state with Phoenix SignalLogger class
                 (state)->SignalLogger.writeString("state", state.toString())),
             new SysIdRoutine.Mechanism(
-                (Measure<Voltage> volts)-> m_motorToTest.setControl(m_sysidControl.withOutput(volts.in(Volts))),
+                (Measure<Voltage> volts)-> m_TalonLeft.setControl(m_sysidControl.withOutput(volts.in(Volts))),
                 null,
                 this));
 
     public SystemIdentification() {
         setName("Flywheel");
 
+        m_TalonRight.setControl(new Follower(m_TalonLeft.getDeviceID(), false));
+
         TalonFXConfiguration cfg = new TalonFXConfiguration();
-        m_motorToTest.getConfigurator().apply(cfg);
+        m_TalonLeft.getConfigurator().apply(cfg);
 
         /* Speed up signals for better charaterization data */
         BaseStatusSignal.setUpdateFrequencyForAll(250,
-            m_motorToTest.getPosition(),
-            m_motorToTest.getVelocity(),
-            m_motorToTest.getMotorVoltage());
+            m_TalonLeft.getPosition(),
+            m_TalonLeft.getVelocity(),
+            m_TalonLeft.getMotorVoltage());
 
         /* Optimize out the other signals, since they're not particularly helpful for us */
-        m_motorToTest.optimizeBusUtilization();
+        m_TalonLeft.optimizeBusUtilization();
 
         SignalLogger.start();
-    }
-
-    public Command joystickDriveCommand(DoubleSupplier output) {
-        return run(()->m_motorToTest.setControl(m_joystickControl.withOutput(output.getAsDouble())));
     }
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
         return m_SysIdRoutine.quasistatic(direction);
