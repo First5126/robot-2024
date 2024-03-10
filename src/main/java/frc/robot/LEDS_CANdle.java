@@ -3,7 +3,6 @@ package frc.robot;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.LarsonAnimation;
 import com.ctre.phoenix.led.SingleFadeAnimation;
-import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.TwinkleAnimation;
 

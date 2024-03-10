@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Shooter;
-import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj2.command.Command;
 
 

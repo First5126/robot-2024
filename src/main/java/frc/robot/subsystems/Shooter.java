@@ -4,29 +4,18 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
 
 public class Shooter extends SubsystemBase {
 
@@ -49,7 +38,6 @@ public class Shooter extends SubsystemBase {
     public Timer timer = new Timer();
 
 
-    private Encoder revThroughBore;
     public Shooter(CommandGenericHID controller, CommandGenericHID m_driverController2) {
         
         slot0Configs = new Slot0Configs();
@@ -73,43 +61,22 @@ public class Shooter extends SubsystemBase {
         Intake = new CANSparkMax(15, MotorType.kBrushless);
             Intake.setInverted(true);
             ReverseNoteSpeed = 0.3;
+            PickUpSpeed = 0.6;
+            MoveNoteSpeed = 0.15;
 
         BackSensor = new DigitalInput(3);
         FrontSensor = new DigitalInput(4);
 
-        //DistanceSensor = new Rev2mDistanceSensor(Port.kMXP);
         m_buttonsController = controller;
         m_driverController = m_driverController2;
-
-        SmartDashboard.putNumber("Reverse note speed", 0.0);
-        //SmartDashboard.putNumber("Move Note Speed", 0.0);
-        SmartDashboard.putNumber("Goal RPS", 0);
-
-        revThroughBore = new Encoder(1, 2);
-
-        //Pigeon = new Pigeon2(0);
-
     }
 
     @Override
     public void periodic() {
-        //SmartDashboard.putNumber("Desired Rotations Per Second", 0);
-        //SmartDashboard.putNumber("Intake Speed", 0);
-        //ShooterRotationsPerSecond = SmartDashboard.getNumber("Desired Speed", 0.5);
-        PickUpSpeed = SmartDashboard.getNumber("Pick Up Speed", 0.6);
-        MoveNoteSpeed = SmartDashboard.getNumber("Move Note Speed", 0.15);
-        goalRPS = SmartDashboard.getNumber("Goal RPS", 29);
 
         SmartDashboard.putBoolean("Back Sensor", BackSensor.get());
         SmartDashboard.putBoolean("Front Sensor", FrontSensor.get());
-        SmartDashboard.putNumber("Arm Encoder", revThroughBore.getDistance());
-        /*SmartDashboard.putNumber("Angle", Pigeon.getAngle());
-        SmartDashboard.putNumber("Rate of Rotation", Pigeon.getRate());
-        SmartDashboard.putNumber("Roll", Pigeon.getRoll().getValueAsDouble());
-        SmartDashboard.putNumber("Yaw", Pigeon.getYaw().getValueAsDouble());
-        SmartDashboard.putNumber("Pitch", Pigeon.getPitch().getValueAsDouble());*/
-        //SmartDashboard.putBoolean("Is in range", DistanceSensor.isRangeValid());
-        //SmartDashboard.putNumber("Distance Sensor Range in inches", DistanceSensor.getRange(Unit.kInches));
+
         if(rumbling){
             if (timer.hasElapsed(1)){
                 timer.stop();

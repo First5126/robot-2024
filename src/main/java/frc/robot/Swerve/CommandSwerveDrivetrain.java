@@ -98,6 +98,6 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     public void periodic(){
-        SmartDashboard.putData(this.getPigeon2());
+        //SmartDashboard.putData(this.getPigeon2());
     }
 }

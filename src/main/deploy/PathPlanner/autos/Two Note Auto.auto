@@ -1,0 +1,80 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.2654580294915574,
+      "y": 5.55472336015897
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Subwoofer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Subwoofer"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Home"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Center Subwoofer"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Podium"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Podium"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "test",
+  "choreoAuto": false
+}
