@@ -129,7 +129,7 @@ public class LLSubsystem extends SubsystemBase {
     double targetHeight = 0;
     if (LLId == 2){
       if (BackId == 1 || BackId == 2 || BackId == 5 || BackId == 6 || BackId == 9 || BackId == 10) {
-        targetHeight = SmartDashboard.getNumber("test AprilTag Hight", 8);
+        targetHeight = 9.375;
       }
       else if (BackId == 3 || BackId == 4 || BackId == 7 || BackId == 8) {
         targetHeight = 57.125;
@@ -138,9 +138,7 @@ public class LLSubsystem extends SubsystemBase {
         targetHeight = 52;
       }
       targetDegrees = backLimelightAngle + BackY;
-      SmartDashboard.putNumber("degrees", targetDegrees);
-      double targetRadians = targetDegrees * (Math.PI / 180.0);
-      SmartDashboard.putNumber("Radians", targetRadians);
+      double targetRadians = targetDegrees * (3.14159 / 180.0);
 
       // calculates distance
       BackDistanceFromTarget = (targetHeight - backLimelightHeight) / Math.tan(targetRadians);
