@@ -129,7 +129,7 @@ public class LLSubsystem extends SubsystemBase {
     double targetHeight = 0;
     if (LLId == 2){
       if (BackId == 1 || BackId == 2 || BackId == 5 || BackId == 6 || BackId == 9 || BackId == 10) {
-        targetHeight = 9.375;
+        targetHeight = 48.125;
       }
       else if (BackId == 3 || BackId == 4 || BackId == 7 || BackId == 8) {
         targetHeight = 57.125;
