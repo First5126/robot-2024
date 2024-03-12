@@ -1,4 +1,43 @@
 {
+  "HALProvider": {
+    "DIO": {
+      "window": {
+        "visible": true
+      }
+    },
+    "Other Devices": {
+      "Talon FX (v6)[10]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[10]/Rotor Sensor": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[15]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[15]/Rotor Sensor": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[16]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[2]/Fwd Limit": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -7,6 +46,7 @@
       "/SmartDashboard/Module 1": "Mechanism2d",
       "/SmartDashboard/Module 2": "Mechanism2d",
       "/SmartDashboard/Module 3": "Mechanism2d",
+      "/SmartDashboard/Pigeon 2 (v6) [1]": "Gyro",
       "/SmartDashboard/SendableChooser[0]": "String Chooser"
     },
     "windows": {

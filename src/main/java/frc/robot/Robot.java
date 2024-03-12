@@ -5,11 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.ManualRotation;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -30,14 +27,17 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_CANdle.Larson(255, 56, 0);
+  }
 
   @Override
   public void disabledPeriodic() {
-    m_CANdle.Larson(255, 56, 0);
+    RobotContainer.ChangeArmMode();
     //m_Blinkin.PurpleHeartbeat();
   }
 
@@ -64,6 +64,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    m_CANdle.Twinkle(255, 87, 51);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -72,7 +73,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    m_CANdle.Twinkle(255, 87, 51);
+    //RobotContainer.ChangeArmMode();
+
     //m_Blinkin.DoubleSinelon();
   }
 
@@ -82,8 +84,6 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
-
-    SmartDashboard.putData(new ManualRotation(null, kDefaultPeriod));
   }
 
   @Override

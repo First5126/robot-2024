@@ -3,15 +3,15 @@ package frc.robot;
 public class ShooterSetpoint {
 
     private double Distance;
-    private double ArmEncoderPosition;
+    private double ArmPosition;
     private double IntakeSpeed;
     private double ShooterVelo;
 
 
-    public ShooterSetpoint(double Distance, double ArmEncoderPosition, double IntakeSpeed, double ShooterVelo){
+    public ShooterSetpoint(double Distance, double ArmPosition, double IntakeSpeed, double ShooterVelo){
         
         this.Distance = Distance;
-        this.ArmEncoderPosition = ArmEncoderPosition;
+        this.ArmPosition = ArmPosition;
         this.IntakeSpeed = IntakeSpeed;
         this.ShooterVelo = ShooterVelo;
     }
@@ -25,11 +25,11 @@ public class ShooterSetpoint {
     }
 
     public double getArmEncoderPosition() {
-        return ArmEncoderPosition;
+        return ArmPosition;
     }
 
-    public void setArmEncoderPosition(double armEncoderPosition) {
-        ArmEncoderPosition = armEncoderPosition;
+    public void setArmPosition(double armPosition) {
+        ArmPosition = armPosition;
     }
 
     public double getIntakeSpeed() {
