@@ -37,6 +37,8 @@ import frc.robot.commands.Shoot;
 
 public class RobotContainer {
   
+  //Data Logger
+  private DataLogger rLog = new DataLogger();
   //Arm mode switch
   private static DigitalInput ArmMode = new DigitalInput(7);
   //Controllers
@@ -67,16 +69,14 @@ public class RobotContainer {
   
   public RobotContainer() {
     
-    NamedCommands.registerCommand("Rotate Arm Subwoofer", new RotateArm(m_arm, 16));
+    NamedCommands.registerCommand("Rotate Arm Subwoofer", new RotateArm(m_arm, 15)); //Old : 16
     NamedCommands.registerCommand("Shoot Subwoofer", new Shoot(m_ShooterSubsystem, m_arm, 58.4833));
-    NamedCommands.registerCommand("Rotate Arm Podium", new RotateArm(m_arm, 28));
+    NamedCommands.registerCommand("Rotate Arm Podium", new RotateArm(m_arm, 26)); //Old : 28
     NamedCommands.registerCommand("Rotate Arm Home", new ManualRotation(m_arm, -0.3));
     NamedCommands.registerCommand("Shoot Podium", new Shoot(m_ShooterSubsystem, m_arm, 78));
     NamedCommands.registerCommand("Intake", new Intake(m_ShooterSubsystem, m_ButtonsController, m_driverController));
 
-    autoChooser.addOption("Blue 3 Note", drivetrain.getAutoPath("Auto"));
-    autoChooser.addOption("One Note", drivetrain.getAutoPath("One Note"));
-    autoChooser.addOption("Two Note Auto", drivetrain.getAutoPath("Two Note Auto"));
+    autoChooser.addOption("Three Blue Note Auto", drivetrain.getAutoPath("Three Note Blue Auto"));
     SmartDashboard.putData(autoChooser);
 
     configureBindings();
@@ -156,7 +156,7 @@ public class RobotContainer {
       ClimberButton.whileTrue(new Climb(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final Trigger AmpPosButton = new Trigger (m_ButtonsController.povLeft());
-      AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 59));
+      AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 57));
     
     final Trigger SubwooferPosButton = new Trigger (m_ButtonsController.povDown());
       SubwooferPosButton.toggleOnTrue(new RotateArm(m_arm, 16));

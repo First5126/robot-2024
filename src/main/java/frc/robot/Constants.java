@@ -23,12 +23,12 @@ public final class Constants {
   }
 
   public static class ArmConstants {
-    public static final double kP = 3.8126; //Old : 4.6 - Output per unit of error in velocity (output/rps)
+    public static final double kP = 3.7651; //Old : 3.8126 - Output per unit of error in velocity (output/rps)
     public static final double kI = 0.0; //Output per unit of integrated error in velocity (output/rotation)
-    public static final double kD = 0.040423; //Output per unit of error derivative in velocity (output/(rps/s))
-    public static final double kA = 0.0042894; //Target Acceleration
-    public static final double kG = 0.0; //Gravity Feedforward gain
-    public static final double kS = 0.21183; //to over come static friction (output)
-    public static final double kV = 0.10618; //output per unit of requested velocity (output/rps)
+    public static final double kD = 0.034524; //Old : 0.040423 - Output per unit of error derivative in velocity (output/(rps/s))
+    public static final double kA = 0.0032207; //Old : 0.0042894 - Target Acceleration
+    public static final double kG = 0.5066; //Old : 0.0 - Gravity Feedforward gain
+    public static final double kS = 0.079362; // Old : 0.21183 - to over come static friction (output)
+    public static final double kV = 0.12209; //Old : 0.10618 - output per unit of requested velocity (output/rps)
   }
 }
