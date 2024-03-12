@@ -122,15 +122,28 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Center to Blue Center"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Rotate Arm Home"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Center to Blue Center"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
           }
         }
       ]
