@@ -61,7 +61,7 @@ public class Shooter extends SubsystemBase {
         Intake = new CANSparkMax(15, MotorType.kBrushless);
             Intake.setInverted(true);
             ReverseNoteSpeed = 0.3;
-            PickUpSpeed = 0.6;
+            PickUpSpeed = 0.8;
             MoveNoteSpeed = 0.15;
 
         BackSensor = new DigitalInput(3);

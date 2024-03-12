@@ -69,10 +69,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shoot Subwoofer", new Shoot(m_ShooterSubsystem, m_arm, 58.4833));
     NamedCommands.registerCommand("Rotate Arm Podium", new RotateArm(m_arm, 28));
     NamedCommands.registerCommand("Rotate Arm Home", new ManualRotation(m_arm, -0.3));
-    NamedCommands.registerCommand("Shoot Podium ", new Shoot(m_ShooterSubsystem, m_arm, 78));
+    NamedCommands.registerCommand("Shoot Podium", new Shoot(m_ShooterSubsystem, m_arm, 78));
     NamedCommands.registerCommand("Intake", new Intake(m_ShooterSubsystem, m_ButtonsController, m_driverController));
 
-    autoChooser.addOption("Tests", drivetrain.getAutoPath("Tests"));
+    //autoChooser.addOption("Tests", drivetrain.getAutoPath("Tests"));
     autoChooser.addOption("Blue 3 Note", drivetrain.getAutoPath("Auto"));
     autoChooser.addOption("One Note", drivetrain.getAutoPath("One Note"));
     autoChooser.addOption("Two Note Auto", drivetrain.getAutoPath("Two Note Auto"));
@@ -107,7 +107,7 @@ public class RobotContainer {
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-(m_driverController.getHID().getRawAxis(1)), -(m_driverController.getHID().getRawAxis(0)))))); //b*/
 
     // reset the field-centric heading on left bumper press
-    (m_driverController).button(8).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    //(m_driverController).button(8).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     drivetrain.registerTelemetry(logger::telemeterize);
 
     m_driverController.pov(0).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0).withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) ));
@@ -126,9 +126,6 @@ public class RobotContainer {
 
     final JoystickButton ShootBlueLineButton = new JoystickButton(m_driverController.getHID(), XboxController.Button.kY.value);
       ShootBlueLineButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 94).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-
-    final JoystickButton ShootBankButton = new JoystickButton(m_driverController.getHID(), XboxController.Button.kRightBumper.value);
-      ShootBankButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 94).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     //Buttons Controller
     final JoystickButton IntakeButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kA.value);    
@@ -169,7 +166,7 @@ public class RobotContainer {
       PodiumPosButton.toggleOnTrue(new RotateArm(m_arm, 28));
 
     final Trigger BlueLinePosButton = new Trigger (m_ButtonsController.povUp());
-      BlueLinePosButton.toggleOnTrue(new RotateArm(m_arm, 36));
+      BlueLinePosButton.toggleOnTrue(new RotateArm(m_arm, 34));
 
 
     if (Utils.isSimulation()) {

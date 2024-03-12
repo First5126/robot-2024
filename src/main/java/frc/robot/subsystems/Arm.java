@@ -56,14 +56,14 @@ public class Arm extends SubsystemBase {
   }
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Magnetic Limit Switch", ReverseMagLimitSwitch.get());
+    SmartDashboard.putBoolean("Reverse Mag Switch", ReverseMagLimitSwitch.get());
     SmartDashboard.putNumber("arm speed", speed);
     SmartDashboard.putNumber("reverse limit switch", leftMotorFx.getReverseLimit().getValueAsDouble());
     SmartDashboard.putNumber("forward limit switch", leftMotorFx.getForwardLimit().getValueAsDouble());
     SmartDashboard.putNumber("Arm Velocity", leftMotorFx.getVelocity().getValueAsDouble());
     SmartDashboard.putNumber("Potentiometer Position", potentiometer.get());
     SmartDashboard.putNumber("Arm Position", leftMotorFx.getPosition().getValueAsDouble());
-    SmartDashboard.putNumber("Arm Encoder", revThroughBore.getDistance());
+    SmartDashboard.putNumber("REV Encoder", revThroughBore.getDistance());
     SmartDashboard.putBoolean("Arm Swtich", RobotContainer.getSwitchPosition());
     ClimberSpeed = SmartDashboard.getNumber("Climber Speed", .1);
 
