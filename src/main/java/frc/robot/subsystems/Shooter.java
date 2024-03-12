@@ -78,7 +78,7 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putBoolean("Front Sensor", FrontSensor.get());
 
         if(rumbling){
-            if (timer.hasElapsed(1)){
+            if (timer.hasElapsed(2)){
                 timer.stop();
                 timer.reset();
                 m_buttonsController.getHID().setRumble(RumbleType.kBothRumble, 0);
