@@ -6,8 +6,9 @@ package frc.robot;
 
 import frc.robot.Swerve.Telemetry;
 import frc.robot.subsystems.Arm;
-import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -18,6 +19,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.FindDistance;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
@@ -43,9 +45,9 @@ public class RobotContainer {
 
 
   //Subsystems
+  public final LLSubsystem m_LlSubsystem = new LLSubsystem();
   private final Shooter m_ShooterSubsystem = new Shooter(m_ButtonsController, m_driverController);
   public final static Arm m_arm = new Arm();
-
   //Swerve
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -56,7 +58,7 @@ public class RobotContainer {
   private final Telemetry logger = new Telemetry(Constants.SwerveConstants.MaxSpeed);
   private SlewRateLimiter xSlewRate = new SlewRateLimiter(1.5);
   private SlewRateLimiter ySlewRate = new SlewRateLimiter(1.5);
-  private SlewRateLimiter rotationSlewRate = new SlewRateLimiter(1.5);
+  private SlewRateLimiter rotationSlewRate = new SlewRateLimiter(1.5); 
   /* Path follower */
 
 
@@ -64,7 +66,7 @@ public class RobotContainer {
   private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   
   public RobotContainer() {
-
+    
     NamedCommands.registerCommand("Rotate Arm Subwoofer", new RotateArm(m_arm, 16));
     NamedCommands.registerCommand("Shoot Subwoofer", new Shoot(m_ShooterSubsystem, m_arm, 58.4833));
     NamedCommands.registerCommand("Rotate Arm Podium", new RotateArm(m_arm, 28));
@@ -72,13 +74,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shoot Podium", new Shoot(m_ShooterSubsystem, m_arm, 78));
     NamedCommands.registerCommand("Intake", new Intake(m_ShooterSubsystem, m_ButtonsController, m_driverController));
 
-    //autoChooser.addOption("Tests", drivetrain.getAutoPath("Tests"));
     autoChooser.addOption("Blue 3 Note", drivetrain.getAutoPath("Auto"));
     autoChooser.addOption("One Note", drivetrain.getAutoPath("One Note"));
     autoChooser.addOption("Two Note Auto", drivetrain.getAutoPath("Two Note Auto"));
     SmartDashboard.putData(autoChooser);
 
     configureBindings();
+    m_LlSubsystem.setDefaultCommand(new FindDistance(m_LlSubsystem, 2));
   }
   /*
   private double deadband(double value){
@@ -110,6 +112,7 @@ public class RobotContainer {
     //(m_driverController).button(8).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     drivetrain.registerTelemetry(logger::telemeterize);
 
+
     m_driverController.pov(0).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0).withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) ));
     m_driverController.pov(90).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0).withVelocityY(-0.5).withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) ));
     m_driverController.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0).withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) ));
@@ -133,11 +136,7 @@ public class RobotContainer {
 
     final JoystickButton Reverse = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kX.value);
       Reverse.whileTrue(new Reverse(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-    /*final JoystickButton moveArmToNinetyDegrees = new JoystickButton(m_ButtonsController, XboxController.Button.kX.value);
-        moveArmToNinetyDegrees.toggleOnTrue(new RotateArm(m_arm, 64).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-    final JoystickButton homeArm = new JoystickButton(m_ButtonsController, XboxController.Button.kY.value);
-        homeArm.toggleOnTrue(new RotateArm(m_arm, 0).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-*/
+
     final JoystickButton manualRotationUp = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kRightBumper.value);
       manualRotationUp.whileTrue(new ManualRotation(m_arm, 0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
@@ -168,11 +167,11 @@ public class RobotContainer {
     final Trigger BlueLinePosButton = new Trigger (m_ButtonsController.povUp());
       BlueLinePosButton.toggleOnTrue(new RotateArm(m_arm, 34));
 
-
-    if (Utils.isSimulation()) {
+    
+    /*if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
-    drivetrain.registerTelemetry(logger::telemeterize);
+    drivetrain.registerTelemetry(logger::telemeterize);*/
   }
   
   public Command getAutonomousCommand() {
