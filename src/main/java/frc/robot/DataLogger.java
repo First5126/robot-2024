@@ -17,10 +17,9 @@ public class DataLogger {
             this.logPh();
         }
         catch(Exception e1){
-         System.err.println("Unable to start the Datalogger ... Hey yo should check out the Space on the SD card");
+         System.err.println("Unable to start the Datalogger. Check the space on the SD card.");
         }
 
-        this.startAsCameraServer();
     }
 
      private void StartLogger(){
@@ -33,17 +32,8 @@ public class DataLogger {
      }
 
     private void logPh(){
-      PowerDistribution ph = new PowerDistribution(1, PowerDistribution.ModuleType.kRev); //I CHANGED THE CAN ID DANNNNNNNNNN
+      PowerDistribution ph = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
       SmartDashboard.putData("PH",ph);
      }
 
-     private void startAsCameraServer(){
-      try{
-      CameraServer.startAutomaticCapture();
-      }
-
-      catch(Exception e1){
-      System.out.println("Unable to connect to Camera");
-      }
      }
-}
