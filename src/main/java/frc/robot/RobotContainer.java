@@ -30,6 +30,7 @@ import frc.robot.Swerve.CommandSwerveDrivetrain;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.commands.Climb;
 import frc.robot.commands.Intake;
+import frc.robot.commands.ManualPID;
 import frc.robot.commands.ManualRotation;
 import frc.robot.commands.Reverse;
 import frc.robot.commands.RotateArm;
@@ -76,7 +77,16 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shoot Podium", new Shoot(m_ShooterSubsystem, m_arm, 78));
     NamedCommands.registerCommand("Intake", new Intake(m_ShooterSubsystem, m_ButtonsController, m_driverController));
 
+    autoChooser.addOption("Four Blue Note Auto", drivetrain.getAutoPath("Four Note Blue Auto"));
+    autoChooser.addOption("Four Red Note Auto", drivetrain.getAutoPath("Four Note Red Auto"));
     autoChooser.addOption("Three Blue Note Auto", drivetrain.getAutoPath("Three Note Blue Auto"));
+    autoChooser.addOption("Three Red Note Auto", drivetrain.getAutoPath("Three Note Red Auto"));
+    autoChooser.addOption("Two Blue Note Auto", drivetrain.getAutoPath("Two Note Blue Auto"));
+    autoChooser.addOption("Two Red Note Auto", drivetrain.getAutoPath("Two Note Red Auto"));
+    autoChooser.addOption("One Note Pickup Red Auto", drivetrain.getAutoPath("One Note Pickup Red Auto"));
+    autoChooser.addOption("One Note Pickup Blue Auto", drivetrain.getAutoPath("One Note Pickup Blue Auto"));
+    autoChooser.addOption("No Auto", drivetrain.getAutoPath("Null"));
+
     SmartDashboard.putData(autoChooser);
 
     configureBindings();
@@ -122,7 +132,7 @@ public class RobotContainer {
       ShootSubwooferButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 58.48333).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootAmpButton = new JoystickButton(m_driverController.getHID(), XboxController.Button.kX.value);
-      ShootAmpButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 15.98).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      ShootAmpButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 15).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootPodiumButton = new JoystickButton(m_driverController.getHID(), XboxController.Button.kB.value);
       ShootPodiumButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 78).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
@@ -154,6 +164,9 @@ public class RobotContainer {
 
     final JoystickButton ClimberButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kLeftStick.value);
       ClimberButton.whileTrue(new Climb(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+
+    final JoystickButton ManualRotationPIDButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kRightStick.value);
+      ManualRotationPIDButton.toggleOnTrue(new ManualPID(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final Trigger AmpPosButton = new Trigger (m_ButtonsController.povLeft());
       AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 57));

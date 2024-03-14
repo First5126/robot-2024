@@ -89,67 +89,6 @@
           "data": {
             "waitTime": 0.1
           }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Center Blue to Middle"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.1
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Rotate Arm Home"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Middle to Blue Center"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Rotate Arm Podium"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.1
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot Podium"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Rotate Arm Home"
-          }
         }
       ]
     }

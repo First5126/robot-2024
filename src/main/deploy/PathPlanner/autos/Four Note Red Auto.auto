@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.28,
-      "y": 5.55
+      "x": 15.28,
+      "y": 5.58
     },
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -54,7 +54,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Blue Center Subwoofer"
+                  "pathName": "Red Center Subwoofer"
                 }
               }
             ]
@@ -103,7 +103,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Center Blue to Middle"
+                  "pathName": "Center Red to Middle"
                 }
               }
             ]
@@ -124,7 +124,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Middle to Blue Center"
+            "pathName": "Middle to Red Center"
           }
         },
         {
@@ -150,10 +150,29 @@
           "data": {
             "name": "Rotate Arm Home"
           }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Red Center to Left Middle"
+                }
+              }
+            ]
+          }
         }
       ]
     }
   },
-  "folder": "Blue",
+  "folder": "Red",
   "choreoAuto": false
 }
