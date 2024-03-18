@@ -8,30 +8,17 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class LLSubsystem extends SubsystemBase {
-  NetworkTable IntakeLL = NetworkTableInstance.getDefault().getTable("limelight");
-  NetworkTableEntry IntakeTX;
-  NetworkTableEntry IntakeTY;
-  NetworkTableEntry IntakeTA; 
-  NetworkTableEntry IntakeTID;
-
   NetworkTable BackLL = NetworkTableInstance.getDefault().getTable("limelight");
   NetworkTableEntry BackTX;
   NetworkTableEntry BackTY;
   NetworkTableEntry BackTA; 
   NetworkTableEntry BackTID;
 
-  NetworkTable FrontLL = NetworkTableInstance.getDefault().getTable("limelight");
-  NetworkTableEntry FrontTX;
-  NetworkTableEntry FrontTY;
-  NetworkTableEntry FrontTA; 
-  NetworkTableEntry FrontTID;
-
-  double intakeLimelightAngle;
-
-  double IntakeX;
-  double IntakeY;
-  double IntakeArea;
-  long IntakeId;
+  NetworkTable IntakeLL = NetworkTableInstance.getDefault().getTable("limelight");
+  NetworkTableEntry IntakeTX;
+  NetworkTableEntry IntakeTY;
+  NetworkTableEntry IntakeTA; 
+  NetworkTableEntry IntakeTID;
 
   double backLimelightAngle;
 
@@ -40,27 +27,21 @@ public class LLSubsystem extends SubsystemBase {
   double BackArea;
   long BackId;
 
-  double FrontLimelightAngle;
+  double IntakeLimelightAngle = 35;
 
-  double FrontX;
-  double FrontY;
-  double FrontArea;
-  long FrontId;
+  double IntakeX;
+  double IntakeY;
+  double IntakeArea;
+  long IntakeId;
 
   // distance from the center of the Limelight lens to the floor in inches
-  double intakeLimelightHeight = 31.0; 
-  double backLimelightHeight = 7;
-  double FrontLimelightHeight = 31.0;
+  double backLimelightHeight = 19.5;
+  double IntakeLimelightHeight = 31.0;
 
-  double IntakeDistanceFromTarget = 0;
   double BackDistanceFromTarget = 0;
-  double FrontDistanceFromTarget = 0;
+  double IntakeDistanceFromTarget = 0;
 
-  public LLSubsystem() {
-    SmartDashboard.putNumber("(Back) Limelight Angle", 0);
-    SmartDashboard.putNumber("test AprilTag Hight", 0);
-    SmartDashboard.putNumber("Limelight Hight", 0);
-  }
+  public LLSubsystem() {}
 
   @Override
   public void periodic() {
@@ -77,51 +58,35 @@ public class LLSubsystem extends SubsystemBase {
     BackTA = BackLL.getEntry("ta");
     BackTID = BackLL.getEntry("tid");
 
-    // Gets Front LimeLight reading data
-    FrontTX = BackLL.getEntry("tx");
-    FrontTY = BackLL.getEntry("ty");
-    FrontTA = BackLL.getEntry("ta");
-    FrontTID = BackLL.getEntry("tid");
-
-    // reads Inttake Limelight values periodically
-    IntakeX = IntakeTX.getDouble(0.0);
-    IntakeY = IntakeTY.getDouble(0.0);
-    IntakeArea = IntakeTA.getDouble(0.0);
-    IntakeId = IntakeTID.getInteger(0);   
-
+    // Gets Intake LimeLight reading data
+    IntakeTX = BackLL.getEntry("tx");
+    IntakeTY = BackLL.getEntry("ty");
+    IntakeTA = BackLL.getEntry("ta");
+    IntakeTID = BackLL.getEntry("tid");
+  
     // reads Back Limelight values periodically
     BackX = BackTX.getDouble(0.0);
     BackY = BackTY.getDouble(0.0);
-    SmartDashboard.putNumber("backY", BackY);
     BackArea = BackTA.getDouble(0.0);
     BackId = BackTID.getInteger(0);  
     
-    // reads Front Limelight values periodically
-    FrontX = BackTX.getDouble(0.0);
-    FrontY = BackTY.getDouble(0.0);
-    FrontArea = BackTA.getDouble(0.0);
-    FrontId = BackTID.getInteger(0);
+    // reads Intake Limelight values periodically
+    IntakeX = BackTX.getDouble(0.0);
+    IntakeY = BackTY.getDouble(0.0);
+    IntakeArea = BackTA.getDouble(0.0);
+    IntakeId = BackTID.getInteger(0);
 
-    // Intake Limelight Values
-    SmartDashboard.putNumber("(Intake) Limelight IntakeTX", IntakeX);
-    SmartDashboard.putNumber("(Intake) Limelight IntakeTY", IntakeY);
-    SmartDashboard.putNumber("(Intake) Limelight Area", IntakeArea);
-    SmartDashboard.putNumber("(Intake) Target Distance", IntakeDistanceFromTarget);
-    intakeLimelightAngle = SmartDashboard.getNumber("(Intake) Limelight Angle", 9);
-    
     // Back Limelight Values
     SmartDashboard.putNumber("(Back) Limelight tx", BackX);
     SmartDashboard.putNumber("(Back) Limelight ty", BackY);
     SmartDashboard.putNumber("(Back) Limelight Area", BackArea);
     SmartDashboard.putNumber("(Back) Target Distance", BackDistanceFromTarget);
-    backLimelightAngle = SmartDashboard.getNumber("(Back) Limelight Angle", 0);//85
 
-    // Front Limelight Values
-    SmartDashboard.putNumber("(Front) Limelight tx", FrontX);
-    SmartDashboard.putNumber("(Front) Limelight ty", FrontY);
-    SmartDashboard.putNumber("(Front) Limelight Area", FrontArea);
-    SmartDashboard.putNumber("(Front) Target Distance", FrontDistanceFromTarget);
-    FrontLimelightAngle = SmartDashboard.getNumber("(Front) Limelight Angle", 9);
+    // Intake Limelight Values
+    SmartDashboard.putNumber("(Intake) Limelight tx", IntakeX);
+    SmartDashboard.putNumber("(Intake) Limelight ty", IntakeY);
+    SmartDashboard.putNumber("(Intake) Limelight Area", IntakeArea);
+    SmartDashboard.putNumber("(Intake) Target Distance", IntakeDistanceFromTarget);
   }
 
   public double getDistance(int LLId) { 
@@ -129,7 +94,7 @@ public class LLSubsystem extends SubsystemBase {
     double targetHeight = 0;
     if (LLId == 2){
       if (BackId == 1 || BackId == 2 || BackId == 5 || BackId == 6 || BackId == 9 || BackId == 10) {
-        targetHeight = 9.375;
+        targetHeight = 48.125;
       }
       else if (BackId == 3 || BackId == 4 || BackId == 7 || BackId == 8) {
         targetHeight = 57.125;
@@ -145,21 +110,21 @@ public class LLSubsystem extends SubsystemBase {
       return BackDistanceFromTarget;
     }
     else if (LLId == 3){
-      if (FrontId == 1 || FrontId == 2 || FrontId == 5 || FrontId == 6 || FrontId == 9 || FrontId == 10) {
-        targetHeight = 9.375;
+      if (IntakeId == 1 || IntakeId == 2 || IntakeId == 5 || IntakeId == 6 || IntakeId == 9 || IntakeId == 10) {
+        targetHeight = 48.125;
       }
-      else if (FrontId == 3 || FrontId == 4 || FrontId == 7 || FrontId == 8) {
+      else if (IntakeId == 3 || IntakeId == 4 || IntakeId == 7 || IntakeId == 8) {
         targetHeight = 57.125;
       }
-      else if (FrontId >= 11) {
+      else if (IntakeId >= 11) {
         targetHeight = 52;
       }
-      targetDegrees = FrontLimelightAngle + BackY;
+      targetDegrees = IntakeLimelightAngle + BackY;
       double targetRadians = targetDegrees * (3.14159 / 180.0);
 
       // calculates distance
-      FrontDistanceFromTarget = (targetHeight - FrontLimelightHeight) / Math.tan(targetRadians);
-      return FrontDistanceFromTarget;
+      IntakeDistanceFromTarget = (targetHeight - IntakeLimelightHeight) / Math.tan(targetRadians);
+      return IntakeDistanceFromTarget;
     }
     else{
       return -1;
