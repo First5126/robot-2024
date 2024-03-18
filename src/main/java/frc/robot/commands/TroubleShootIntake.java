@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Robot;
 
 
-public class Intake extends Command {
+public class TroubleShootIntake extends Command {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final Shooter m_subsystem;
     private boolean isFinished;
@@ -17,7 +17,8 @@ public class Intake extends Command {
     private final CommandGenericHID m_driverController;
     private LEDS_CANdle m_CANdle;
 
-    public Intake(Shooter subsystem, CommandGenericHID controller, CommandGenericHID driver) {
+
+    public TroubleShootIntake(Shooter subsystem, CommandGenericHID controller, CommandGenericHID driver) {
         m_subsystem = subsystem;
         m_buttonsController = controller;
         m_driverController = driver;
@@ -33,11 +34,6 @@ public class Intake extends Command {
 
     @Override
     public void execute() {
-        if (m_subsystem.FrontSeesNote()){
-            m_buttonsController.getHID().setRumble(RumbleType.kBothRumble, 1);
-            m_driverController.getHID().setRumble(RumbleType.kBothRumble, 1);
-            Slowed = true;
-        }
         if (m_subsystem.BackSeesNote()){
             m_buttonsController.getHID().setRumble(RumbleType.kBothRumble, 1);
             m_driverController.getHID().setRumble(RumbleType.kBothRumble, 1);
@@ -47,14 +43,11 @@ public class Intake extends Command {
             m_subsystem.rumbling = true;
             m_subsystem.timer.start();
         }
-        else if (Slowed){
-            m_subsystem.SetMoveNoteSpeed();
-            m_CANdle.Larson(245, 99, 2);
-        }
         else{
             m_subsystem.SetPickUpSpeed();
             m_CANdle.Larson(245, 99, 2);
         }
+
 
 
         

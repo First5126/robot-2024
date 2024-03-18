@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import java.sql.Driver;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -12,7 +16,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-  private LEDS_CANdle m_CANdle;
+  private static LEDS_CANdle m_CANdle;
+
   //private Blinkin m_Blinkin;
 
   
@@ -27,12 +32,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-
   }
 
   @Override
   public void disabledInit() {
-    m_CANdle.Larson(255, 56, 0);
+    m_CANdle.Larson(132, 2, 245);
   }
 
   @Override
@@ -46,6 +50,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    //if(DriverStation.Alliance.Blue == DriverStation.getAlliance()
     System.out.println("auto innit");
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     if (m_autonomousCommand != null) {
@@ -64,7 +69,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    m_CANdle.Twinkle(255, 87, 51);
+    if(DriverStation.getAlliance().orElse(Alliance.Blue)==Alliance.Red){
+
+
+    }
+    m_CANdle.Twinkle(132, 2, 245);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -101,4 +110,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationPeriodic() {}
+
+  public static LEDS_CANdle getCaNdle(){
+    return m_CANdle;
+  }
 }

@@ -55,11 +55,10 @@ public class LEDS_CANdle {
   }
 
   public void Larson(int r, int g, int b){
-    candle.animate(new LarsonAnimation(r, g, b, 255, .3, 160, LarsonAnimation.BounceMode.Front, 7,0));
+    candle.animate(new LarsonAnimation(r, g, b, 255, .3, 190, LarsonAnimation.BounceMode.Front, 7,0));
   }
 
   public void SingleFade(int r, int g, int b){
     candle.animate(new SingleFadeAnimation(r, g, b, 255, .3, 68, 0));
   }
-
 }

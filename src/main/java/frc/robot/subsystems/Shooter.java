@@ -126,10 +126,10 @@ public class Shooter extends SubsystemBase {
 
     public boolean FrontSeesNote(){
         if (FrontSensor.get() == false){
-            return true;
+            return false;
         }
         else{
-            return false;
+            return true;
         }
     }
 
