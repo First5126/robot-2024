@@ -27,31 +27,36 @@ public class Intake extends Command {
 
     @Override
     public void initialize() {
+        System.out.println("innit");
         isFinished = false;
         Slowed = false; 
     }
 
     @Override
     public void execute() {
+        System.out.println("execute");
         if (m_subsystem.FrontSeesNote()){
-            m_buttonsController.getHID().setRumble(RumbleType.kBothRumble, 1);
-            m_driverController.getHID().setRumble(RumbleType.kBothRumble, 1);
+            System.out.println("front note sees");
             Slowed = true;
         }
         if (m_subsystem.BackSeesNote()){
+            System.out.println("back note sees");
             m_buttonsController.getHID().setRumble(RumbleType.kBothRumble, 1);
             m_driverController.getHID().setRumble(RumbleType.kBothRumble, 1);
             m_CANdle.setRGBColor(245, 99, 2);
-
+            Slowed = false;
             isFinished = true;
             m_subsystem.rumbling = true;
             m_subsystem.timer.start();
         }
         else if (Slowed){
+            System.out.println("slowed");
             m_subsystem.SetMoveNoteSpeed();
-            m_CANdle.Larson(245, 99, 2);
+            m_CANdle.Larson(245, 99, 2, .1);
         }
         else{
+            Slowed = false;
+            System.out.println("else");
             m_subsystem.SetPickUpSpeed();
             m_CANdle.Larson(245, 99, 2);
         }
@@ -63,6 +68,8 @@ public class Intake extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        System.out.println("end");
+        Slowed = false;
         m_subsystem.zeroIntake();
         isFinished = true;
     }

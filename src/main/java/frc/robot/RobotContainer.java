@@ -128,10 +128,10 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
 
 
-    m_driverController.pov(0).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(m_driverController.getHID().getRawAxis(5)).withVelocityY(0).withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) ));
-    m_driverController.pov(90).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0).withVelocityY(-m_driverController.getHID().getRawAxis(5)).withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) ));
-    m_driverController.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-m_driverController.getHID().getRawAxis(5)).withVelocityY(0).withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) ));
-    m_driverController.pov(270).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0).withVelocityY(m_driverController.getHID().getRawAxis(5)).withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) ));
+    m_driverController.pov(0).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(m_driverController.getHID().getRawAxis(3)).withVelocityY(0).withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) ));
+    m_driverController.pov(90).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0).withVelocityY(-m_driverController.getHID().getRawAxis(3)).withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) ));
+    m_driverController.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-m_driverController.getHID().getRawAxis(3)).withVelocityY(0).withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) ));
+    m_driverController.pov(270).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0).withVelocityY(m_driverController.getHID().getRawAxis(3)).withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) ));
 
     m_driverController.button(8).toggleOnTrue(drivetrain.applyRequest(() -> drive.withVelocityX(xSlewRate.calculate((Math.signum(m_driverController.getHID().getRawAxis(1)) * Math.pow(m_driverController.getHID().getRawAxis(1), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
@@ -149,7 +149,7 @@ public class RobotContainer {
       ShootPodiumButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 78).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootBlueLineButton = new JoystickButton(m_driverController.getHID(), XboxController.Button.kY.value);
-      ShootBlueLineButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 94).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      ShootBlueLineButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 94).withInterruptBehavior(InterruptionBehavior.kCancelSelf)); //dont 
 
     //Buttons Controller
     final JoystickButton IntakeButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kA.value);    
@@ -183,13 +183,13 @@ public class RobotContainer {
       ManualRotationPIDButton.toggleOnTrue(new ManualPID(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final Trigger AmpPosButton = new Trigger (m_ButtonsController.povLeft());
-      AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 57));
+      AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 55));
     
     final Trigger SubwooferPosButton = new Trigger (m_ButtonsController.povDown());
-      SubwooferPosButton.toggleOnTrue(new RotateArm(m_arm, 16));
+      SubwooferPosButton.toggleOnTrue(new RotateArm(m_arm, 13));
 
     final Trigger PodiumPosButton = new Trigger (m_ButtonsController.povRight());
-      PodiumPosButton.toggleOnTrue(new RotateArm(m_arm, 28));
+      PodiumPosButton.toggleOnTrue(new RotateArm(m_arm, 23));
 
     final Trigger BankPosButton = new Trigger (m_ButtonsController.povUp());
       BankPosButton.toggleOnTrue(new RotateArm(m_arm, 48));
