@@ -146,7 +146,7 @@ public class RobotContainer {
     m_driverController.pov(270).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0).withVelocityY(0.5).withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) ));
 
     m_driverController.button(8).toggleOnTrue(drivetrain.applyRequest(() -> drive.withVelocityX(xSlewRate.calculate((Math.signum(m_driverController.getHID().getRawAxis(1)) * Math.pow(m_driverController.getHID().getRawAxis(1), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive forward with
-                                                                                           // negative Y (forward)
+            // negative Y (forward)
             .withVelocityY( ySlewRate.calculate((Math.signum(m_driverController.getHID().getRawAxis(0)) * Math.pow(m_driverController.getHID().getRawAxis(0), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
             .withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
@@ -161,9 +161,7 @@ public class RobotContainer {
       ShootPodiumButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 78).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootBlueLineButton = new JoystickButton(m_driverController.getHID(), XboxController.Button.kY.value);
-      ShootBlueLineButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 94).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-
-
+      ShootBlueLineButton.  toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 94).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     //Buttons Controller
     final JoystickButton IntakeButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kA.value);    
@@ -209,10 +207,10 @@ public class RobotContainer {
       BankPosButton.toggleOnTrue(new RotateArm(m_arm, 48));
 
     
-    /*if (Utils.isSimulation()) {
+    if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
-    drivetrain.registerTelemetry(logger::telemeterize);*/
+    drivetrain.registerTelemetry(logger::telemeterize);
   }
   
   public Command getAutonomousCommand() {

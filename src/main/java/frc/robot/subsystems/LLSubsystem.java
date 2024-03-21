@@ -77,6 +77,27 @@ public class LLSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("(Back) Limelight Area", BackArea);
     SmartDashboard.putNumber("(Back) Target Distance", BackDistanceFromTarget);
 
+    if (Math.signum(BackX) == 0){
+      SmartDashboard.putBoolean("Offset-LEFT", true);
+      SmartDashboard.putBoolean("Offset-RIGHT", false);
+      SmartDashboard.putBoolean("Offset-CENTER", false);
+    }
+    else if (Math.signum(BackX) == 0){
+      SmartDashboard.putBoolean("Offset-RIGHT", true);
+      SmartDashboard.putBoolean("Offset-LEFT", false);
+      SmartDashboard.putBoolean("Offset-CENTER", false);
+    }
+    else if (BackId != 0){
+      SmartDashboard.putBoolean("Offset-CENTER", true);
+      SmartDashboard.putBoolean("Offset-LEFT", false);
+      SmartDashboard.putBoolean("Offset-RIGHT", false);
+    }
+    else{
+      SmartDashboard.putBoolean("Offset-CENTER", false);
+      SmartDashboard.putBoolean("Offset-LEFT", false);
+      SmartDashboard.putBoolean("Offset-RIGHT", false);
+    }
+
     // Front Limelight Values
     SmartDashboard.putNumber("(Front) Limelight tx", FrontX);
     SmartDashboard.putNumber("(Front) Limelight ty", FrontY);
