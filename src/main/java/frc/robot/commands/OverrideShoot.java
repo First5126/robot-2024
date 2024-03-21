@@ -6,18 +6,14 @@ package frc.robot.commands;
 
 import frc.robot.LEDS_CANdle;
 import frc.robot.Robot;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shooter;
-
-import com.ctre.phoenix.led.CANdle;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
-public class Shoot extends Command {
+public class OverrideShoot extends Command {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final Shooter m_ShooterSubsystem;
     private Arm m_ArmSubsystem;
@@ -28,11 +24,11 @@ public class Shoot extends Command {
     private double ArmPosition;
     private LEDS_CANdle m_CANdle;
 
-    public Shoot(Shooter m_ShooterSubsystem, Arm m_ArmSubsystem, double RPS) {
+    public OverrideShoot(Shooter m_ShooterSubsystem, Arm m_ArmSubsystem, double RPS) {
         this.m_ShooterSubsystem = m_ShooterSubsystem;
         this.m_ArmSubsystem = m_ArmSubsystem;
         GoalRPS = RPS;
-        m_CANdle = new LEDS_CANdle();
+        m_CANdle = Robot.getCaNdle();
 
         addRequirements(m_ShooterSubsystem);
         
@@ -51,19 +47,17 @@ public class Shoot extends Command {
 
     @Override
     public void execute() {
+        m_CANdle.Twinkle(245,99,2);
         m_ShooterSubsystem.setShooterRPS(GoalRPS);
         error = GoalRPS - m_ShooterSubsystem.getCurrentShooterVelocity();
         SmartDashboard.putNumber("Error", error);
         SmartDashboard.putNumber("current velo", m_ShooterSubsystem.getCurrentShooterVelocity());
 
-        if( error <= DeadZone && m_ShooterSubsystem.BackSeesNote() ) {
-            m_CANdle.Twinkle(245,99,2);
-            m_ShooterSubsystem.ManualIntakeSpeed(0.7);
-        } 
+        if( error <= DeadZone) {
+            m_ShooterSubsystem.ManualIntakeSpeed(0.8);
 
-        if (!m_ShooterSubsystem.BackSeesNote()){
-            m_CANdle.Twinkle(245,99,2);
-            isFinished = true;  
+            Timer.delay(3);
+            isFinished = true;
         }
     }
 

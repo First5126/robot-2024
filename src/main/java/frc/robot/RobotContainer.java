@@ -9,6 +9,8 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Joystick;
+
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -30,13 +32,19 @@ import frc.robot.Swerve.CommandSwerveDrivetrain;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.commands.Climb;
 import frc.robot.commands.Intake;
+import frc.robot.commands.ManualIntake;
+import frc.robot.commands.ManualPID;
 import frc.robot.commands.ManualRotation;
 import frc.robot.commands.Reverse;
 import frc.robot.commands.RotateArm;
 import frc.robot.commands.Shoot;
+import frc.robot.commands.TroubleShootIntake;
+import frc.robot.commands.TroubleShootReverse;
 
 public class RobotContainer {
   
+  //Data Logger
+  private DataLogger rLog = new DataLogger();
   //Arm mode switch
   private static DigitalInput ArmMode = new DigitalInput(7);
   //Controllers
@@ -49,6 +57,7 @@ public class RobotContainer {
   private final Shooter m_ShooterSubsystem = new Shooter(m_ButtonsController, m_driverController);
   public final static Arm m_arm = new Arm();
   //Swerve
+  private boolean isInverted = false;
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(Constants.SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(Constants.SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
@@ -67,22 +76,26 @@ public class RobotContainer {
   
   public RobotContainer() {
     
-    NamedCommands.registerCommand("Rotate Arm Subwoofer", new RotateArm(m_arm, 16));
+    NamedCommands.registerCommand("Rotate Arm Subwoofer", new RotateArm(m_arm, 15)); //Old : 16
     NamedCommands.registerCommand("Shoot Subwoofer", new Shoot(m_ShooterSubsystem, m_arm, 58.4833));
-    NamedCommands.registerCommand("Rotate Arm Podium", new RotateArm(m_arm, 28));
-    NamedCommands.registerCommand("Rotate Arm Home", new ManualRotation(m_arm, -0.3));
+    NamedCommands.registerCommand("Rotate Arm Podium", new RotateArm(m_arm, 26)); //Old : 28
+    NamedCommands.registerCommand("Rotate Arm Home", new ManualRotation(m_arm, -0.4));
     NamedCommands.registerCommand("Shoot Podium", new Shoot(m_ShooterSubsystem, m_arm, 78));
     NamedCommands.registerCommand("Intake", new Intake(m_ShooterSubsystem, m_ButtonsController, m_driverController));
 
-    autoChooser.addOption("Blue 3 Note", drivetrain.getAutoPath("Auto"));
-    autoChooser.addOption("One Note", drivetrain.getAutoPath("One Note"));
-    autoChooser.addOption("Two Note Auto", drivetrain.getAutoPath("Two Note Auto"));
+    autoChooser.addOption("Alliance 4 Note Auto", drivetrain.getAutoPath("Alliance Color 4 Note Auto"));
+    autoChooser.addOption("Four Blue Note Auto", drivetrain.getAutoPath("Four Note Blue Auto"));
+    autoChooser.addOption("Three Blue Note Auto", drivetrain.getAutoPath("Three Note Blue Auto"));
+    autoChooser.addOption("Two Blue Note Auto", drivetrain.getAutoPath("Two Note Blue Auto"));
+    autoChooser.addOption("One Note Pickup Blue Auto", drivetrain.getAutoPath("One Note Pickup Blue Auto"));
+    autoChooser.addOption("No Auto", drivetrain.getAutoPath("Null"));
+
     SmartDashboard.putData(autoChooser);
 
     configureBindings();
     m_LlSubsystem.setDefaultCommand(new FindDistance(m_LlSubsystem, 2));
   }
-  /*
+  
   private double deadband(double value){
     if (Math.abs(value) < 0.1){
       return 0;
@@ -91,13 +104,27 @@ public class RobotContainer {
     return value;
     }
   }
-  */
+  
 
   private void configureBindings() {
-
+    
     //Swerve and driving
-
-    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+    /*drivetrain.setDefaultCommand(
+    if(isInverted){
+     drivetrain.applyRequest(() -> drive.withVelocityX(xSlewRate.calculate((Math.signum(m_driverController.getHID().getRawAxis(1)) * Math.pow(m_driverController.getHID().getRawAxis(1), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive forward with
+                                                                                           // negative Y (forward)
+            .withVelocityY( ySlewRate.calculate((Math.signum(m_driverController.getHID().getRawAxis(0)) * Math.pow(m_driverController.getHID().getRawAxis(0), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
+        );
+    }
+    else{
+      drivetrain.applyRequest(() -> drive.withVelocityX(xSlewRate.calculate(-(Math.signum(m_driverController.getHID().getRawAxis(1)) * Math.pow(m_driverController.getHID().getRawAxis(1), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive forward with
+                                                                                           // negative Y (forward)
+            .withVelocityY( ySlewRate.calculate(-(Math.signum(m_driverController.getHID().getRawAxis(0)) * Math.pow(m_driverController.getHID().getRawAxis(0), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
+        );
+    });*/
+   drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> drive.withVelocityX(xSlewRate.calculate(-(Math.signum(m_driverController.getHID().getRawAxis(1)) * Math.pow(m_driverController.getHID().getRawAxis(1), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
             .withVelocityY( ySlewRate.calculate(-(Math.signum(m_driverController.getHID().getRawAxis(0)) * Math.pow(m_driverController.getHID().getRawAxis(0), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
@@ -118,11 +145,17 @@ public class RobotContainer {
     m_driverController.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0).withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) ));
     m_driverController.pov(270).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0).withVelocityY(0.5).withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) ));
 
+    m_driverController.button(8).toggleOnTrue(drivetrain.applyRequest(() -> drive.withVelocityX(xSlewRate.calculate((Math.signum(m_driverController.getHID().getRawAxis(1)) * Math.pow(m_driverController.getHID().getRawAxis(1), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive forward with
+                                                                                           // negative Y (forward)
+            .withVelocityY( ySlewRate.calculate((Math.signum(m_driverController.getHID().getRawAxis(0)) * Math.pow(m_driverController.getHID().getRawAxis(0), 2))) * Constants.SwerveConstants.MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getHID().getRawAxis(4) * Math.pow(m_driverController.getHID().getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
+        ));
+
     final JoystickButton ShootSubwooferButton = new JoystickButton(m_driverController.getHID(), XboxController.Button.kA.value);
       ShootSubwooferButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 58.48333).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootAmpButton = new JoystickButton(m_driverController.getHID(), XboxController.Button.kX.value);
-      ShootAmpButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 15.98).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      ShootAmpButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 15).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootPodiumButton = new JoystickButton(m_driverController.getHID(), XboxController.Button.kB.value);
       ShootPodiumButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 78).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
@@ -130,12 +163,17 @@ public class RobotContainer {
     final JoystickButton ShootBlueLineButton = new JoystickButton(m_driverController.getHID(), XboxController.Button.kY.value);
       ShootBlueLineButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 94).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
+
+
     //Buttons Controller
     final JoystickButton IntakeButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kA.value);    
       IntakeButton.toggleOnTrue(new Intake(m_ShooterSubsystem, m_ButtonsController, m_driverController).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton Reverse = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kX.value);
-      Reverse.whileTrue(new Reverse(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      Reverse.whileTrue(new TroubleShootReverse(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    
+    /*final JoystickButton TroubleShootReverse = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kX.value);
+      Reverse.whileTrue(new Reverse(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));*/
 
     final JoystickButton manualRotationUp = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kRightBumper.value);
       manualRotationUp.whileTrue(new ManualRotation(m_arm, 0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
@@ -144,10 +182,10 @@ public class RobotContainer {
       manualRotationDown.whileTrue(new ManualRotation(m_arm, -0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     
     final JoystickButton HomeArm = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kStart.value);
-      HomeArm.toggleOnTrue(new ManualRotation(m_arm, -0.35).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      HomeArm.toggleOnTrue(new ManualRotation(m_arm, -0.4).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
-    final JoystickButton BankPosButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kBack.value);
-      BankPosButton.toggleOnTrue(new RotateArm(m_arm, 48));
+    final JoystickButton TroubleShootButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kBack.value);
+      TroubleShootButton.toggleOnTrue(new TroubleShootIntake(m_ShooterSubsystem, m_ButtonsController, m_driverController).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton SourcePosButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kB.value);
       SourcePosButton.toggleOnTrue(new RotateArm(m_arm, 44));
@@ -155,8 +193,11 @@ public class RobotContainer {
     final JoystickButton ClimberButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kLeftStick.value);
       ClimberButton.whileTrue(new Climb(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
+    final JoystickButton ManualRotationPIDButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kRightStick.value);
+      ManualRotationPIDButton.toggleOnTrue(new ManualPID(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+
     final Trigger AmpPosButton = new Trigger (m_ButtonsController.povLeft());
-      AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 59));
+      AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 57));
     
     final Trigger SubwooferPosButton = new Trigger (m_ButtonsController.povDown());
       SubwooferPosButton.toggleOnTrue(new RotateArm(m_arm, 16));
@@ -164,8 +205,8 @@ public class RobotContainer {
     final Trigger PodiumPosButton = new Trigger (m_ButtonsController.povRight());
       PodiumPosButton.toggleOnTrue(new RotateArm(m_arm, 28));
 
-    final Trigger BlueLinePosButton = new Trigger (m_ButtonsController.povUp());
-      BlueLinePosButton.toggleOnTrue(new RotateArm(m_arm, 34));
+    final Trigger BankPosButton = new Trigger (m_ButtonsController.povUp());
+      BankPosButton.toggleOnTrue(new RotateArm(m_arm, 48));
 
     
     /*if (Utils.isSimulation()) {

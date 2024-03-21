@@ -61,8 +61,8 @@ public class Shooter extends SubsystemBase {
         Intake = new CANSparkMax(15, MotorType.kBrushless);
             Intake.setInverted(true);
             ReverseNoteSpeed = 0.3;
-            PickUpSpeed = 0.8;
-            MoveNoteSpeed = 0.15;
+            PickUpSpeed = 0.6;
+            MoveNoteSpeed = 0.15;                                  
 
         BackSensor = new DigitalInput(3);
         FrontSensor = new DigitalInput(4);
@@ -126,10 +126,10 @@ public class Shooter extends SubsystemBase {
 
     public boolean FrontSeesNote(){
         if (FrontSensor.get() == false){
-            return true;
+            return false;
         }
         else{
-            return false;
+            return true;
         }
     }
 

@@ -1,7 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.controls.CoastOut;
+import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -27,6 +29,8 @@ public class Arm extends SubsystemBase {
   public DigitalInput ForwardMagLimitSwitch;
   private Encoder revThroughBore;
   private double ClimberSpeed;
+  private static double CurrentSetpoint;
+  private VoltageConfigs voltageLimiter = new VoltageConfigs();
 
   public Arm() {
     ReverseMagLimitSwitch = new DigitalInput(5);
@@ -45,11 +49,17 @@ public class Arm extends SubsystemBase {
       slot0Configs.kG = Constants.ArmConstants.kG;
       slot0Configs.kS = Constants.ArmConstants.kS;
       slot0Configs.kV = Constants.ArmConstants.kV;
-  
+      slot0Configs.GravityType = Constants.ArmConstants.gType;
+      
     positionVoltage = new PositionVoltage(0).withSlot(0);
-    leftMotorFx = new TalonFX(10, "frc5126");
+
+
+
+    leftMotorFx = new TalonFX(11, "frc5126");
       leftMotorFx.getConfigurator().apply(slot0Configs);
-    rightMotorFx = new TalonFX(11, "frc5126"); // changing to a device ID of 12
+      leftMotorFx.getConfigurator().apply(voltageLimiter.withPeakForwardVoltage(6));
+      leftMotorFx.getConfigurator().apply(voltageLimiter.withPeakReverseVoltage(-6));
+      rightMotorFx = new TalonFX(10, "frc5126"); 
       rightMotorFx.setControl(new Follower(leftMotorFx.getDeviceID(), false));
 
     SmartDashboard.putNumber("Climber Speed", 0);
@@ -57,14 +67,16 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Reverse Mag Switch", ReverseMagLimitSwitch.get());
+        SmartDashboard.putBoolean("Forward Mag Switch", ForwardMagLimitSwitch.get());
     SmartDashboard.putNumber("arm speed", speed);
-    SmartDashboard.putNumber("reverse limit switch", leftMotorFx.getReverseLimit().getValueAsDouble());
-    SmartDashboard.putNumber("forward limit switch", leftMotorFx.getForwardLimit().getValueAsDouble());
+    SmartDashboard.putNumber("reverse limit switch", rightMotorFx.getReverseLimit().getValueAsDouble());
+    SmartDashboard.putNumber("forward limit switch", rightMotorFx.getForwardLimit().getValueAsDouble());
     SmartDashboard.putNumber("Arm Velocity", leftMotorFx.getVelocity().getValueAsDouble());
     SmartDashboard.putNumber("Potentiometer Position", potentiometer.get());
-    SmartDashboard.putNumber("Arm Position", leftMotorFx.getPosition().getValueAsDouble());
+    SmartDashboard.putNumber("left Arm Position", leftMotorFx.getPosition().getValueAsDouble());
+    SmartDashboard.putNumber("right Arm Position", rightMotorFx.getPosition().getValueAsDouble());
     SmartDashboard.putNumber("REV Encoder", revThroughBore.getDistance());
-    SmartDashboard.putBoolean("Arm Swtich", RobotContainer.getSwitchPosition());
+    SmartDashboard.putBoolean("Arm Mode Switch", RobotContainer.getSwitchPosition());
     ClimberSpeed = SmartDashboard.getNumber("Climber Speed", .1);
 
 
@@ -137,5 +149,13 @@ public class Arm extends SubsystemBase {
 
   public void setClimberSpeed(){
     leftMotorFx.set(ClimberSpeed);
+  }
+
+  public void setCurrentSetPoint(double setpoint){
+    CurrentSetpoint = setpoint;
+  }
+
+  public static double getCurrentSetpoint(){
+    return CurrentSetpoint;
   }
 }
