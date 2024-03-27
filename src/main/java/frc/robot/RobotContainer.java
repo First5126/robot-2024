@@ -31,7 +31,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Swerve.CommandSwerveDrivetrain;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.commands.Climb;
+import frc.robot.commands.DriveTest;
 import frc.robot.commands.Intake;
+import frc.robot.commands.LLDrive;
 import frc.robot.commands.ManualIntake;
 import frc.robot.commands.ManualPID;
 import frc.robot.commands.ManualRotation;
@@ -53,15 +55,14 @@ public class RobotContainer {
 
 
   //Subsystems
-  public final LLSubsystem m_LlSubsystem = new LLSubsystem();
   private final Shooter m_ShooterSubsystem = new Shooter(m_ButtonsController, m_driverController);
   public final static Arm m_arm = new Arm();
   //Swerve
   private boolean isInverted = false;
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(Constants.SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(Constants.SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+  .withDeadband(Constants.SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(Constants.SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
+  .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private final Telemetry logger = new Telemetry(Constants.SwerveConstants.MaxSpeed);
@@ -69,11 +70,13 @@ public class RobotContainer {
   private SlewRateLimiter ySlewRate = new SlewRateLimiter(1.5);
   private SlewRateLimiter rotationSlewRate = new SlewRateLimiter(1.5); 
   /* Path follower */
-
-
+  
+  
   //autoChooser
   private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   
+  //Limelight
+  public final LLSubsystem m_LlSubsystem = new LLSubsystem(drivetrain, forwardStraight);
   public RobotContainer() {
     
     NamedCommands.registerCommand("Rotate Arm Subwoofer", new RotateArm(m_arm, 15)); //Old : 16
@@ -160,9 +163,13 @@ public class RobotContainer {
     final JoystickButton ShootPodiumButton = new JoystickButton(m_driverController.getHID(), XboxController.Button.kB.value);
       ShootPodiumButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 78).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
-    final JoystickButton ShootBlueLineButton = new JoystickButton(m_driverController.getHID(), XboxController.Button.kY.value);
-      ShootBlueLineButton.  toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 94).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    /*final JoystickButton ShootBlueLineButton = new JoystickButton(m_driverController.getHID(), XboxController.Button.kY.value);
+      ShootBlueLineButton.  toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 94).withInterruptBehavior(InterruptionBehavior.kCancelSelf));*/
+    //final JoystickButton LLDrive = new JoystickButton(m_driverController.getHID(), XboxController.Button.kY.value);
+    //  LLDrive.whileTrue(new LLDrive(m_LlSubsystem));
 
+    final JoystickButton driveForwardButton = new JoystickButton(m_driverController.getHID(), XboxController.Button.kY.value);
+      driveForwardButton.whileTrue(new DriveTest(drivetrain, forwardStraight));
     //Buttons Controller
     final JoystickButton IntakeButton = new JoystickButton(m_ButtonsController.getHID(), XboxController.Button.kA.value);    
       IntakeButton.toggleOnTrue(new Intake(m_ShooterSubsystem, m_ButtonsController, m_driverController).withInterruptBehavior(InterruptionBehavior.kCancelSelf));

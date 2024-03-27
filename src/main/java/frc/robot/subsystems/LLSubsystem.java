@@ -1,7 +1,11 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Swerve.CommandSwerveDrivetrain;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -42,7 +46,15 @@ public class LLSubsystem extends SubsystemBase {
   double BackDistanceFromTarget = 0;
   double FrontDistanceFromTarget = 0;
 
-  public LLSubsystem() {}
+  final CommandSwerveDrivetrain drivetrain;
+  final SwerveRequest.RobotCentric drive;
+
+  public LLSubsystem(CommandSwerveDrivetrain drivetrain, SwerveRequest.RobotCentric drive) {
+    this.drivetrain = drivetrain;
+    this.drive = drive;
+    SmartDashboard.putNumber("LLRotRate", 1);
+    SmartDashboard.putNumber("Rotation Deadzone", 1);
+  }
 
   @Override
   public void periodic() {
@@ -52,12 +64,14 @@ public class LLSubsystem extends SubsystemBase {
     BackTY = BackLL.getEntry("ty");
     BackTA = BackLL.getEntry("ta");
     BackTID = BackLL.getEntry("tid");
+    SmartDashboard.putNumber("TID", BackTID.getDouble(0d));
 
     // Gets Front LimeLight reading data
     FrontTX = BackLL.getEntry("tx");
     FrontTY = BackLL.getEntry("ty");
     FrontTA = BackLL.getEntry("ta");
     FrontTID = BackLL.getEntry("tid");
+    
 
     // reads Back Limelight values periodically
     BackX = BackTX.getDouble(0.0);
@@ -70,19 +84,13 @@ public class LLSubsystem extends SubsystemBase {
     FrontY = BackTY.getDouble(0.0);
     FrontArea = BackTA.getDouble(0.0);
     FrontId = BackTID.getInteger(0);
-    
-    // Back Limelight Values
-    SmartDashboard.putNumber("(Back) Limelight tx", BackX);
-    SmartDashboard.putNumber("(Back) Limelight ty", BackY);
-    SmartDashboard.putNumber("(Back) Limelight Area", BackArea);
-    SmartDashboard.putNumber("(Back) Target Distance", BackDistanceFromTarget);
-
-    if (Math.signum(BackX) == 0){
+   
+    if (Math.signum(BackX) == -1){
       SmartDashboard.putBoolean("Offset-LEFT", true);
       SmartDashboard.putBoolean("Offset-RIGHT", false);
       SmartDashboard.putBoolean("Offset-CENTER", false);
     }
-    else if (Math.signum(BackX) == 0){
+    else if (Math.signum(BackX) == 1){
       SmartDashboard.putBoolean("Offset-RIGHT", true);
       SmartDashboard.putBoolean("Offset-LEFT", false);
       SmartDashboard.putBoolean("Offset-CENTER", false);
@@ -97,12 +105,6 @@ public class LLSubsystem extends SubsystemBase {
       SmartDashboard.putBoolean("Offset-LEFT", false);
       SmartDashboard.putBoolean("Offset-RIGHT", false);
     }
-
-    // Front Limelight Values
-    SmartDashboard.putNumber("(Front) Limelight tx", FrontX);
-    SmartDashboard.putNumber("(Front) Limelight ty", FrontY);
-    SmartDashboard.putNumber("(Front) Limelight Area", FrontArea);
-    SmartDashboard.putNumber("(Front) Target Distance", FrontDistanceFromTarget);
   }
 
   public double getDistance(int LLId) { 
@@ -144,6 +146,18 @@ public class LLSubsystem extends SubsystemBase {
     }
     else{
       return -1;
+    }
+  }
+  public void LLDrive(){
+    if(Math.round(BackX) * (3.14159 / 180.0) > SmartDashboard.getNumber("Rotation Deadzone", 1)){
+      drivetrain.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate( SmartDashboard.getNumber("LLRotRate", 1) )).execute();
+     
+    }
+    else if(Math.round(BackX) * (3.14159 / 180) < -SmartDashboard.getNumber("Rotation Deadzone", 1)){
+      drivetrain.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate( -SmartDashboard.getNumber("LLRotRate", 1) )).execute();
+    }
+    else{
+      drivetrain.applyRequest(() -> drive.withVelocityX(0.6).withVelocityY(0).withRotationalRate(0)).execute();
     }
   }
 }
