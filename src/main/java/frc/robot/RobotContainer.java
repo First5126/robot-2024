@@ -153,6 +153,8 @@ public class RobotContainer {
             .withRotationalRate( rotationSlewRate.calculate(-(m_driverController.getRawAxis(4) * Math.pow(m_driverController.getRawAxis(4), 2))) * Constants.SwerveConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
 
+    //final JoystickButton InvertDriveButton = new JoystickButton(m_driverController, XboxController.Button.kStart.value);
+      //InvertDriveButton.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     final JoystickButton BreakButton = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
       BreakButton.whileTrue(drivetrain.applyRequest(() -> brake));
 
@@ -160,7 +162,7 @@ public class RobotContainer {
       ShootSubwooferButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 58.48333).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootAmpButton = new JoystickButton(m_driverController, XboxController.Button.kX.value);
-      ShootAmpButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 15).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      ShootAmpButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 25).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootPodiumButton = new JoystickButton(m_driverController, XboxController.Button.kB.value);
       ShootPodiumButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 60).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
@@ -205,7 +207,7 @@ public class RobotContainer {
     final JoystickButton ManualRotationPIDButton = new JoystickButton(m_ButtonsController, XboxController.Button.kRightStick.value);
       ManualRotationPIDButton.toggleOnTrue(new ManualPID(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
-    final BooleanSupplier POVLeftButtons = () -> this.m_ButtonsController.getPOV() == 90;
+    final BooleanSupplier POVLeftButtons = () -> this.m_ButtonsController.getPOV() == 270;
       Trigger AmpPosButton = new Trigger (POVLeftButtons);
       AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 55));
     
@@ -213,7 +215,7 @@ public class RobotContainer {
       Trigger SubwooferPosButton = new Trigger (POVDownButtons);
       SubwooferPosButton.toggleOnTrue(new RotateArm(m_arm, 13));
 
-    final BooleanSupplier POVRightButtons = () -> this.m_ButtonsController.getPOV() == 270;
+    final BooleanSupplier POVRightButtons = () -> this.m_ButtonsController.getPOV() == 90;
       Trigger PodiumPosButton = new Trigger (POVRightButtons);
       PodiumPosButton.toggleOnTrue(new RotateArm(m_arm, 23));
     

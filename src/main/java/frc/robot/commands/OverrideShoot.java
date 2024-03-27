@@ -28,7 +28,7 @@ public class OverrideShoot extends Command {
         this.m_ShooterSubsystem = m_ShooterSubsystem;
         //this.m_ArmSubsystem = m_ArmSubsystem;
         m_CANdle = Robot.getCaNdle();
-        GoalRPS = 15;
+        GoalRPS = 26;
         addRequirements(m_ShooterSubsystem);
         
     }

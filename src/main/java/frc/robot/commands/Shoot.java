@@ -32,7 +32,7 @@ public class Shoot extends Command {
         this.m_ShooterSubsystem = m_ShooterSubsystem;
         this.m_ArmSubsystem = m_ArmSubsystem;
         GoalRPS = RPS;
-        m_CANdle = new LEDS_CANdle();
+        m_CANdle = LEDS_CANdle.getInstance();
 
         addRequirements(m_ShooterSubsystem);
         
@@ -57,22 +57,28 @@ public class Shoot extends Command {
         SmartDashboard.putNumber("current velo", m_ShooterSubsystem.getCurrentShooterVelocity());
 
         if( error <= DeadZone && m_ShooterSubsystem.BackSeesNote() ) {
+            m_CANdle.clearAnimation();
             m_CANdle.Twinkle(245,99,2);
             m_ShooterSubsystem.ManualIntakeSpeed(0.7);
         } 
 
         if (!m_ShooterSubsystem.BackSeesNote()){
-            m_CANdle.Twinkle(245,99,2);
+            m_CANdle.clearAnimation();
+            m_CANdle.Twinkle(132, 2, 245);
             isFinished = true;  
         }
+        //m_CANdle.Twinkle(132, 2, 245);
+
     }
 
     @Override
     public void end(boolean interrupted) {
+        m_CANdle.clearAnimation();
+        m_CANdle.Twinkle(132, 2, 245);
         System.out.println("shoot end");
         m_ShooterSubsystem.zeroShooter();
         m_ShooterSubsystem.zeroIntake();
-        m_CANdle.Twinkle(132, 2, 245);
+
         isFinished = true;
     }
 
