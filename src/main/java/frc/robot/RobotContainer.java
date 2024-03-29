@@ -93,6 +93,7 @@ public class RobotContainer {
     autoChooser.addOption("Three Blue Note Auto", drivetrain.getAutoPath("Three Note Blue Auto"));
     autoChooser.addOption("Two Blue Note Auto", drivetrain.getAutoPath("Two Note Blue Auto"));
     autoChooser.addOption("One Note Pickup Blue Auto", drivetrain.getAutoPath("One Note Pickup Blue Auto"));
+    autoChooser.addOption("1730 Three Blue Note Auto", drivetrain.getAutoPath("1730 Three Note Blue Auto"));
     autoChooser.addOption("No Auto", drivetrain.getAutoPath("Null"));
 
     SmartDashboard.putData(autoChooser);
@@ -167,10 +168,10 @@ public class RobotContainer {
     final JoystickButton ShootPodiumButton = new JoystickButton(m_driverController, XboxController.Button.kB.value);
       ShootPodiumButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 60).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
-    final JoystickButton EjectButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
-      EjectButton.toggleOnTrue(new OverrideShoot(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-    //final JoystickButton ShootBlueLineButton = new JoystickButton(m_driverController.getHID(), XboxController.Button.kY.value);
-      //ShootBlueLineButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 94).withInterruptBehavior(InterruptionBehavior.kCancelSelf)); //dont 
+    //final JoystickButton EjectButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
+      //EjectButton.toggleOnTrue(new OverrideShoot(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    final JoystickButton ShootBlueLineButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
+      ShootBlueLineButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 94).withInterruptBehavior(InterruptionBehavior.kCancelSelf)); //dont 
 
 
 
