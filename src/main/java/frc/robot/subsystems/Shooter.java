@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -31,14 +32,14 @@ public class Shooter extends SubsystemBase {
     private Slot0Configs slot0Configs;
     private VelocityVoltage velocityVoltage;
     private double goalRPS;
-    private CommandGenericHID m_buttonsController;
-    private CommandGenericHID m_driverController;
+    private XboxController m_buttonsController;
+    private XboxController m_driverController;
     //private Pigeon2 Pigeon;
     public boolean rumbling;
     public Timer timer = new Timer();
 
 
-    public Shooter(CommandGenericHID controller, CommandGenericHID m_driverController2) {
+    public Shooter(XboxController controller, XboxController m_driverController2) {
         
         slot0Configs = new Slot0Configs();
         slot0Configs.kP = Constants.ShooterConstants.kP;
@@ -81,8 +82,8 @@ public class Shooter extends SubsystemBase {
             if (timer.hasElapsed(2)){
                 timer.stop();
                 timer.reset();
-                m_buttonsController.getHID().setRumble(RumbleType.kBothRumble, 0);
-                m_driverController.getHID().setRumble(RumbleType.kBothRumble, 0);
+                m_buttonsController.setRumble(RumbleType.kBothRumble, 0);
+                m_driverController.setRumble(RumbleType.kBothRumble, 0);
             }
         
     }
@@ -126,10 +127,10 @@ public class Shooter extends SubsystemBase {
 
     public boolean FrontSeesNote(){
         if (FrontSensor.get() == false){
-            return false;
+            return true;
         }
         else{
-            return true;
+            return false;
         }
     }
 

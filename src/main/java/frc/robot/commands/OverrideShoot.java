@@ -24,12 +24,11 @@ public class OverrideShoot extends Command {
     private double ArmPosition;
     private LEDS_CANdle m_CANdle;
 
-    public OverrideShoot(Shooter m_ShooterSubsystem, Arm m_ArmSubsystem, double RPS) {
+    public OverrideShoot(Shooter m_ShooterSubsystem) {
         this.m_ShooterSubsystem = m_ShooterSubsystem;
-        this.m_ArmSubsystem = m_ArmSubsystem;
-        GoalRPS = RPS;
+        //this.m_ArmSubsystem = m_ArmSubsystem;
         m_CANdle = Robot.getCaNdle();
-
+        GoalRPS = 26;
         addRequirements(m_ShooterSubsystem);
         
     }
@@ -38,7 +37,7 @@ public class OverrideShoot extends Command {
     public void initialize() {
         System.out.println("shoot innit");
         isFinished = false;
-        ArmPosition = m_ArmSubsystem.getPosition();
+        //ArmPosition = m_ArmSubsystem.getPosition();
         //ShooterSetpoint t = ShooterSetpointConstants.getInstance().getShooterSetpointElement(0);
     
         DeadZone = 2;

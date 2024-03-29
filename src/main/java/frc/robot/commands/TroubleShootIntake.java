@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import frc.robot.LEDS_CANdle;
 import frc.robot.subsystems.Shooter;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -13,12 +14,12 @@ public class TroubleShootIntake extends Command {
     private final Shooter m_subsystem;
     private boolean isFinished;
     private boolean Slowed = false;
-    private final CommandGenericHID m_buttonsController;
-    private final CommandGenericHID m_driverController;
+    private final XboxController m_buttonsController;
+    private final XboxController m_driverController;
     private LEDS_CANdle m_CANdle;
 
 
-    public TroubleShootIntake(Shooter subsystem, CommandGenericHID controller, CommandGenericHID driver) {
+    public TroubleShootIntake(Shooter subsystem, XboxController controller, XboxController driver) {
         m_subsystem = subsystem;
         m_buttonsController = controller;
         m_driverController = driver;
@@ -35,8 +36,8 @@ public class TroubleShootIntake extends Command {
     @Override
     public void execute() {
         if (m_subsystem.BackSeesNote()){
-            m_buttonsController.getHID().setRumble(RumbleType.kBothRumble, 1);
-            m_driverController.getHID().setRumble(RumbleType.kBothRumble, 1);
+            m_buttonsController.setRumble(RumbleType.kBothRumble, 1);
+            m_driverController.setRumble(RumbleType.kBothRumble, 1);
             m_CANdle.setRGBColor(245, 99, 2);
 
             isFinished = true;

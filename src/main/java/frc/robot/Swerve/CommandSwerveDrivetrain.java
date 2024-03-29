@@ -13,6 +13,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -30,6 +31,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    private boolean hasAppliedOperatrorPersepective = false;
+    private final Rotation2d BlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
+    private final Rotation2d RedAlliancePerspectionRotation = Rotation2d.fromDegrees(180);
     private final SwerveRequest.ApplyChassisSpeeds AutoRequest = new SwerveRequest.ApplyChassisSpeeds();
 
 
@@ -99,5 +103,14 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public void periodic(){
         //SmartDashboard.putData(this.getPigeon2());
+        
+        if(!hasAppliedOperatrorPersepective || DriverStation.isDisabled()){
+            DriverStation.getAlliance().ifPresent((allianceColor) -> {
+                this.setOperatorPerspectiveForward(
+                    allianceColor == Alliance.Red ? RedAlliancePerspectionRotation 
+                        : BlueAlliancePerspectiveRotation);
+                hasAppliedOperatrorPersepective = true;
+            });
+        }
     }
 }

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7629427135338847,
-      "y": 6.5810867963778685
+      "x": 1.2771521839339972,
+      "y": 5.55472336015897
     },
-    "rotation": 61.02651563822026
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.25
+            "waitTime": 0.17
           }
         },
         {
@@ -54,22 +54,22 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SubLeft of ColorLeft"
+                  "pathName": "Blue Center Subwoofer"
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "ColorLeft to Shoot"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Rotate Arm Podium"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.08
           }
         },
         {
@@ -87,7 +87,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.1
+            "waitTime": 0.08
           }
         },
         {
@@ -103,16 +103,28 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Shoot to ColorCenter"
+                  "pathName": "AMP Center Blue to Middle"
                 }
               }
             ]
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Middle to Blue AMP Center"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Rotate Arm Podium"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.08
           }
         },
         {
@@ -125,49 +137,6 @@
           "type": "named",
           "data": {
             "name": "Rotate Arm Home"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.1
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "ColorCenter to ColorRight"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ColorRight to ColorCenter"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Rotate Arm Podium"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot Podium"
           }
         }
       ]

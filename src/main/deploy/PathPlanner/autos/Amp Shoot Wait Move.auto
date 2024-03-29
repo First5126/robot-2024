@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2771521839339972,
-      "y": 5.55472336015897
+      "x": 0.8210801606788397,
+      "y": 6.689056341075646
     },
-    "rotation": 0
+    "rotation": 61.260204708311925
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.17
           }
         },
         {
@@ -36,28 +36,21 @@
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "Rotate Arm Home"
+            "waitTime": 9.0
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Blue Center Subwoofer"
-                }
-              }
-            ]
+            "pathName": "Mobility Amp Side"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Home"
           }
         }
       ]
