@@ -40,7 +40,7 @@ public class LLSubsystem extends SubsystemBase {
   double FrontLimelightAngle = 35;
 
   // distance from the center of the Limelight lens to the floor in inches 
-  double backLimelightHeight = 19.5;
+  double backLimelightHeight = 13.75;
   double FrontLimelightHeight = 31.0;  
 
   double BackDistanceFromTarget = 0;
@@ -147,6 +147,9 @@ public class LLSubsystem extends SubsystemBase {
     else{
       return -1;
     }
+  }
+  public double GetRotation(){
+    return Math.round(BackX) * (3.14159 / 180);
   }
   public void LLDrive(){
     if(Math.round(BackX) * (3.14159 / 180.0) > SmartDashboard.getNumber("Rotation Deadzone", 1)){

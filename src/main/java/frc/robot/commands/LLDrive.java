@@ -23,12 +23,13 @@ public class LLDrive extends Command {
     }
 
     @Override
-
     public void execute(){
         m_LLSubsystem.LLDrive();
-        if(m_LLSubsystem.getDistance(2) >= SmartDashboard.getNumber("Distance Deadzone", 36)){
-            isFinished = true;
-        }
+        if(m_LLSubsystem.getDistance(2) <= SmartDashboard.getNumber("Distance Deadzone", 36)
+         && m_LLSubsystem.GetRotation() < SmartDashboard.getNumber("Rotation Deadzone", 1)
+         && m_LLSubsystem.GetRotation() > -SmartDashboard.getNumber("Rotation Deadzone", 1)){
+             isFinished = true;
+         }
     }
     @Override
     public void end(boolean interrupted) {
