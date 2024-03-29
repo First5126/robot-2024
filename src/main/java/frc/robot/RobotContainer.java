@@ -94,6 +94,8 @@ public class RobotContainer {
     autoChooser.addOption("Two Blue Note Auto", drivetrain.getAutoPath("Two Note Blue Auto"));
     autoChooser.addOption("One Note Pickup Blue Auto", drivetrain.getAutoPath("One Note Pickup Blue Auto"));
     autoChooser.addOption("1730 Three Blue Note Auto", drivetrain.getAutoPath("1730 Three Note Blue Auto"));
+    autoChooser.addOption("Amp Shoot Wait Move", drivetrain.getAutoPath("Amp Shoot Wait Move"));
+    autoChooser.addOption("Source Shoot Wait Move", drivetrain.getAutoPath("Source Shoot Wait Move"));
     autoChooser.addOption("No Auto", drivetrain.getAutoPath("Null"));
 
     SmartDashboard.putData(autoChooser);
