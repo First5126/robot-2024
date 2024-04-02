@@ -29,9 +29,11 @@ public class ManualRotation extends Command {
     
     if ((m_subsystem.getReverseMagneticLimit() && Math.signum(speed) == -1) || (m_subsystem.leftMotorFx.getReverseLimit().getValueAsDouble() == 0 && Math.signum(speed) == -1)){
       isFinished = true;
+      System.out.println("Manual Rotation Ended -- Limit Switch Detected");
     }
     else if ((m_subsystem.leftMotorFx.getForwardLimit().getValueAsDouble() == 0 && Math.signum(speed) == 1) || (m_subsystem.getForwardMagneticLimit() && Math.signum(speed) == 1) ){
       isFinished = true;
+      System.out.println("Manual Rotation Ended -- Limit Switch Detected");
     }
     else{
       m_subsystem.manualRot(speed);
@@ -41,7 +43,6 @@ public class ManualRotation extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Manual Rotation Ended -- Limit Switch Detected");
     isFinished = true;
     m_subsystem.endRot();
   }
