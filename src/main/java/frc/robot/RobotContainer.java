@@ -165,7 +165,7 @@ public class RobotContainer {
       ShootSubwooferButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 58.48333).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootAmpButton = new JoystickButton(m_driverController, XboxController.Button.kX.value);
-      ShootAmpButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 25).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      ShootAmpButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 20).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootPodiumButton = new JoystickButton(m_driverController, XboxController.Button.kB.value);
       ShootPodiumButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 60).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
@@ -212,7 +212,7 @@ public class RobotContainer {
 
     final BooleanSupplier POVLeftButtons = () -> this.m_ButtonsController.getPOV() == 270;
       Trigger AmpPosButton = new Trigger (POVLeftButtons);
-      AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 55));
+      AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 57));
     
     final BooleanSupplier POVDownButtons = () -> this.m_ButtonsController.getPOV() == 180;
       Trigger SubwooferPosButton = new Trigger (POVDownButtons);
@@ -220,7 +220,7 @@ public class RobotContainer {
 
     final BooleanSupplier POVRightButtons = () -> this.m_ButtonsController.getPOV() == 90;
       Trigger PodiumPosButton = new Trigger (POVRightButtons);
-      PodiumPosButton.toggleOnTrue(new RotateArm(m_arm, 23));
+      PodiumPosButton.toggleOnTrue(new RotateArm(m_arm, 24));
     
   final BooleanSupplier POVUpButtons = () -> this.m_ButtonsController.getPOV() == 0;
       Trigger BankPosButton = new Trigger (POVUpButtons);
