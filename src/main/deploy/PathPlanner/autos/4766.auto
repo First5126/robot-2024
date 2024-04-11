@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.8327743151212798,
-      "y": 4.397002070357417
+      "x": 0.6690561529271205,
+      "y": 6.653973877748326
     },
-    "rotation": -61.113418233089355
+    "rotation": 59.03624346792638
   },
   "command": {
     "type": "sequential",
@@ -38,19 +38,38 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 9.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Source Side Note"
+            "waitTime": 7.0
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Rotate Arm Home"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4766 Path"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate to Bank Pos"
           }
         }
       ]
