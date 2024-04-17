@@ -81,9 +81,9 @@ public class RobotContainer {
   
   public RobotContainer() { 
     
-    NamedCommands.registerCommand("Rotate Arm Subwoofer", new RotateArm(m_arm, 13)); //Old : 15
+    NamedCommands.registerCommand("Rotate Arm Subwoofer", new RotateArm(m_arm, 11)); //Old : 15
     NamedCommands.registerCommand("Shoot Subwoofer", new Shoot(m_ShooterSubsystem, m_arm, 58.4833));
-    NamedCommands.registerCommand("Rotate Arm Podium", new RotateArm(m_arm, 24)); //Old : 26
+    NamedCommands.registerCommand("Rotate Arm Podium", new RotateArm(m_arm, 21.5)); //Old : 26
     NamedCommands.registerCommand("Rotate Arm Home", new ManualRotation(m_arm, -0.4));
     NamedCommands.registerCommand("Shoot Podium", new Shoot(m_ShooterSubsystem, m_arm, 78));
     NamedCommands.registerCommand("Intake", new Intake(m_ShooterSubsystem, m_ButtonsController, m_driverController));
@@ -215,15 +215,15 @@ public class RobotContainer {
 
     final BooleanSupplier POVLeftButtons = () -> this.m_ButtonsController.getPOV() == 270;
       Trigger AmpPosButton = new Trigger (POVLeftButtons);
-      AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 59));
+      AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 56));
     
     final BooleanSupplier POVDownButtons = () -> this.m_ButtonsController.getPOV() == 180;
       Trigger SubwooferPosButton = new Trigger (POVDownButtons);
-      SubwooferPosButton.toggleOnTrue(new RotateArm(m_arm, 13));
+      SubwooferPosButton.toggleOnTrue(new RotateArm(m_arm, 10.5));
 
     final BooleanSupplier POVRightButtons = () -> this.m_ButtonsController.getPOV() == 90;
       Trigger PodiumPosButton = new Trigger (POVRightButtons);
-      PodiumPosButton.toggleOnTrue(new RotateArm(m_arm, 24));
+      PodiumPosButton.toggleOnTrue(new RotateArm(m_arm, 21.5));
     
   final BooleanSupplier POVUpButtons = () -> this.m_ButtonsController.getPOV() == 0;
       Trigger BankPosButton = new Trigger (POVUpButtons);
