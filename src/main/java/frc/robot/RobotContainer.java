@@ -176,7 +176,7 @@ public class RobotContainer {
     //final JoystickButton EjectButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
       //EjectButton.toggleOnTrue(new OverrideShoot(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     final JoystickButton ShootBlueLineButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
-      ShootBlueLineButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 52).withInterruptBehavior(InterruptionBehavior.kCancelSelf)); //dont 
+      ShootBlueLineButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 54).withInterruptBehavior(InterruptionBehavior.kCancelSelf)); //dont 
 
 
 
@@ -227,7 +227,7 @@ public class RobotContainer {
     
   final BooleanSupplier POVUpButtons = () -> this.m_ButtonsController.getPOV() == 0;
       Trigger BankPosButton = new Trigger (POVUpButtons);
-      BankPosButton.toggleOnTrue(new RotateArm(m_arm, 55));
+      BankPosButton.toggleOnTrue(new RotateArm(m_arm, 52));
 
     
     /*if (Utils.isSimulation()) {
