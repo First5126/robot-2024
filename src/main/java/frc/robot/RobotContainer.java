@@ -81,7 +81,7 @@ public class RobotContainer {
   private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   
   //Limelight
-  public final LLSubsystem m_LlSubsystem = new LLSubsystem(drivetrain, forwardStraight);
+  public final LLSubsystem m_LlSubsystem = new LLSubsystem(drivetrain, drive);
   public RobotContainer() {
     
     NamedCommands.registerCommand("Rotate Arm Subwoofer", new RotateArm(m_arm, 13)); //Old : 15

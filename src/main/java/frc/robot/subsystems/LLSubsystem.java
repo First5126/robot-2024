@@ -11,6 +11,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
+import edu.wpi.first.math.controller.PIDController;
+
 public class LLSubsystem extends SubsystemBase {
 
   NetworkTable BackLL = NetworkTableInstance.getDefault().getTable("limelight-upper");
@@ -47,9 +49,10 @@ public class LLSubsystem extends SubsystemBase {
   double FrontDistanceFromTarget = 0;
 
   final CommandSwerveDrivetrain drivetrain;
-  final SwerveRequest.RobotCentric drive;
+  final SwerveRequest.FieldCentric drive;
+  final PIDController LLDriveController = new PIDController(Constants.LLDrivingConstants.P, Constants.LLDrivingConstants.I, Constants.LLDrivingConstants.D);
 
-  public LLSubsystem(CommandSwerveDrivetrain drivetrain, SwerveRequest.RobotCentric drive) {
+  public LLSubsystem(CommandSwerveDrivetrain drivetrain, SwerveRequest.FieldCentric drive) {
     this.drivetrain = drivetrain;
     this.drive = drive;
     SmartDashboard.putNumber("LLRotRate", 1);
@@ -59,6 +62,7 @@ public class LLSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     
+
     // Gets Back LimeLight reading data
     BackTX = BackLL.getEntry("tx");
     BackTY = BackLL.getEntry("ty");
@@ -152,15 +156,9 @@ public class LLSubsystem extends SubsystemBase {
     return Math.round(BackX) * (3.14159 / 180);
   }
   public void LLDrive(){
-    if(Math.round(BackX) * (3.14159 / 180.0) > SmartDashboard.getNumber("Rotation Deadzone", 1)){
-      drivetrain.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate( SmartDashboard.getNumber("LLRotRate", 1) )).execute();
-     
-    }
-    else if(Math.round(BackX) * (3.14159 / 180) < -SmartDashboard.getNumber("Rotation Deadzone", 1)){
-      drivetrain.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate( -SmartDashboard.getNumber("LLRotRate", 1) )).execute();
-    }
-    else{
-      drivetrain.applyRequest(() -> drive.withVelocityX(0.6).withVelocityY(0).withRotationalRate(0)).execute();
+    if(!LLDriveController.atSetpoint()){
+      double setpoint = BackX + drivetrain.getState().Pose.getRotation().getDegrees();
+      drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0).withRotationalRate(LLDriveController.calculate(drivetrain.getState().Pose.getRotation().getDegrees() + FrontX, setpoint)));
     }
   }
 }
