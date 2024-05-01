@@ -1,0 +1,178 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7629427135338847,
+      "y": 6.5810867963778685
+    },
+    "rotation": 61.02651563822026
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Home"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Subwoofer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Subwoofer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Home"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SubLeft of ColorLeft"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ColorLeft to Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Podium"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Podium"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Home"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Shoot to ColorCenter"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Podium"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Podium"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Home"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ColorCenter to ColorRight"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ColorRight to ColorCenter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Podium"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Podium"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Blue",
+  "choreoAuto": false
+}

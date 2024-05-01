@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.8327743151212798,
+      "y": 4.397002070357417
+    },
+    "rotation": -61.113418233089355
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Home"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.17
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Subwoofer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Subwoofer"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Source Side Note"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Red",
+  "choreoAuto": false
+}

@@ -1,0 +1,92 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.8327743151212798,
+      "y": 4.397002070357417
+    },
+    "rotation": -61.113418233089355
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Home"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.17
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Subwoofer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Subwoofer"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.02
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Home"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Source Side Note"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate to Bank Pos"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Next Note"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Podium"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Blue",
+  "choreoAuto": false
+}

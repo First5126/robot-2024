@@ -1,0 +1,147 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.2771521839339972,
+      "y": 5.55472336015897
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Home"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.17
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Subwoofer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Subwoofer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Home"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Blue Center Subwoofer"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Podium"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.07
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Podium"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Home"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.07
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Center Blue to Middle"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Middle to Blue Center"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Podium"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.07
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Podium"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Home"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Blue",
+  "choreoAuto": false
+}
