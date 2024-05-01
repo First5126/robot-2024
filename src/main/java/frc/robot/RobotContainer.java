@@ -89,6 +89,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Intake", new Intake(m_ShooterSubsystem, m_ButtonsController, m_driverController));
     NamedCommands.registerCommand("Rotate to Bank Pos", new RotateArm(m_arm, 52));
 
+    autoChooser.addOption("Bank Source Shoot Move", drivetrain.getAutoPath("Bank Source Shoot Move"));
+    autoChooser.addOption("Amp Side 3 Note", drivetrain.getAutoPath("Amp Side 3 Note"));
     autoChooser.addOption("Alliance 4 Note Auto", drivetrain.getAutoPath("Alliance Color 4 Note Auto"));
     autoChooser.addOption("Four Blue Note Auto", drivetrain.getAutoPath("Four Note Blue Auto"));
     autoChooser.addOption("Three Blue Note Auto", drivetrain.getAutoPath("Three Note Blue Auto"));
@@ -98,6 +100,7 @@ public class RobotContainer {
     autoChooser.addOption("Amp Shoot Wait Move", drivetrain.getAutoPath("Amp Shoot Wait Move"));
     autoChooser.addOption("Blue Source Shoot Wait Move", drivetrain.getAutoPath("Source Shoot Wait Move"));
     autoChooser.addOption("Red Source Shoot Wait Move", drivetrain.getAutoPath("Red Source Shoot Wait Move"));
+    autoChooser.addOption("Amp Side 3 Note Auto", drivetrain.getAutoPath("Amp Side 3 Note"));
     autoChooser.addOption("4766 Auto", drivetrain.getAutoPath("4766"));
     autoChooser.addOption("No Auto", drivetrain.getAutoPath("Null"));
 
@@ -207,9 +210,6 @@ public class RobotContainer {
     final JoystickButton SourcePosButton = new JoystickButton(m_ButtonsController, XboxController.Button.kB.value);
       SourcePosButton.toggleOnTrue(new RotateArm(m_arm, 40.8));
 
-    final JoystickButton ClimberButton = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
-      ClimberButton.whileTrue(new Climb(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-
     final JoystickButton ManualRotationPIDButton = new JoystickButton(m_ButtonsController, XboxController.Button.kRightStick.value);
       ManualRotationPIDButton.toggleOnTrue(new ManualPID(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
@@ -227,7 +227,7 @@ public class RobotContainer {
     
   final BooleanSupplier POVUpButtons = () -> this.m_ButtonsController.getPOV() == 0;
       Trigger BankPosButton = new Trigger (POVUpButtons);
-      BankPosButton.toggleOnTrue(new RotateArm(m_arm, 52));
+      BankPosButton.toggleOnTrue(new RotateArm(m_arm, 49));
 
     
     /*if (Utils.isSimulation()) {
