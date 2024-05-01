@@ -38,13 +38,50 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 9.0
+            "waitTime": 0.02
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate Arm Home"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Source Side Note"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Rotate to Bank Pos"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Source Side Note"
+            "pathName": "Next Note"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Podium"
           }
         }
       ]

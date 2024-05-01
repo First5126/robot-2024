@@ -84,13 +84,16 @@ public class RobotContainer {
   public final LLSubsystem m_LlSubsystem = new LLSubsystem(drivetrain, drive);
   public RobotContainer() {
     
-    NamedCommands.registerCommand("Rotate Arm Subwoofer", new RotateArm(m_arm, 13)); //Old : 15
+    NamedCommands.registerCommand("Rotate Arm Subwoofer", new RotateArm(m_arm, 11)); //Old : 15
     NamedCommands.registerCommand("Shoot Subwoofer", new Shoot(m_ShooterSubsystem, m_arm, 58.4833));
-    NamedCommands.registerCommand("Rotate Arm Podium", new RotateArm(m_arm, 23)); //Old : 26
+    NamedCommands.registerCommand("Rotate Arm Podium", new RotateArm(m_arm, 21.5)); //Old : 26
     NamedCommands.registerCommand("Rotate Arm Home", new ManualRotation(m_arm, -0.4));
     NamedCommands.registerCommand("Shoot Podium", new Shoot(m_ShooterSubsystem, m_arm, 78));
     NamedCommands.registerCommand("Intake", new Intake(m_ShooterSubsystem, m_ButtonsController, m_driverController));
+    NamedCommands.registerCommand("Rotate to Bank Pos", new RotateArm(m_arm, 52));
 
+    autoChooser.addOption("Bank Source Shoot Move", drivetrain.getAutoPath("Bank Source Shoot Move"));
+    autoChooser.addOption("Amp Side 3 Note", drivetrain.getAutoPath("Amp Side 3 Note"));
     autoChooser.addOption("Alliance 4 Note Auto", drivetrain.getAutoPath("Alliance Color 4 Note Auto"));
     autoChooser.addOption("Four Blue Note Auto", drivetrain.getAutoPath("Four Note Blue Auto"));
     autoChooser.addOption("Three Blue Note Auto", drivetrain.getAutoPath("Three Note Blue Auto"));
@@ -98,7 +101,10 @@ public class RobotContainer {
     autoChooser.addOption("One Note Pickup Blue Auto", drivetrain.getAutoPath("One Note Pickup Blue Auto"));
     autoChooser.addOption("1730 Three Blue Note Auto", drivetrain.getAutoPath("1730 Three Note Blue Auto"));
     autoChooser.addOption("Amp Shoot Wait Move", drivetrain.getAutoPath("Amp Shoot Wait Move"));
-    autoChooser.addOption("Source Shoot Wait Move", drivetrain.getAutoPath("Source Shoot Wait Move"));
+    autoChooser.addOption("Blue Source Shoot Wait Move", drivetrain.getAutoPath("Source Shoot Wait Move"));
+    autoChooser.addOption("Red Source Shoot Wait Move", drivetrain.getAutoPath("Red Source Shoot Wait Move"));
+    autoChooser.addOption("Amp Side 3 Note Auto", drivetrain.getAutoPath("Amp Side 3 Note"));
+    autoChooser.addOption("4766 Auto", drivetrain.getAutoPath("4766"));
     autoChooser.addOption("No Auto", drivetrain.getAutoPath("Null"));
 
     SmartDashboard.putData(autoChooser);
@@ -168,7 +174,7 @@ public class RobotContainer {
       ShootSubwooferButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 58.48333).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootAmpButton = new JoystickButton(m_driverController, XboxController.Button.kX.value);
-      ShootAmpButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 25).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      ShootAmpButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 20).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootPodiumButton = new JoystickButton(m_driverController, XboxController.Button.kB.value);
       ShootPodiumButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 60).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
@@ -176,7 +182,7 @@ public class RobotContainer {
     //final JoystickButton EjectButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
       //EjectButton.toggleOnTrue(new OverrideShoot(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     final JoystickButton ShootBlueLineButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
-      ShootBlueLineButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 94).withInterruptBehavior(InterruptionBehavior.kCancelSelf)); //dont 
+      ShootBlueLineButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 54).withInterruptBehavior(InterruptionBehavior.kCancelSelf)); //dont 
 
     final JoystickButton driveForwardButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
       driveForwardButton.whileTrue(new LLDrive(m_LlSubsystem));
@@ -191,10 +197,10 @@ public class RobotContainer {
       Reverse.whileTrue(new Reverse(m_ShooterSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));*/
 
     final JoystickButton manualRotationUp = new JoystickButton(m_ButtonsController, XboxController.Button.kRightBumper.value);
-      manualRotationUp.whileTrue(new ManualRotation(m_arm, 0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      manualRotationUp.whileTrue(new ManualRotation(m_arm, 0.2).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton manualRotationDown = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftBumper.value);
-      manualRotationDown.whileTrue(new ManualRotation(m_arm, -0.1).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      manualRotationDown.whileTrue(new ManualRotation(m_arm, -0.2).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     
     final JoystickButton HomeArm = new JoystickButton(m_ButtonsController, XboxController.Button.kStart.value);
       HomeArm.toggleOnTrue(new ManualRotation(m_arm, -0.4).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
@@ -217,19 +223,19 @@ public class RobotContainer {
 
     final BooleanSupplier POVLeftButtons = () -> this.m_ButtonsController.getPOV() == 270;
       Trigger AmpPosButton = new Trigger (POVLeftButtons);
-      AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 55));
+      AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 56));
     
     final BooleanSupplier POVDownButtons = () -> this.m_ButtonsController.getPOV() == 180;
       Trigger SubwooferPosButton = new Trigger (POVDownButtons);
-      SubwooferPosButton.toggleOnTrue(new RotateArm(m_arm, 13));
+      SubwooferPosButton.toggleOnTrue(new RotateArm(m_arm, 10.5));
 
     final BooleanSupplier POVRightButtons = () -> this.m_ButtonsController.getPOV() == 90;
       Trigger PodiumPosButton = new Trigger (POVRightButtons);
-      PodiumPosButton.toggleOnTrue(new RotateArm(m_arm, 23));
+      PodiumPosButton.toggleOnTrue(new RotateArm(m_arm, 21.5));
     
   final BooleanSupplier POVUpButtons = () -> this.m_ButtonsController.getPOV() == 0;
       Trigger BankPosButton = new Trigger (POVUpButtons);
-      BankPosButton.toggleOnTrue(new RotateArm(m_arm, 48));
+      BankPosButton.toggleOnTrue(new RotateArm(m_arm, 49));
 
     
     if (Utils.isSimulation()) {
