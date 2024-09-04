@@ -212,8 +212,8 @@ public class RobotContainer {
       final JoystickButton SourcePosButton = new JoystickButton(m_ButtonsController, XboxController.Button.kB.value);
       SourcePosButton.toggleOnTrue(new RotateArm(m_arm, 40.8));
       
-      final JoystickButton ClimberButton = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
-      ClimberButton.whileTrue(new Climb(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      //final JoystickButton ClimberButton = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
+      //ClimberButton.whileTrue(new Climb(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
       
       final JoystickButton ManualRotationPIDButton = new JoystickButton(m_ButtonsController, XboxController.Button.kRightStick.value);
       ManualRotationPIDButton.toggleOnTrue(new ManualPID(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));

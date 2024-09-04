@@ -153,12 +153,12 @@ public class LLSubsystem extends SubsystemBase {
     }
   }
   public double GetRotation(){
-    return Math.round(BackX) * (3.14159 / 180);
+    return Math.round(FrontX) * (3.14159 / 180);
   }
   public void LLDrive(){
     if(!LLDriveController.atSetpoint()){
       double setpoint = BackX + drivetrain.getState().Pose.getRotation().getDegrees();
-      drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0).withRotationalRate(LLDriveController.calculate(drivetrain.getState().Pose.getRotation().getDegrees() + FrontX, setpoint)));
+      drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0).withRotationalRate(LLDriveController.calculate(drivetrain.getState().Pose.getRotation().getDegrees() +  BackX, setpoint)));
     }
   }
 }
