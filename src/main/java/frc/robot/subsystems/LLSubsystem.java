@@ -155,9 +155,18 @@ public class LLSubsystem extends SubsystemBase {
   public double GetRotation(){
     return Math.round(FrontX) * (3.14159 / 180);
   }
+  
+  // normally methods and variables should have a lower case first letter
   public void LLDrive(){
     if(!LLDriveController.atSetpoint()){
+      //TODO
+      //The setpoint is alays being the same as the measurement. This will generate no output.
+      //What we want is a measurment that is the error.  The Limelight provides this as the TX value
       double setpoint = BackX + drivetrain.getState().Pose.getRotation().getDegrees();
+      //TODO
+      //To make this easier to read I would make a new double variable that is the output
+      // then have the controller calculate the output using a measurment (first parameter of calculate) of the LL tx value
+      // and the setpoint (second parameter of calculate) of 0
       drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0).withRotationalRate(LLDriveController.calculate(drivetrain.getState().Pose.getRotation().getDegrees() +  BackX, setpoint)));
     }
   }
