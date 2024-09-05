@@ -218,6 +218,7 @@ public class RobotContainer {
       final JoystickButton ManualRotationPIDButton = new JoystickButton(m_ButtonsController, XboxController.Button.kRightStick.value);
       ManualRotationPIDButton.toggleOnTrue(new ManualPID(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     
+      //TODO since this commmand doesn't end it should probably be called with while true so it only executes while the button is held
     final JoystickButton LimelightAutodrive = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
       LimelightAutodrive.onTrue(new LLDrive(m_LlSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
