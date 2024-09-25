@@ -67,27 +67,13 @@ public class LLSubsystem extends SubsystemBase {
     BackTX = BackLL.getEntry("tx");
     BackTY = BackLL.getEntry("ty");
     BackTA = BackLL.getEntry("ta");
-    BackTID = BackLL.getEntry("tid");
-    SmartDashboard.putNumber("TID", BackTID.getDouble(0d));
-
-    // Gets Front LimeLight reading data
-    FrontTX = BackLL.getEntry("tx");
-    FrontTY = BackLL.getEntry("ty");
-    FrontTA = BackLL.getEntry("ta");
-    FrontTID = BackLL.getEntry("tid");
-    
+    BackTID = BackLL.getEntry("tid");    
 
     // reads Back Limelight values periodically
     BackX = BackTX.getDouble(0.0);
     BackY = BackTY.getDouble(0.0);
     BackArea = BackTA.getDouble(0.0);
     BackId = BackTID.getInteger(0);  
-    
-    // reads Front Limelight values periodically
-    FrontX = BackTX.getDouble(0.0);
-    FrontY = BackTY.getDouble(0.0);
-    FrontArea = BackTA.getDouble(0.0);
-    FrontId = BackTID.getInteger(0);
    
     if (Math.signum(BackX) == -1){
       SmartDashboard.putBoolean("Offset-LEFT", true);
@@ -131,43 +117,21 @@ public class LLSubsystem extends SubsystemBase {
       BackDistanceFromTarget = (targetHeight - backLimelightHeight) / Math.tan(targetRadians);
       return BackDistanceFromTarget;
     }
-    else if (LLId == 3){
-      if (FrontId == 1 || FrontId == 2 || FrontId == 5 || FrontId == 6 || FrontId == 9 || FrontId == 10) {
-        targetHeight = 48.125;
-      }
-      else if (FrontId == 3 || FrontId == 4 || FrontId == 7 || FrontId == 8) {
-        targetHeight = 57.125;
-      }
-      else if (FrontId >= 11) {
-        targetHeight = 52;
-      }
-      targetDegrees = FrontLimelightAngle + BackY;
-      double targetRadians = targetDegrees * (3.14159 / 180.0);
-
-      // calculates distance
-      FrontDistanceFromTarget = (targetHeight - FrontLimelightHeight) / Math.tan(targetRadians);
-      return FrontDistanceFromTarget;
-    }
     else{
       return -1;
-    }
+    }    
   }
-  public double GetRotation(){
+  public double getRotation(){
     return Math.round(FrontX) * (3.14159 / 180);
   }
   
-  // normally methods and variables should have a lower case first letter
-  public void LLDrive(){
+  public void limelightDrive(){
     if(!LLDriveController.atSetpoint()){
-      //TODO
-      //The setpoint is alays being the same as the measurement. This will generate no output.
-      //What we want is a measurment that is the error.  The Limelight provides this as the TX value
-      double setpoint = BackX + drivetrain.getState().Pose.getRotation().getDegrees();
-      //TODO
-      //To make this easier to read I would make a new double variable that is the output
-      // then have the controller calculate the output using a measurment (first parameter of calculate) of the LL tx value
-      // and the setpoint (second parameter of calculate) of 0
-      drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0).withRotationalRate(LLDriveController.calculate(drivetrain.getState().Pose.getRotation().getDegrees() +  BackX, setpoint)));
+      // Calculates the angle for the drivetrain to rotate to
+      double output = LLDriveController.calculate(BackX, 0);
+
+      // Rotates the robot to face the apriltag
+      drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0).withRotationalRate(output));
     }
   }
 }
