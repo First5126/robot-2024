@@ -47,22 +47,15 @@ public class LLSubsystem extends SubsystemBase {
 
   double BackDistanceFromTarget = 0;
   double FrontDistanceFromTarget = 0;
-
-  final CommandSwerveDrivetrain drivetrain;
-  final SwerveRequest.FieldCentric drive;
   final PIDController LLDriveController = new PIDController(Constants.LLDrivingConstants.P, Constants.LLDrivingConstants.I, Constants.LLDrivingConstants.D);
 
-  public LLSubsystem(CommandSwerveDrivetrain drivetrain, SwerveRequest.FieldCentric drive) {
-    this.drivetrain = drivetrain;
-    this.drive = drive;
+  public LLSubsystem() {
     SmartDashboard.putNumber("LLRotRate", 1);
     SmartDashboard.putNumber("Rotation Deadzone", 1);
   }
 
   @Override
   public void periodic() {
-    
-
     // Gets Back LimeLight reading data
     BackTX = BackLL.getEntry("tx");
     BackTY = BackLL.getEntry("ty");
@@ -125,13 +118,28 @@ public class LLSubsystem extends SubsystemBase {
     return Math.round(FrontX) * (3.14159 / 180);
   }
   
-  public void limelightDrive(){
+  public void limelightAutoAim(CommandSwerveDrivetrain drivetrain, SwerveRequest.FieldCentric drive){
     if(!LLDriveController.atSetpoint()){
       // Calculates the angle for the drivetrain to rotate to
       double output = LLDriveController.calculate(BackX, 0);
+      SmartDashboard.putNumber("Rotation Error", LLDriveController.getPositionError());
+      SmartDashboard.putNumber("Rotation PID Output", output);
 
       // Rotates the robot to face the apriltag
       drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0).withRotationalRate(output));
+
+      System.out.println("Rotation PID Error is " + LLDriveController.getPositionError());
+      System.out.println("Rotation PID Output is " + output);
+    }
+  }
+
+  public void limelightAutoAdjust(CommandSwerveDrivetrain drivetrain, SwerveRequest.FieldCentric drive){
+    if(!LLDriveController.atSetpoint()){
+      // Calculates the x value for the drivetrain to move to
+      double output = LLDriveController.calculate(BackX, 0);
+
+      // Moves the robot to be in-line with the apriltag
+      drivetrain.setControl(drive.withVelocityX(output).withVelocityY(0).withRotationalRate(0));
     }
   }
 }

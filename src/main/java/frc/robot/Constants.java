@@ -35,9 +35,9 @@ public final class Constants {
     public static final double kV = 0.11551; //Older : 0.12209 - output per unit of requested velocity (output/rps)
   }
   public static class LLDrivingConstants {
-    public static final double P = 4;
+    public static final double P = 0.1;
     public static final double I = 0;
-    public static final double D = 0.1;
+    public static final double D = 0;
     public static final double TurnTolerance = 0.05;
     public static final double TurnRateTolerancePerS = 0.25;
   }
