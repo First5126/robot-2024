@@ -47,47 +47,26 @@ public class LLSubsystem extends SubsystemBase {
 
   double BackDistanceFromTarget = 0;
   double FrontDistanceFromTarget = 0;
-
-  final CommandSwerveDrivetrain drivetrain;
-  final SwerveRequest.FieldCentric drive;
   final PIDController LLDriveController = new PIDController(Constants.LLDrivingConstants.P, Constants.LLDrivingConstants.I, Constants.LLDrivingConstants.D);
 
-  public LLSubsystem(CommandSwerveDrivetrain drivetrain, SwerveRequest.FieldCentric drive) {
-    this.drivetrain = drivetrain;
-    this.drive = drive;
+  public LLSubsystem() {
     SmartDashboard.putNumber("LLRotRate", 1);
     SmartDashboard.putNumber("Rotation Deadzone", 1);
   }
 
   @Override
   public void periodic() {
-    
-
     // Gets Back LimeLight reading data
     BackTX = BackLL.getEntry("tx");
     BackTY = BackLL.getEntry("ty");
     BackTA = BackLL.getEntry("ta");
-    BackTID = BackLL.getEntry("tid");
-    SmartDashboard.putNumber("TID", BackTID.getDouble(0d));
-
-    // Gets Front LimeLight reading data
-    FrontTX = BackLL.getEntry("tx");
-    FrontTY = BackLL.getEntry("ty");
-    FrontTA = BackLL.getEntry("ta");
-    FrontTID = BackLL.getEntry("tid");
-    
+    BackTID = BackLL.getEntry("tid");    
 
     // reads Back Limelight values periodically
     BackX = BackTX.getDouble(0.0);
     BackY = BackTY.getDouble(0.0);
     BackArea = BackTA.getDouble(0.0);
     BackId = BackTID.getInteger(0);  
-    
-    // reads Front Limelight values periodically
-    FrontX = BackTX.getDouble(0.0);
-    FrontY = BackTY.getDouble(0.0);
-    FrontArea = BackTA.getDouble(0.0);
-    FrontId = BackTID.getInteger(0);
    
     if (Math.signum(BackX) == -1){
       SmartDashboard.putBoolean("Offset-LEFT", true);
@@ -131,34 +110,36 @@ public class LLSubsystem extends SubsystemBase {
       BackDistanceFromTarget = (targetHeight - backLimelightHeight) / Math.tan(targetRadians);
       return BackDistanceFromTarget;
     }
-    else if (LLId == 3){
-      if (FrontId == 1 || FrontId == 2 || FrontId == 5 || FrontId == 6 || FrontId == 9 || FrontId == 10) {
-        targetHeight = 48.125;
-      }
-      else if (FrontId == 3 || FrontId == 4 || FrontId == 7 || FrontId == 8) {
-        targetHeight = 57.125;
-      }
-      else if (FrontId >= 11) {
-        targetHeight = 52;
-      }
-      targetDegrees = FrontLimelightAngle + BackY;
-      double targetRadians = targetDegrees * (3.14159 / 180.0);
-
-      // calculates distance
-      FrontDistanceFromTarget = (targetHeight - FrontLimelightHeight) / Math.tan(targetRadians);
-      return FrontDistanceFromTarget;
-    }
     else{
       return -1;
+    }    
+  }
+  public double getRotation(){
+    return Math.round(FrontX) * (3.14159 / 180);
+  }
+  
+  public void limelightAutoAim(CommandSwerveDrivetrain drivetrain, SwerveRequest.FieldCentric drive){
+    double output = LLDriveController.calculate(BackX, 0);
+    if(!LLDriveController.atSetpoint()){
+      // Calculates the angle for the drivetrain to rotate to
+      SmartDashboard.putNumber("Rotation Error", LLDriveController.getPositionError());
+      SmartDashboard.putNumber("Rotation PID Output", output);
+
+      // Rotates the robot to face the apriltag
+      drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0).withRotationalRate(output));
+
+      System.out.println("Rotation PID Error is " + LLDriveController.getPositionError());
+      System.out.println("Rotation PID Output is " + output);
     }
   }
-  public double GetRotation(){
-    return Math.round(BackX) * (3.14159 / 180);
-  }
-  public void LLDrive(){
+
+  public void limelightAutoAdjust(CommandSwerveDrivetrain drivetrain, SwerveRequest.FieldCentric drive){
+    double output = LLDriveController.calculate(BackX, 0);
     if(!LLDriveController.atSetpoint()){
-      double setpoint = BackX + drivetrain.getState().Pose.getRotation().getDegrees();
-      drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0).withRotationalRate(LLDriveController.calculate(drivetrain.getState().Pose.getRotation().getDegrees() + FrontX, setpoint)));
+      // Calculates the x value for the drivetrain to move to
+
+      // Moves the robot to be in-line with the apriltag
+      drivetrain.setControl(drive.withVelocityX(output).withVelocityY(0).withRotationalRate(0));
     }
   }
 }

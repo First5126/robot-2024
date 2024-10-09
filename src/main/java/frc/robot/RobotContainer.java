@@ -8,9 +8,7 @@ import frc.robot.Swerve.Telemetry;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Joystick;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -29,20 +27,15 @@ import frc.robot.commands.FindDistance;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
-import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Swerve.CommandSwerveDrivetrain;
 import frc.robot.Swerve.TunerConstants;
-import frc.robot.commands.Climb;
-import frc.robot.commands.DriveTest;
 import frc.robot.commands.Intake;
-import frc.robot.commands.LLDrive;
-import frc.robot.commands.ManualIntake;
+import frc.robot.commands.LLAmpAdjust;
+import frc.robot.commands.LLAutoAim;
 import frc.robot.commands.ManualPID;
 import frc.robot.commands.ManualRotation;
-import frc.robot.commands.OverrideShoot;
-import frc.robot.commands.Reverse;
 import frc.robot.commands.RotateArm;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.TroubleShootIntake;
@@ -81,7 +74,7 @@ public class RobotContainer {
   private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   
   //Limelight
-  public final LLSubsystem m_LlSubsystem = new LLSubsystem(drivetrain, drive);
+  public final LLSubsystem m_LlSubsystem = new LLSubsystem();
   public RobotContainer() {
     
     NamedCommands.registerCommand("Rotate Arm Subwoofer", new RotateArm(m_arm, 11)); //Old : 15
@@ -174,7 +167,7 @@ public class RobotContainer {
       ShootSubwooferButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 58.48333).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootAmpButton = new JoystickButton(m_driverController, XboxController.Button.kX.value);
-      ShootAmpButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 20).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      ShootAmpButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 35).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final JoystickButton ShootPodiumButton = new JoystickButton(m_driverController, XboxController.Button.kB.value);
       ShootPodiumButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 60).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
@@ -184,8 +177,6 @@ public class RobotContainer {
     final JoystickButton ShootBlueLineButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
       ShootBlueLineButton.toggleOnTrue(new Shoot(m_ShooterSubsystem, m_arm, 54).withInterruptBehavior(InterruptionBehavior.kCancelSelf)); //dont 
 
-    final JoystickButton driveForwardButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
-      driveForwardButton.whileTrue(new LLDrive(m_LlSubsystem));
     //Buttons Controller
     final JoystickButton IntakeButton = new JoystickButton(m_ButtonsController, XboxController.Button.kA.value);    
       IntakeButton.toggleOnTrue(new Intake(m_ShooterSubsystem, m_ButtonsController, m_driverController).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
@@ -212,18 +203,21 @@ public class RobotContainer {
       final JoystickButton SourcePosButton = new JoystickButton(m_ButtonsController, XboxController.Button.kB.value);
       SourcePosButton.toggleOnTrue(new RotateArm(m_arm, 40.8));
       
-      final JoystickButton ClimberButton = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
-      ClimberButton.whileTrue(new Climb(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+      //final JoystickButton ClimberButton = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
+      //ClimberButton.whileTrue(new Climb(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
       
       final JoystickButton ManualRotationPIDButton = new JoystickButton(m_ButtonsController, XboxController.Button.kRightStick.value);
       ManualRotationPIDButton.toggleOnTrue(new ManualPID(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-    
-    final JoystickButton LimelightAutodrive = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
-      LimelightAutodrive.onTrue(new LLDrive(m_LlSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    // Limelight
+    final JoystickButton limelightAutodrive = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
+      limelightAutodrive.whileTrue(new LLAutoAim(m_LlSubsystem, drivetrain, drive).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+
+    final JoystickButton limelightAmpAdjust = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
+      limelightAmpAdjust.whileTrue(new LLAmpAdjust(m_LlSubsystem, drivetrain, drive).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final BooleanSupplier POVLeftButtons = () -> this.m_ButtonsController.getPOV() == 270;
       Trigger AmpPosButton = new Trigger (POVLeftButtons);
-      AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 56));
+      AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 55));
     
     final BooleanSupplier POVDownButtons = () -> this.m_ButtonsController.getPOV() == 180;
       Trigger SubwooferPosButton = new Trigger (POVDownButtons);
