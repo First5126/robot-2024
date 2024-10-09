@@ -119,9 +119,9 @@ public class LLSubsystem extends SubsystemBase {
   }
   
   public void limelightAutoAim(CommandSwerveDrivetrain drivetrain, SwerveRequest.FieldCentric drive){
+    double output = LLDriveController.calculate(BackX, 0);
     if(!LLDriveController.atSetpoint()){
       // Calculates the angle for the drivetrain to rotate to
-      double output = LLDriveController.calculate(BackX, 0);
       SmartDashboard.putNumber("Rotation Error", LLDriveController.getPositionError());
       SmartDashboard.putNumber("Rotation PID Output", output);
 
@@ -134,9 +134,9 @@ public class LLSubsystem extends SubsystemBase {
   }
 
   public void limelightAutoAdjust(CommandSwerveDrivetrain drivetrain, SwerveRequest.FieldCentric drive){
+    double output = LLDriveController.calculate(BackX, 0);
     if(!LLDriveController.atSetpoint()){
       // Calculates the x value for the drivetrain to move to
-      double output = LLDriveController.calculate(BackX, 0);
 
       // Moves the robot to be in-line with the apriltag
       drivetrain.setControl(drive.withVelocityX(output).withVelocityY(0).withRotationalRate(0));

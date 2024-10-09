@@ -32,16 +32,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Swerve.CommandSwerveDrivetrain;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.commands.Intake;
+import frc.robot.commands.LLAmpAdjust;
+import frc.robot.commands.LLAutoAim;
 import frc.robot.commands.ManualPID;
 import frc.robot.commands.ManualRotation;
 import frc.robot.commands.RotateArm;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.TroubleShootIntake;
 import frc.robot.commands.TroubleShootReverse;
-
-// Limelight Aim/Adjust commands
-import frc.robot.commands.LLAutoAim;
-import frc.robot.commands.LLAmpAdjust;
 
 public class RobotContainer {
   
@@ -210,15 +208,13 @@ public class RobotContainer {
       
       final JoystickButton ManualRotationPIDButton = new JoystickButton(m_ButtonsController, XboxController.Button.kRightStick.value);
       ManualRotationPIDButton.toggleOnTrue(new ManualPID(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-    
-    // Limelight Commands
-    final JoystickButton limelightAutoAim = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
-      limelightAutoAim.whileTrue(new LLAutoAim(m_LlSubsystem, drivetrain, drive).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    // Limelight
+    final JoystickButton limelightAutodrive = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
+      limelightAutodrive.whileTrue(new LLAutoAim(m_LlSubsystem, drivetrain, drive).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
-    /*final JoystickButton limelightAmpAdjust = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
-      limelightAmpAdjust.whileTrue(new LLAutoAim(m_LlSubsystem, drivetrain, drive).withInterruptBehavior(InterruptionBehavior.kCancelSelf));*/
-    
-    // Arm Control Buttons
+    final JoystickButton limelightAmpAdjust = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
+      limelightAmpAdjust.whileTrue(new LLAmpAdjust(m_LlSubsystem, drivetrain, drive).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+
     final BooleanSupplier POVLeftButtons = () -> this.m_ButtonsController.getPOV() == 270;
       Trigger AmpPosButton = new Trigger (POVLeftButtons);
       AmpPosButton.toggleOnTrue(new RotateArm(m_arm, 55));

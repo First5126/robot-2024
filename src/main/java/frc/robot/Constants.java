@@ -38,7 +38,5 @@ public final class Constants {
     public static final double P = 0.1;
     public static final double I = 0;
     public static final double D = 0;
-    public static final double TurnTolerance = 0.05;
-    public static final double TurnRateTolerancePerS = 0.25;
   }
 }
