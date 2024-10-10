@@ -47,11 +47,14 @@ public class LLSubsystem extends SubsystemBase {
 
   double BackDistanceFromTarget = 0;
   double FrontDistanceFromTarget = 0;
+  final PIDController LLRotController = new PIDController(Constants.LLDrivingConstants.P, Constants.LLDrivingConstants.I, Constants.LLDrivingConstants.D);
   final PIDController LLDriveController = new PIDController(Constants.LLDrivingConstants.P, Constants.LLDrivingConstants.I, Constants.LLDrivingConstants.D);
 
   public LLSubsystem() {
     SmartDashboard.putNumber("LLRotRate", 1);
     SmartDashboard.putNumber("Rotation Deadzone", 1);
+
+    LLRotController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
   @Override
@@ -117,29 +120,38 @@ public class LLSubsystem extends SubsystemBase {
   public double getRotation(){
     return Math.round(FrontX) * (3.14159 / 180);
   }
-  
-  public void limelightAutoAim(CommandSwerveDrivetrain drivetrain, SwerveRequest.FieldCentric drive){
-    double output = LLDriveController.calculate(BackX, 0);
-    if(!LLDriveController.atSetpoint()){
-      // Calculates the angle for the drivetrain to rotate to
-      SmartDashboard.putNumber("Rotation Error", LLDriveController.getPositionError());
-      SmartDashboard.putNumber("Rotation PID Output", output);
 
-      // Rotates the robot to face the apriltag
-      drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0).withRotationalRate(output));
-
-      System.out.println("Rotation PID Error is " + LLDriveController.getPositionError());
-      System.out.println("Rotation PID Output is " + output);
+  public boolean isAmpTag(){
+    if (BackId == 5 || BackId == 6){
+      return true;
     }
+    return false;
   }
 
-  public void limelightAutoAdjust(CommandSwerveDrivetrain drivetrain, SwerveRequest.FieldCentric drive){
-    double output = LLDriveController.calculate(BackX, 0);
-    if(!LLDriveController.atSetpoint()){
-      // Calculates the x value for the drivetrain to move to
-
-      // Moves the robot to be in-line with the apriltag
-      drivetrain.setControl(drive.withVelocityX(output).withVelocityY(0).withRotationalRate(0));
+  public boolean isSpeakerTag(){
+    if (BackId == 7 || BackId == 9){
+      return true;
     }
+    return false;
+  }
+  
+  public void limelightAutoAim(CommandSwerveDrivetrain drivetrain, SwerveRequest.FieldCentric drive){
+    // Calculates the angle for the drivetrain to rotate to
+    double output = LLRotController.calculate(BackX, 0);
+    if(!LLRotController.atSetpoint()){
+      // Rotates the robot to face the apriltag
+      drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0).withRotationalRate(output));
+    }
+  }
+ 
+  public void limelightAutoAdjust(CommandSwerveDrivetrain drivetrain, SwerveRequest.FieldCentric drive){
+    // Calculates the x value for the drivetrain to move to
+    double output = LLDriveController.calculate(BackX, 0);
+    double rotation = LLRotController.calculate(drivetrain.getState().Pose.getRotation().getRadians(), -Math.PI/2);
+    
+    drivetrain.getState().Pose.getRotation();
+
+    // Moves the robot to be in-line with the apriltag
+    drivetrain.setControl(drive.withVelocityX(-output).withVelocityY(0).withRotationalRate(rotation));
   }
 }

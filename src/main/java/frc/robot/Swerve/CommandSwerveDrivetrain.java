@@ -103,7 +103,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public void periodic(){
         //SmartDashboard.putData(this.getPigeon2());
-        
+
+        SmartDashboard.putNumber("Rotation", this.getState().Pose.getRotation().getRadians());        
         if(!hasAppliedOperatrorPersepective || DriverStation.isDisabled()){
             DriverStation.getAlliance().ifPresent((allianceColor) -> {
                 this.setOperatorPerspectiveForward(
