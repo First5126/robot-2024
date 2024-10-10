@@ -47,7 +47,7 @@ public class LLSubsystem extends SubsystemBase {
 
   double BackDistanceFromTarget = 0;
   double FrontDistanceFromTarget = 0;
-  final PIDController LLRotController = new PIDController(Constants.LLDrivingConstants.P, Constants.LLDrivingConstants.I, Constants.LLDrivingConstants.D);
+  final PIDController LLRotController = new PIDController(5.7d, Constants.LLDrivingConstants.I, Constants.LLDrivingConstants.D);
   final PIDController LLDriveController = new PIDController(Constants.LLDrivingConstants.P, Constants.LLDrivingConstants.I, Constants.LLDrivingConstants.D);
 
   public LLSubsystem() {
@@ -137,8 +137,8 @@ public class LLSubsystem extends SubsystemBase {
   
   public void limelightAutoAim(CommandSwerveDrivetrain drivetrain, SwerveRequest.FieldCentric drive){
     // Calculates the angle for the drivetrain to rotate to
-    double output = LLRotController.calculate(BackX, 0);
-    if(!LLRotController.atSetpoint()){
+    double output = LLDriveController.calculate(BackX, 0);
+    if(!LLDriveController.atSetpoint()){
       // Rotates the robot to face the apriltag
       drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0).withRotationalRate(output));
     }
@@ -150,6 +150,8 @@ public class LLSubsystem extends SubsystemBase {
     double rotation = LLRotController.calculate(drivetrain.getState().Pose.getRotation().getRadians(), -Math.PI/2);
     
     drivetrain.getState().Pose.getRotation();
+
+    System.out.println("I am at rotation " + (drivetrain.getState().Pose.getRotation().getRadians() + ", and I am calculating " + rotation));
 
     // Moves the robot to be in-line with the apriltag
     drivetrain.setControl(drive.withVelocityX(-output).withVelocityY(0).withRotationalRate(rotation));
