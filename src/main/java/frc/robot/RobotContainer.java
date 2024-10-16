@@ -210,10 +210,10 @@ public class RobotContainer {
       final JoystickButton ManualRotationPIDButton = new JoystickButton(m_ButtonsController, XboxController.Button.kRightStick.value);
       ManualRotationPIDButton.toggleOnTrue(new ManualPID(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     // Limelight
-    final JoystickButton limelightSpeakerAdjust = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
+    final JoystickButton limelightSpeakerAdjust = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
       limelightSpeakerAdjust.and(m_LlSubsystem::isSpeakerTag).whileTrue(new LLAutoAim(m_LlSubsystem, drivetrain, drive).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
-    final JoystickButton limelightAmpAdjust = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
+    final JoystickButton limelightAmpAdjust = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
       limelightAmpAdjust.and(m_LlSubsystem::isAmpTag).whileTrue(new LLAmpAdjust(m_LlSubsystem, drivetrain, drive).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final BooleanSupplier POVLeftButtons = () -> this.m_ButtonsController.getPOV() == 270;
