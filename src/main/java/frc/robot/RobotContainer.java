@@ -84,6 +84,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shoot Podium", new Shoot(m_ShooterSubsystem, m_arm, 78));
     NamedCommands.registerCommand("Intake", new Intake(m_ShooterSubsystem, m_ButtonsController, m_driverController));
     NamedCommands.registerCommand("Rotate to Bank Pos", new RotateArm(m_arm, 52));
+    /*NamedCommands.registerCommand("Rotate Blue Line", new RotateArm(m_arm, 34));
+    NamedCommands.registerCommand("Shoot Blue Line", new Shoot(m_ShooterSubsystem, m_arm, 94));
+    NamedCommands.registerCommand("Rotate with Limelight", new LLAutoAim(m_LlSubsystem, drivetrain, drive));*/
 
     autoChooser.addOption("Bank Source Shoot Move", drivetrain.getAutoPath("Bank Source Shoot Move"));
     autoChooser.addOption("Amp Side 3 Note", drivetrain.getAutoPath("Amp Side 3 Note"));
