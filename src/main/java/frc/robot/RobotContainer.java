@@ -90,6 +90,7 @@ public class RobotContainer {
 
     autoChooser.addOption("Bank Source Shoot Move", drivetrain.getAutoPath("Bank Source Shoot Move"));
     autoChooser.addOption("Amp Side 3 Note", drivetrain.getAutoPath("Amp Side 3 Note"));
+    autoChooser.addOption("Amp Side Center Line", drivetrain.getAutoPath("Amp Side Center Line"));
     autoChooser.addOption("Alliance 4 Note Auto", drivetrain.getAutoPath("Alliance Color 4 Note Auto"));
     autoChooser.addOption("Four Blue Note Auto", drivetrain.getAutoPath("Four Note Blue Auto"));
     autoChooser.addOption("Three Blue Note Auto", drivetrain.getAutoPath("Three Note Blue Auto"));
@@ -195,7 +196,7 @@ public class RobotContainer {
 
     final JoystickButton manualRotationDown = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftBumper.value);
       manualRotationDown.whileTrue(new ManualRotation(m_arm, -0.2).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
-    
+  
     final JoystickButton HomeArm = new JoystickButton(m_ButtonsController, XboxController.Button.kStart.value);
       HomeArm.toggleOnTrue(new ManualRotation(m_arm, -0.4).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
@@ -212,11 +213,11 @@ public class RobotContainer {
       final JoystickButton ManualRotationPIDButton = new JoystickButton(m_ButtonsController, XboxController.Button.kRightStick.value);
       ManualRotationPIDButton.toggleOnTrue(new ManualPID(m_arm).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
     // Limelight
-    final JoystickButton limelightAutodrive = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
-      limelightAutodrive.whileTrue(new LLAutoAim(m_LlSubsystem, drivetrain, drive).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    final JoystickButton limelightSpeakerAdjust = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
+      limelightSpeakerAdjust.and(m_LlSubsystem::isSpeakerTag).whileTrue(new LLAutoAim(m_LlSubsystem, drivetrain, drive).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
-    final JoystickButton limelightAmpAdjust = new JoystickButton(m_ButtonsController, XboxController.Button.kLeftStick.value);
-      limelightAmpAdjust.whileTrue(new LLAmpAdjust(m_LlSubsystem, drivetrain, drive).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
+    final JoystickButton limelightAmpAdjust = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
+      limelightAmpAdjust.and(m_LlSubsystem::isAmpTag).whileTrue(new LLAmpAdjust(m_LlSubsystem, drivetrain, drive).withInterruptBehavior(InterruptionBehavior.kCancelSelf));
 
     final BooleanSupplier POVLeftButtons = () -> this.m_ButtonsController.getPOV() == 270;
       Trigger AmpPosButton = new Trigger (POVLeftButtons);
